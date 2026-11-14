@@ -8,3 +8,4 @@ export * from './Tooltip';
 export * from './toastStore';
 export * from './Toast';
 export * from './Icon';
+export * from './ErrorBoundary';

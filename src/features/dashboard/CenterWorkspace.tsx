@@ -29,6 +29,7 @@ import { TimelineStripView } from '../timeline/TimelineStrip';
 import type { MetricsResult, Site, HorizonProfile } from '../../contracts';
 import { safeViewTransition } from '../../lib/viewTransition';
 import { Icon } from '../../ui/Icon';
+import { ErrorBoundary } from '../../ui/ErrorBoundary';
 
 const viewportTabs: TabItem[] = [
   { id: 'globe', label: '3D Moon Globe', icon: <Icon icon={Globe} size={16} /> },
@@ -616,9 +617,15 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
 
         {/* 3D Canvas / Projection Viewport with Radial Gradient Vignette Mask */}
         <div className="relative h-full w-full">
-          {activeCenterTab === 'globe' && <MoonGlobeView />}
-          {activeCenterTab === 'terrain' && <TerrainView />}
-          {activeCenterTab === 'horizon' && <HorizonView />}
+          <ErrorBoundary
+            title="Viewport Telemetry Alert"
+            message="The 3D WebGL renderer could not initialize in your browser. Verify graphics acceleration in chrome://settings/system, or switch to the 2D Horizon Panorama tab."
+            onReset={() => setActiveCenterTab('horizon')}
+          >
+            {activeCenterTab === 'globe' && <MoonGlobeView />}
+            {activeCenterTab === 'terrain' && <TerrainView />}
+            {activeCenterTab === 'horizon' && <HorizonView />}
+          </ErrorBoundary>
 
           {/* Radial Edge Fade Mask (only in non-fullscreen) */}
           {!isFullscreen && (
