@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { X, Rocket, ChevronRight, ChevronLeft, Compass } from 'lucide-react';
 import { useUIStore } from '../../store/useUIStore';
 import { Button } from '../../ui/Button';
 import { Badge } from '../../ui/Badge';
+import { Icon } from '../../ui';
 
 interface TourStep {
   title: string;
@@ -73,7 +75,7 @@ const TOUR_STEPS: TourStep[] = [
       'Use the Overview mode for plain-language educational summaries, or switch to Technical mode for astrometric frames, sub-body coordinates, libration angles, and decimals. The tool runs completely client-side in your browser with zero server dependencies.',
     keyTakeaways: [
       'Space: Play / Pause simulation playback.',
-      '← / →: Step backward or forward through time.',
+      'Arrow keys: Step backward or forward through time.',
       '1, 2, 3: Switch between 3D Globe, 3D Terrain, and Horizon Panorama.',
       'm: Toggle Overview / Technical mode | c: Toggle Comparison Matrix | ?: Toggle Mission Guide.'
     ]
@@ -116,6 +118,7 @@ export function GuidedTour(): React.JSX.Element | null {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-panel-border pb-3.5">
           <div className="flex items-center gap-2.5">
+            <Icon icon={Compass} size={18} className="text-amber" />
             <span className="font-mono text-sm font-bold tracking-wider text-amber">
               MISSION CONTROL GUIDE
             </span>
@@ -127,8 +130,9 @@ export function GuidedTour(): React.JSX.Element | null {
             onClick={handleClose}
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-panel-border bg-panel text-muted hover:text-ink hover:border-muted transition-colors"
             title="Close guide"
+            aria-label="Close guide"
           >
-            ✕
+            <Icon icon={X} size={16} />
           </button>
         </div>
 
@@ -147,7 +151,7 @@ export function GuidedTour(): React.JSX.Element | null {
             <ul className="space-y-1.5 text-xs text-ink">
               {step.keyTakeaways.map((item, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-amber font-bold">•</span>
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber mt-1.5 shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -177,12 +181,23 @@ export function GuidedTour(): React.JSX.Element | null {
           {/* Nav Buttons */}
           <div className="flex items-center gap-2">
             {!isFirst && (
-              <Button size="sm" variant="outline" onClick={handlePrev} className="text-xs">
-                Back
+              <Button size="sm" variant="outline" onClick={handlePrev} className="text-xs flex items-center gap-1">
+                <Icon icon={ChevronLeft} size={16} />
+                <span>Back</span>
               </Button>
             )}
-            <Button size="sm" variant="primary" onClick={handleNext} className="text-xs px-4">
-              {isLast ? '🚀 Launch Mission Control' : 'Next →'}
+            <Button size="sm" variant="primary" onClick={handleNext} className="text-xs px-4 flex items-center gap-1.5">
+              {isLast ? (
+                <>
+                  <Icon icon={Rocket} size={16} />
+                  <span>Launch Mission Control</span>
+                </>
+              ) : (
+                <>
+                  <span>Next</span>
+                  <Icon icon={ChevronRight} size={16} />
+                </>
+              )}
             </Button>
           </div>
         </div>

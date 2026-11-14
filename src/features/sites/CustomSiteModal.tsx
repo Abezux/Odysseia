@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { X } from 'lucide-react';
 import { Button } from '../../ui/Button';
+import { Icon } from '../../ui/Icon';
 
 export interface CustomSiteModalProps {
   isOpen: boolean;
@@ -57,12 +59,25 @@ export function CustomSiteModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 select-none"
     >
       <div className="w-full max-w-md rounded-3xl glass-panel p-6 shadow-2xl border border-glass-border">
-        <h2 id="custom-site-title" className="font-sans text-xs font-bold uppercase tracking-wider text-amber">
-          Custom Selenographic Coordinates
-        </h2>
-        <p className="mt-1 font-sans text-xs text-muted">
-          Input arbitrary lunar landing coordinates. Ephemeris vectors will be evaluated against a smooth 0° horizon.
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h2 id="custom-site-title" className="font-sans text-xs font-bold uppercase tracking-wider text-amber">
+              Custom Selenographic Coordinates
+            </h2>
+            <p className="mt-1 font-sans text-xs text-muted">
+              Input arbitrary lunar landing coordinates. Ephemeris vectors will be evaluated against a smooth 0° horizon.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-7 w-7 items-center justify-center rounded-lg border border-panel-border bg-panel text-muted hover:text-ink hover:border-muted transition-colors"
+            title="Close dialog"
+            aria-label="Close dialog"
+          >
+            <Icon icon={X} size={16} />
+          </button>
+        </div>
 
         {error && (
           <div className="mt-3 rounded-xl border border-critical/40 bg-critical/15 p-2.5 font-mono text-xs text-critical">

@@ -1,4 +1,13 @@
 import React, { useMemo } from 'react';
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Info,
+  Plus,
+  RotateCcw,
+  Activity,
+  ExternalLink
+} from 'lucide-react';
 import { useUIStore } from '../../store/useUIStore';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { useTimeStore } from '../../store/useTimeStore';
@@ -6,6 +15,7 @@ import { SkyDial } from '../detail/SkyDial';
 import { computeMissionAlerts } from '../../lib/alerts';
 import { showToast } from '../../ui/toastStore';
 import type { Site, HorizonProfile, MetricsResult } from '../../contracts';
+import { Icon } from '../../ui/Icon';
 
 interface RightUtilityColumnProps {
   site: Site | null;
@@ -99,20 +109,44 @@ export function RightUtilityColumn({
                 ? 'border-l-emerald bg-emerald/5'
                 : 'border-l-amber bg-amber/5';
 
+            const alertIcon =
+              alert.severity === 'critical'
+                ? AlertTriangle
+                : alert.severity === 'warning'
+                ? AlertTriangle
+                : alert.severity === 'success'
+                ? CheckCircle2
+                : Info;
+
             return (
               <div
                 key={alert.id}
                 className={`rounded-xl border border-panel-border border-l-4 p-2.5 ${barColor} transition-colors`}
               >
                 <div className="flex items-start justify-between gap-1">
-                  <span className="font-sans text-xs font-semibold text-ink leading-tight">
-                    {alert.title}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <Icon
+                      icon={alertIcon}
+                      size={16}
+                      className={
+                        alert.severity === 'critical'
+                          ? 'text-critical'
+                          : alert.severity === 'warning'
+                          ? 'text-warning'
+                          : alert.severity === 'success'
+                          ? 'text-emerald'
+                          : 'text-amber'
+                      }
+                    />
+                    <span className="font-sans text-xs font-semibold text-ink leading-tight">
+                      {alert.title}
+                    </span>
+                  </div>
                   <span className="font-mono text-[9px] text-muted shrink-0">
                     {alert.timestamp}
                   </span>
                 </div>
-                <p className="mt-1 font-sans text-[11px] leading-relaxed text-muted">
+                <p className="mt-1 font-sans text-[11px] leading-relaxed text-muted pl-5">
                   {alert.description}
                 </p>
               </div>
@@ -232,32 +266,39 @@ export function RightUtilityColumn({
             <button
               type="button"
               onClick={handleAddToCompare}
-              className="rounded-lg border border-panel-border bg-panel py-2 text-center font-sans text-[11px] font-semibold text-muted hover:text-ink hover:border-muted transition-colors"
+              className="flex items-center justify-center gap-1 rounded-lg border border-panel-border bg-panel py-2 text-center font-sans text-[11px] font-semibold text-muted hover:text-ink hover:border-muted transition-colors"
+              title="Add to Compare matrix"
             >
-              + Compare
+              <Icon icon={Plus} size={16} />
+              <span>Compare</span>
             </button>
             <button
               type="button"
               onClick={handleResetEpoch}
-              className="rounded-lg border border-panel-border bg-panel py-2 text-center font-sans text-[11px] font-semibold text-muted hover:text-ink hover:border-muted transition-colors"
+              className="flex items-center justify-center gap-1 rounded-lg border border-panel-border bg-panel py-2 text-center font-sans text-[11px] font-semibold text-muted hover:text-ink hover:border-muted transition-colors"
+              title="Reset simulation to current epoch"
             >
-              Reset Epoch
+              <Icon icon={RotateCcw} size={16} />
+              <span>Reset</span>
             </button>
             <button
               type="button"
               onClick={handleDiagnostics}
-              className="rounded-lg border border-panel-border bg-panel py-2 text-center font-sans text-[11px] font-semibold text-muted hover:text-ink hover:border-muted transition-colors"
+              className="flex items-center justify-center gap-1 rounded-lg border border-panel-border bg-panel py-2 text-center font-sans text-[11px] font-semibold text-muted hover:text-ink hover:border-muted transition-colors"
+              title="Run astrometric and terrain diagnostics"
             >
-              Diagnostics
+              <Icon icon={Activity} size={16} />
+              <span>Status</span>
             </button>
           </div>
 
           <button
             type="button"
             onClick={onOpenScorecardModal}
-            className="w-full rounded-lg bg-amber py-2.5 text-center font-sans text-xs font-bold text-amber-text transition-colors hover:bg-amber-hover active:bg-amber-pressed"
+            className="flex items-center justify-center gap-2 w-full rounded-lg bg-amber py-2.5 text-center font-sans text-xs font-bold text-amber-text transition-colors hover:bg-amber-hover active:bg-amber-pressed"
           >
-            View Full Scorecard ({metrics?.scorecard.overallScore ?? 88}/100)
+            <span>View Full Scorecard ({metrics?.scorecard.overallScore ?? 88}/100)</span>
+            <Icon icon={ExternalLink} size={16} />
           </button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { Sun, Globe } from 'lucide-react';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { useTimeStore } from '../../store/useTimeStore';
 import { dataProvider } from '../../lib/data';
@@ -7,6 +8,7 @@ import { getHorizonThresholdAtAzimuth } from '../../lib/metrics/visibility';
 import type { Site, HorizonProfile, EphemerisSample } from '../../contracts';
 import { Badge } from '../../ui/Badge';
 import { Button } from '../../ui/Button';
+import { Icon } from '../../ui';
 
 export function HorizonView(): React.JSX.Element {
   const { activeSiteId } = useScenarioStore();
@@ -243,17 +245,19 @@ export function HorizonView(): React.JSX.Element {
             size="sm"
             variant="outline"
             onClick={handleTrackSun}
-            className="text-[10px] h-6 px-2 text-amber border-amber/30 hover:border-amber"
+            className="text-[10px] h-6 px-2 text-amber border-amber/30 hover:border-amber flex items-center gap-1.5"
           >
-            ☀️ Look at Sun ({sunAz.toFixed(0)}°)
+            <Icon icon={Sun} size={16} />
+            <span>Look at Sun ({sunAz.toFixed(0)}°)</span>
           </Button>
           <Button
             size="sm"
             variant="outline"
             onClick={handleTrackEarth}
-            className="text-[10px] h-6 px-2 text-emerald border-emerald/30 hover:border-emerald"
+            className="text-[10px] h-6 px-2 text-emerald border-emerald/30 hover:border-emerald flex items-center gap-1.5"
           >
-            🌍 Look at Earth ({earthAz.toFixed(0)}°)
+            <Icon icon={Globe} size={16} />
+            <span>Look at Earth ({earthAz.toFixed(0)}°)</span>
           </Button>
           <Button
             size="sm"
@@ -478,13 +482,19 @@ export function HorizonView(): React.JSX.Element {
         {/* Overlay Telemetry HUD (Bottom Left & Right) */}
         <div className="pointer-events-none absolute bottom-3 left-3 z-10 flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 text-[10px] text-ink backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <span className="text-amber">☀️ Solar Line-of-Sight:</span>
+            <span className="flex items-center gap-1.5 text-amber">
+              <Icon icon={Sun} size={16} />
+              <span>Solar Line-of-Sight:</span>
+            </span>
             <span className={isSunVisible ? 'text-emerald font-bold' : 'text-muted font-semibold'}>
               {isSunVisible ? `CLEAR (+${sunClearance.toFixed(2)}°)` : `OBSCURED (${sunClearance.toFixed(2)}°)`}
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-emerald">🌍 Earth DTE Link:</span>
+            <span className="flex items-center gap-1.5 text-emerald">
+              <Icon icon={Globe} size={16} />
+              <span>Earth DTE Link:</span>
+            </span>
             <span className={isEarthVisible ? 'text-emerald font-bold' : 'text-critical font-semibold'}>
               {isEarthVisible ? `LOCKED (+${earthClearance.toFixed(2)}°)` : `TERRAIN BLOCKED (${earthClearance.toFixed(2)}°)`}
             </span>

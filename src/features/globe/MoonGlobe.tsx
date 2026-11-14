@@ -3,6 +3,7 @@ import { Canvas, useFrame, type ThreeEvent } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
+import { Target, Globe } from 'lucide-react';
 import { useTimeStore } from '../../store/useTimeStore';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { dataProvider } from '../../lib/data';
@@ -13,6 +14,7 @@ import { SitePinLayer } from './SitePinLayer';
 import { SubBodyMarkers } from './SubBodyMarkers';
 import { latLonToVector3, GLOBE_RADIUS } from './globeMath';
 import { Button } from '../../ui/Button';
+import { Icon } from '../../ui';
 
 interface GlobeMeshProps {
   sunDirection: THREE.Vector3;
@@ -169,11 +171,13 @@ export function MoonGlobeView(): React.JSX.Element {
 
       {/* Floating HUD Controls */}
       <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10">
-        <Button variant="secondary" size="sm" onClick={focusSouthPole}>
-          🎯 Focus South Pole
+        <Button variant="secondary" size="sm" onClick={focusSouthPole} className="flex items-center gap-1.5">
+          <Icon icon={Target} size={16} />
+          <span>Focus South Pole</span>
         </Button>
-        <Button variant="outline" size="sm" onClick={focusEquator}>
-          🌐 Equator View
+        <Button variant="outline" size="sm" onClick={focusEquator} className="flex items-center gap-1.5">
+          <Icon icon={Globe} size={16} />
+          <span>Equator View</span>
         </Button>
       </div>
 

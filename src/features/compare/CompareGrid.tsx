@@ -1,7 +1,9 @@
 import React from 'react';
+import { X, Plus } from 'lucide-react';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import type { Scenario, MetricsResult, Site } from '../../contracts';
 import { Badge } from '../../ui/Badge';
+import { Icon } from '../../ui';
 
 export interface CompareGridProps {
   scenarios: Scenario[];
@@ -76,10 +78,11 @@ export function CompareGrid({
                         e.stopPropagation();
                         removeScenario(sc.id);
                       }}
-                      className="text-muted hover:text-critical p-1 transition-colors text-xs"
+                      className="text-muted hover:text-critical p-1 transition-colors rounded-md"
                       title="Remove scenario"
+                      aria-label="Remove scenario"
                     >
-                      ✕
+                      <Icon icon={X} size={16} />
                     </button>
                   )}
                 </div>
@@ -221,8 +224,8 @@ export function CompareGrid({
             onClick={onAddScenarioClick}
             className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-dashed border-panel-border bg-panel/30 p-6 text-center transition-all hover:border-amber hover:bg-panel/60 focus:outline-none"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber/15 text-amber text-xl">
-              +
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber/15 text-amber">
+              <Icon icon={Plus} size={20} />
             </div>
             <span className="mt-3 font-sans text-xs font-semibold text-ink">
               Add Comparative Site

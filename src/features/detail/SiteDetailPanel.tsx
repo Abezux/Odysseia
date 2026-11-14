@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { Compass, Sliders } from 'lucide-react';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { useTimeStore } from '../../store/useTimeStore';
 import { useUIStore } from '../../store/useUIStore';
@@ -7,6 +8,7 @@ import { evaluateMetricsAsync } from '../../lib/workers/workerClient';
 import type { Site, HorizonProfile, MetricsResult } from '../../contracts';
 import { Badge } from '../../ui/Badge';
 import { Button } from '../../ui/Button';
+import { Icon } from '../../ui';
 import { SkyDial } from './SkyDial';
 
 export function SiteDetailView(): React.JSX.Element {
@@ -105,12 +107,12 @@ export function SiteDetailView(): React.JSX.Element {
             <h2 className="text-base font-bold text-ink">{site.name}</h2>
             <div className="flex items-center gap-2 pt-0.5 font-mono text-[11px] text-muted">
               <span>{site.agencyOrOperator}</span>
-              <span>•</span>
+              <span className="opacity-40">/</span>
               <span>
                 {site.latDeg >= 0 ? `${site.latDeg.toFixed(3)}°N` : `${Math.abs(site.latDeg).toFixed(3)}°S`},{' '}
                 {site.lonDeg >= 0 ? `${site.lonDeg.toFixed(3)}°E` : `${Math.abs(site.lonDeg).toFixed(3)}°W`}
               </span>
-              <span>•</span>
+              <span className="opacity-40">/</span>
               <span>{site.elevationM !== undefined ? `${site.elevationM} m` : 'Datum'}</span>
             </div>
           </div>
@@ -120,9 +122,10 @@ export function SiteDetailView(): React.JSX.Element {
             size="sm"
             onClick={toggleMode}
             title="Toggle between Overview and Technical telemetry mode"
-            className="text-[11px] font-mono capitalize"
+            className="text-[11px] font-mono capitalize flex items-center gap-1.5"
           >
-            {mode === 'overview' ? '⚡ Mode: Overview' : '🔬 Mode: Technical'}
+            <Icon icon={mode === 'overview' ? Compass : Sliders} size={16} />
+            <span>Mode: {mode === 'overview' ? 'Overview' : 'Technical'}</span>
           </Button>
         </div>
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import type { Scenario, MetricsResult, Site } from '../../contracts';
+import { Icon } from '../../ui';
 
 export interface DeltaAnalysisProps {
   scenarios: Scenario[];
@@ -110,8 +112,10 @@ export function DeltaAnalysis({
           <div className="mt-2 text-2xl font-bold font-mono">
             {renderDeltaBadge(deltaScore, ' pts')}
           </div>
-          <div className="mt-1 text-[10px] text-muted font-mono">
-            {baseRes.scorecard.overallScore} → {targetRes.scorecard.overallScore}/100
+          <div className="mt-1 flex items-center justify-center gap-1.5 text-[10px] text-muted font-mono">
+            <span>{baseRes.scorecard.overallScore}</span>
+            <Icon icon={ArrowRight} size={16} />
+            <span>{targetRes.scorecard.overallScore}/100</span>
           </div>
         </div>
 

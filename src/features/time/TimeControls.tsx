@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Play, Pause } from 'lucide-react';
 import { useTimeStore } from '../../store/useTimeStore';
 import { Button } from '../../ui/Button';
+import { Icon } from '../../ui';
 
 const SPEED_PRESETS = [1, 100, 1000, 10000];
 
@@ -102,8 +104,10 @@ export function TimeControlsBar(): React.JSX.Element {
           size="sm"
           onClick={togglePlay}
           aria-label={isPlaying ? 'Pause simulation' : 'Play simulation'}
+          className="flex items-center gap-1.5"
         >
-          {isPlaying ? '⏸ Pause' : '▶ Play'}
+          <Icon icon={isPlaying ? Pause : Play} size={16} />
+          <span>{isPlaying ? 'Pause' : 'Play'}</span>
         </Button>
         <Button variant="secondary" size="sm" onClick={() => stepTime(3600)}>
           +1h

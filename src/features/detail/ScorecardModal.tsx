@@ -1,7 +1,9 @@
 import React from 'react';
+import { X } from 'lucide-react';
 import type { Site, MetricsResult } from '../../contracts';
 import { Badge } from '../../ui/Badge';
 import { Button } from '../../ui/Button';
+import { Icon } from '../../ui/Icon';
 
 export interface ScorecardModalProps {
   isOpen: boolean;
@@ -62,7 +64,7 @@ export function ScorecardModal({
               title="Close modal"
               aria-label="Close modal"
             >
-              ✕
+              <Icon icon={X} size={16} />
             </button>
           </div>
         </div>

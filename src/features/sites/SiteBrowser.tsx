@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { Plus, Check } from 'lucide-react';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { dataProvider } from '../../lib/data';
 import type { Site, SiteCategory } from '../../contracts';
@@ -6,6 +7,7 @@ import { Chip } from '../../ui/Chip';
 import { Button } from '../../ui/Button';
 import { Badge } from '../../ui/Badge';
 import { CustomSiteModal } from './CustomSiteModal';
+import { Icon } from '../../ui/Icon';
 
 export function SiteBrowserView(): React.JSX.Element {
   const { activeSiteId, setActiveSiteId, scenarios, addScenario } = useScenarioStore();
@@ -213,8 +215,10 @@ export function SiteBrowserView(): React.JSX.Element {
                       handleAddToCompare(site);
                     }}
                     title={inScenarios ? 'Already in comparison' : 'Add to Compare matrix'}
+                    className="flex items-center gap-1"
                   >
-                    {inScenarios ? '✓ In Compare' : '+ Compare'}
+                    <Icon icon={inScenarios ? Check : Plus} size={16} />
+                    <span>{inScenarios ? 'In Compare' : 'Compare'}</span>
                   </Button>
                 </div>
               </div>

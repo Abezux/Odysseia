@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Play, Pause, RotateCcw } from 'lucide-react';
 import { useTimeStore } from '../../store/useTimeStore';
 import { TimelineStripView } from '../timeline/TimelineStrip';
 import type { MetricsResult } from '../../contracts';
+import { Icon } from '../../ui/Icon';
 
 interface TimelineDockProps {
   metrics: MetricsResult | null;
@@ -83,7 +85,7 @@ export function TimelineDock({ metrics }: TimelineDockProps): React.JSX.Element 
                 : 'border border-panel-border bg-panel text-ink hover:border-amber/50'
             }`}
           >
-            <span>{isPlaying ? '⏸' : '▶'}</span>
+            <Icon icon={isPlaying ? Pause : Play} size={16} />
             <span>{isPlaying ? 'Pause' : 'Play'}</span>
           </button>
 
@@ -180,10 +182,11 @@ export function TimelineDock({ metrics }: TimelineDockProps): React.JSX.Element 
               <button
                 type="button"
                 onClick={resetToNow}
-                className="rounded-lg border border-panel-border bg-panel px-2.5 py-1 font-mono text-[11px] text-muted hover:text-ink hover:border-amber/50 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-panel-border bg-panel px-2.5 py-1 font-mono text-[11px] text-muted hover:text-ink hover:border-amber/50 transition-colors"
                 title="Reset simulation to current real-world time"
               >
-                Reset Epoch
+                <Icon icon={RotateCcw} size={16} />
+                <span>Reset</span>
               </button>
             </div>
           </div>

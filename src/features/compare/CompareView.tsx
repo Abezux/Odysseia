@@ -1,4 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Columns3,
+  Clock,
+  BarChart3,
+  GitCompare,
+  Calendar,
+  Copy,
+  Download,
+  X
+} from 'lucide-react';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { useUIStore } from '../../store/useUIStore';
 import { dataProvider } from '../../lib/data';
@@ -12,15 +22,16 @@ import { DeltaAnalysis } from './DeltaAnalysis';
 import { DateSweepHeatmap } from './DateSweepHeatmap';
 import { downloadComparisonCsv, copyComparisonMarkdown } from './exportUtils';
 import { safeViewTransition } from '../../lib/viewTransition';
+import { Icon } from '../../ui/Icon';
 
 type CompareSubTab = 'grid' | 'timeline' | 'bars' | 'delta' | 'datesweep';
 
 const compareTabs: TabItem[] = [
-  { id: 'grid', label: '📊 Scenario Matrix' },
-  { id: 'timeline', label: '⏱️ Multi-Row Timeline' },
-  { id: 'bars', label: '📈 Grouped Metric Bars' },
-  { id: 'delta', label: '⚖️ Pairwise Delta Analysis' },
-  { id: 'datesweep', label: '🗓️ Date-Sweep Heatmap' }
+  { id: 'grid', label: 'Scenario Matrix', icon: <Icon icon={Columns3} size={16} /> },
+  { id: 'timeline', label: 'Multi-Row Timeline', icon: <Icon icon={Clock} size={16} /> },
+  { id: 'bars', label: 'Grouped Metric Bars', icon: <Icon icon={BarChart3} size={16} /> },
+  { id: 'delta', label: 'Pairwise Delta Analysis', icon: <Icon icon={GitCompare} size={16} /> },
+  { id: 'datesweep', label: 'Date-Sweep Heatmap', icon: <Icon icon={Calendar} size={16} /> }
 ];
 
 export function CompareView(): React.JSX.Element {
@@ -151,23 +162,26 @@ export function CompareView(): React.JSX.Element {
           <button
             type="button"
             onClick={handleCopyMarkdown}
-            className="rounded-lg border border-panel-border bg-panel px-3 py-1.5 font-mono text-xs text-muted hover:text-ink hover:border-muted transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-panel-border bg-panel px-3 py-1.5 font-mono text-xs text-muted hover:text-ink hover:border-muted transition-colors"
           >
-            📋 Copy MD
+            <Icon icon={Copy} size={16} />
+            <span>Copy MD</span>
           </button>
           <button
             type="button"
             onClick={handleExportCsv}
-            className="rounded-lg border border-panel-border bg-panel px-3 py-1.5 font-mono text-xs text-muted hover:text-ink hover:border-muted transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-panel-border bg-panel px-3 py-1.5 font-mono text-xs text-muted hover:text-ink hover:border-muted transition-colors"
           >
-            ⬇️ Export CSV
+            <Icon icon={Download} size={16} />
+            <span>Export CSV</span>
           </button>
           <button
             type="button"
             onClick={handleClose}
-            className="rounded-lg bg-amber px-4 py-1.5 font-sans text-xs font-bold text-amber-text transition-colors hover:bg-amber-hover active:bg-amber-pressed"
+            className="flex items-center gap-1.5 rounded-lg bg-amber px-4 py-1.5 font-sans text-xs font-bold text-amber-text transition-colors hover:bg-amber-hover active:bg-amber-pressed"
           >
-            ✕ Close Matrix
+            <Icon icon={X} size={16} />
+            <span>Close Matrix</span>
           </button>
         </div>
       </div>

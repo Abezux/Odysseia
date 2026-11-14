@@ -246,7 +246,7 @@ export default function App(): React.JSX.Element {
             />
           ),
           CenterViewSlot: (
-            <CenterWorkspace metrics={metrics} activeSite={site} />
+            <CenterWorkspace metrics={metrics} activeSite={site} horizon={horizon} />
           ),
           RightDetailSlot: (
             <RightUtilityColumn
