@@ -4,6 +4,93 @@
 
 :root {
   color-scheme: dark;
+  --color-ground: #0B0A09;
+  --color-panel: #1A1816;
+  --color-panel-border: #2E2A26;
+  --color-glass: rgba(26, 24, 22, 0.9);
+  --color-glass-border: rgba(82, 74, 66, 0.4);
+  --color-ink: #F4EFE8;
+  --color-muted: #8A847B;
+  --color-amber: #F5A524;
+  --color-amber-pressed: #C77F0A;
+  --color-amber-text: #0B0A09;
+  --color-emerald: #10B981;
+  --color-warning: #E8590C;
+  --color-critical: #EF4444;
+
+  /* Chart & Canvas Theme Tokens */
+  --chart-lit: #F5A524;
+  --chart-dark: rgba(244, 239, 232, 0.16);
+  --chart-dte: #10B981;
+  --chart-blackout: rgba(239, 68, 68, 0.25);
+  --chart-stroke: rgba(244, 239, 232, 0.2);
+}
+
+/* Glassmorphism panel utility */
+.glass-panel {
+  background: rgba(26, 24, 22, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(82, 74, 66, 0.4);
+}
+
+/* View Transition Names for Persistent Elements */
+.view-toolbar {
+  view-transition-name: toolbar;
+}
+.view-nav {
+  view-transition-name: main-nav;
+}
+.view-content {
+  view-transition-name: main-content;
+}
+
+/* 4px Scrollbars: track #1A1816, thumb #4A433B */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #1A1816;
+}
+::-webkit-scrollbar-thumb {
+  background: #4A433B;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #60574D;
+}
+
+/* Pulsing critical site dot animation */
+@keyframes site-dot-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.75);
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+.site-dot-pulse {
+  animation: site-dot-pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Toast slide-in animation: 0.4s cubic-bezier(0.4, 0, 0.2, 1) */
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.toast-slide-in {
+  animation: toast-slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* Scroll Reveal System */
@@ -30,5 +117,17 @@
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+  .site-dot-pulse {
+    animation: none !important;
+  }
+  .toast-slide-in {
+    animation: none !important;
+    transform: none !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

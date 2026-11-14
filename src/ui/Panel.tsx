@@ -4,42 +4,37 @@ export interface PanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   action?: React.ReactNode;
-  borderAccent?: 'default' | 'sun' | 'earth' | 'comms';
+  variant?: 'solid' | 'glass';
 }
 
 export function Panel({
   title,
   subtitle,
   action,
-  borderAccent = 'default',
+  variant = 'solid',
   className = '',
   children,
   ...props
 }: PanelProps): React.JSX.Element {
-  const accentClasses = {
-    default: 'border-space-700/60',
-    sun: 'border-sun-amber/30',
-    earth: 'border-earth-blue/30',
-    comms: 'border-comms-green/30'
-  }[borderAccent];
+  const bgClasses =
+    variant === 'glass'
+      ? 'glass-panel rounded-2xl'
+      : 'bg-panel border border-panel-border rounded-2xl shadow-xl';
 
   return (
-    <div
-      className={`flex flex-col rounded-lg border bg-space-900/80 backdrop-blur-md shadow-xl ${accentClasses} ${className}`}
-      {...props}
-    >
+    <div className={`flex flex-col ${bgClasses} ${className}`} {...props}>
       {(title || action) && (
-        <div className="flex items-center justify-between border-b border-space-800/80 px-4 py-2.5">
+        <div className="flex items-center justify-between border-b border-panel-border/80 px-4 py-3">
           <div>
             {typeof title === 'string' ? (
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <h2 className="text-xs font-sans font-semibold uppercase tracking-wider text-ink">
                 {title}
               </h2>
             ) : (
               title
             )}
             {subtitle && (
-              <p className="mt-0.5 font-mono text-[11px] text-slate-500">{subtitle}</p>
+              <p className="mt-0.5 font-mono text-[11px] text-muted">{subtitle}</p>
             )}
           </div>
           {action && <div className="flex items-center gap-2">{action}</div>}

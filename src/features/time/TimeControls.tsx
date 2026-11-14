@@ -70,11 +70,11 @@ export function TimeControlsBar(): React.JSX.Element {
     <div
       role="region"
       aria-label="Time Controls"
-      className="flex flex-wrap items-center justify-between gap-3 font-mono text-xs text-slate-200"
+      className="flex flex-wrap items-center justify-between gap-3 font-mono text-xs text-ink"
     >
       {/* 1. Date & Time Picker */}
       <div className="flex items-center gap-2">
-        <label htmlFor="time-iso-picker" className="text-slate-400 text-[11px] uppercase">
+        <label htmlFor="time-iso-picker" className="text-muted text-[11px] uppercase">
           UTC Epoch:
         </label>
         <input
@@ -82,7 +82,7 @@ export function TimeControlsBar(): React.JSX.Element {
           type="datetime-local"
           value={isoInput}
           onChange={handleIsoChange}
-          className="rounded border border-space-700 bg-space-950 px-2 py-1 text-sun-amber focus:border-sun-amber focus:outline-none"
+          className="rounded-lg border border-panel-border bg-panel px-2.5 py-1 text-amber focus:border-amber focus:outline-none"
         />
         <Button variant="ghost" size="sm" onClick={resetToNow} title="Reset to current UTC time">
           Now
@@ -123,7 +123,7 @@ export function TimeControlsBar(): React.JSX.Element {
 
       {/* 3. Playback Speed Selector */}
       <div className="flex items-center gap-1.5">
-        <span className="text-[11px] text-slate-400">Speed:</span>
+        <span className="text-[11px] text-muted">Speed:</span>
         {SPEED_PRESETS.map((speed) => (
           <button
             key={speed}
@@ -131,8 +131,8 @@ export function TimeControlsBar(): React.JSX.Element {
             onClick={() => setPlaybackSpeed(speed)}
             className={`rounded px-1.5 py-0.5 text-[11px] transition-colors ${
               playbackSpeed === speed
-                ? 'bg-sun-amber text-space-950 font-bold'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-space-800'
+                ? 'bg-amber text-amber-text font-bold'
+                : 'text-muted hover:text-ink hover:bg-white/5'
             }`}
           >
             {speed}x
@@ -142,7 +142,7 @@ export function TimeControlsBar(): React.JSX.Element {
 
       {/* 4. Diurnal Scrubber */}
       <div className="flex items-center gap-2 min-w-[140px]">
-        <span className="text-[10px] text-slate-500">0h</span>
+        <span className="text-[10px] text-muted">0h</span>
         <input
           type="range"
           min="0"
@@ -151,9 +151,9 @@ export function TimeControlsBar(): React.JSX.Element {
           value={scrubValue}
           onChange={handleSliderChange}
           aria-label="Daily hour scrub"
-          className="h-1.5 flex-1 cursor-pointer appearance-none rounded bg-space-700 accent-sun-amber"
+          className="h-1.5 flex-1 cursor-pointer appearance-none rounded bg-[#2E2A26] accent-amber"
         />
-        <span className="text-[10px] text-slate-500">24h</span>
+        <span className="text-[10px] text-muted">24h</span>
       </div>
     </div>
   );

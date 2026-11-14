@@ -17,14 +17,14 @@ export function SitePinLayer({
   const getCategoryColor = (category: Site['category']): string => {
     switch (category) {
       case 'artemis_candidate':
-        return '#F59E0B'; // Sun amber
+        return '#F5A524'; // Amber
       case 'clps':
-        return '#10B981'; // Comms green
+        return '#10B981'; // Emerald
       case 'international':
-        return '#38BDF8'; // Earth blue
+        return '#E8590C'; // Burnt orange
       case 'apollo':
       default:
-        return '#E2E8F0'; // Slate white
+        return '#F4EFE8'; // Warm ink
     }
   };
 
@@ -78,7 +78,7 @@ export function SitePinLayer({
             {isActive && (
               <mesh position={pos} lookAt={() => normal}>
                 <ringGeometry args={[0.04, 0.06, 32]} />
-                <meshBasicMaterial color="#FCD34D" side={THREE.DoubleSide} transparent opacity={0.8} />
+                <meshBasicMaterial color="#F5A524" side={THREE.DoubleSide} transparent opacity={0.85} />
               </mesh>
             )}
           </group>

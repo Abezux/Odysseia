@@ -52,7 +52,7 @@ function TerrainMesh({ manifest, heights, exaggeration }: TerrainMeshProps): Rea
   return (
     <mesh ref={meshRef} geometry={geometry} receiveShadow castShadow>
       <meshStandardMaterial
-        color="#64748B"
+        color="#7A746B"
         roughness={0.92}
         metalness={0.08}
         flatShading={false}
@@ -80,46 +80,46 @@ function LanderMarker({ earthDirection }: LanderMarkerProps): React.JSX.Element 
       {/* Lander Core Body (Gold Foil Octagon) */}
       <mesh position={[0, 0.3, 0]} castShadow>
         <cylinderGeometry args={[0.5, 0.6, 0.5, 8]} />
-        <meshStandardMaterial color="#D97706" metalness={0.8} roughness={0.3} />
+        <meshStandardMaterial color="#C77F0A" metalness={0.8} roughness={0.3} />
       </mesh>
 
       {/* Solar Panel Wings */}
       <mesh position={[0.9, 0.35, 0]} rotation={[0, 0, Math.PI / 12]} castShadow>
         <boxGeometry args={[0.9, 0.05, 0.6]} />
-        <meshStandardMaterial color="#1E3A8A" metalness={0.5} roughness={0.2} />
+        <meshStandardMaterial color="#1A1816" metalness={0.5} roughness={0.2} />
       </mesh>
       <mesh position={[-0.9, 0.35, 0]} rotation={[0, 0, -Math.PI / 12]} castShadow>
         <boxGeometry args={[0.9, 0.05, 0.6]} />
-        <meshStandardMaterial color="#1E3A8A" metalness={0.5} roughness={0.2} />
+        <meshStandardMaterial color="#1A1816" metalness={0.5} roughness={0.2} />
       </mesh>
 
       {/* Landing Legs */}
       <mesh position={[0.5, 0.1, 0.5]} rotation={[0.4, 0, -0.4]}>
         <cylinderGeometry args={[0.04, 0.04, 0.4]} />
-        <meshStandardMaterial color="#E2E8F0" metalness={0.6} />
+        <meshStandardMaterial color="#C5BFB5" metalness={0.6} />
       </mesh>
       <mesh position={[-0.5, 0.1, 0.5]} rotation={[0.4, 0, 0.4]}>
         <cylinderGeometry args={[0.04, 0.04, 0.4]} />
-        <meshStandardMaterial color="#E2E8F0" metalness={0.6} />
+        <meshStandardMaterial color="#C5BFB5" metalness={0.6} />
       </mesh>
       <mesh position={[0.5, 0.1, -0.5]} rotation={[-0.4, 0, -0.4]}>
         <cylinderGeometry args={[0.04, 0.04, 0.4]} />
-        <meshStandardMaterial color="#E2E8F0" metalness={0.6} />
+        <meshStandardMaterial color="#C5BFB5" metalness={0.6} />
       </mesh>
       <mesh position={[-0.5, 0.1, -0.5]} rotation={[-0.4, 0, 0.4]}>
         <cylinderGeometry args={[0.04, 0.04, 0.4]} />
-        <meshStandardMaterial color="#E2E8F0" metalness={0.6} />
+        <meshStandardMaterial color="#C5BFB5" metalness={0.6} />
       </mesh>
 
       {/* High Gain Communication Antenna Dish */}
       <group ref={dishRef} position={[0, 0.65, 0]}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <coneGeometry args={[0.25, 0.1, 16, 1, true]} />
-          <meshStandardMaterial color="#F8FAFC" metalness={0.4} roughness={0.4} side={THREE.DoubleSide} />
+          <meshStandardMaterial color="#F4EFE8" metalness={0.4} roughness={0.4} side={THREE.DoubleSide} />
         </mesh>
         <mesh position={[0, 0, 0.1]}>
           <cylinderGeometry args={[0.02, 0.02, 0.12]} />
-          <meshStandardMaterial color="#64748B" />
+          <meshStandardMaterial color="#8A847B" />
         </mesh>
       </group>
 
@@ -142,7 +142,7 @@ function CompassReticle({ radius = 32 }: { radius?: number }): React.JSX.Element
 
   const lineObj = useMemo(() => {
     const mat = new THREE.LineBasicMaterial({
-      color: 0x38bdf8,
+      color: 0xF5A524,
       transparent: true,
       opacity: 0.35
     });
@@ -228,9 +228,9 @@ export function TerrainView(): React.JSX.Element {
 
   if (isLoading || !site) {
     return (
-      <div className="flex h-full w-full items-center justify-center font-mono text-xs text-slate-500">
+      <div className="flex h-full w-full items-center justify-center font-mono text-xs text-muted">
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 animate-spin rounded-full border-2 border-sun-amber border-t-transparent" />
+          <div className="h-3 w-3 animate-spin rounded-full border-2 border-amber border-t-transparent" />
           <span>Loading 3D digital elevation model...</span>
         </div>
       </div>
@@ -240,9 +240,9 @@ export function TerrainView(): React.JSX.Element {
   if (!terrainData) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center">
-        <div className="rounded-lg border border-space-700 bg-space-900/80 p-6 max-w-md">
-          <h3 className="font-bold text-slate-200">No 3D DEM Tile Available</h3>
-          <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+        <div className="rounded-2xl border border-panel-border bg-panel/90 p-6 max-w-md backdrop-blur-md">
+          <h3 className="font-bold text-ink">No 3D DEM Tile Available</h3>
+          <p className="mt-2 text-xs text-muted leading-relaxed">
             Local 3D elevation tiles are generated for key polar landing targets (e.g. Shackleton Rim,
             Malapert Plateau). For this coordinate, evaluate using the Topocentric Sky Dial and Horizon Panorama.
           </p>
@@ -255,7 +255,7 @@ export function TerrainView(): React.JSX.Element {
   const sunLightPos = sunVector.clone().multiplyScalar(100);
 
   return (
-    <div className="relative h-full w-full select-none overflow-hidden bg-space-950">
+    <div className="relative h-full w-full select-none overflow-hidden bg-[#0B0A09]">
       {/* 3D Canvas */}
       <Canvas
         shadows
@@ -263,7 +263,7 @@ export function TerrainView(): React.JSX.Element {
         gl={{ antialias: true, alpha: false }}
         className="h-full w-full"
       >
-        <color attach="background" args={['#05070D']} />
+        <color attach="background" args={['#0B0A09']} />
 
         {/* Ambient deep space starlight */}
         <ambientLight intensity={0.06} />
@@ -272,7 +272,7 @@ export function TerrainView(): React.JSX.Element {
         <directionalLight
           position={[sunLightPos.x, sunLightPos.y, sunLightPos.z]}
           intensity={isSunUp ? 2.2 : 0.0}
-          color="#FFFBEB"
+          color="#FFF8EE"
           castShadow
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
@@ -282,8 +282,8 @@ export function TerrainView(): React.JSX.Element {
         {/* Secondary Earthshine illumination */}
         <directionalLight
           position={[earthVector.x * 100, earthVector.y * 100, earthVector.z * 100]}
-          intensity={isEarthUp ? 0.2 : 0.0}
-          color="#38BDF8"
+          intensity={isEarthUp ? 0.12 : 0.0}
+          color="#10B981"
         />
 
         {/* Local Terrain Heightmap */}
@@ -322,16 +322,16 @@ export function TerrainView(): React.JSX.Element {
           </Badge>
         </div>
 
-        <div className="rounded-md border border-space-800 bg-space-950/85 px-3 py-2 font-mono text-[11px] text-slate-300 backdrop-blur">
+        <div className="rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 font-mono text-[11px] text-ink backdrop-blur-md">
           <div className="flex items-center justify-between gap-4">
-            <span className="text-amber-400">Sun Elevation:</span>
-            <span className="font-semibold text-slate-100">{sunElevDeg.toFixed(2)}°</span>
+            <span className="text-amber">Sun Elevation:</span>
+            <span className="font-semibold text-ink">{sunElevDeg.toFixed(2)}°</span>
           </div>
           <div className="flex items-center justify-between gap-4">
-            <span className="text-sky-400">Earth Elevation:</span>
-            <span className="font-semibold text-slate-100">{earthElevDeg.toFixed(2)}°</span>
+            <span className="text-emerald">Earth Elevation:</span>
+            <span className="font-semibold text-ink">{earthElevDeg.toFixed(2)}°</span>
           </div>
-          <div className="flex items-center justify-between gap-4 border-t border-space-800 pt-1 mt-1 text-[10px] text-slate-400">
+          <div className="flex items-center justify-between gap-4 border-t border-panel-border pt-1 mt-1 text-[10px] text-muted">
             <span>Elevation Relief:</span>
             <span>{manifest.minElevationM}m to {manifest.maxElevationM}m</span>
           </div>
@@ -339,8 +339,8 @@ export function TerrainView(): React.JSX.Element {
       </div>
 
       {/* Floating Controls Overlay: Vertical Exaggeration */}
-      <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-md border border-space-800 bg-space-950/85 px-3 py-2 font-mono text-xs text-slate-300 backdrop-blur">
-        <span>Vertical Exaggeration:</span>
+      <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 font-mono text-xs text-ink backdrop-blur-md">
+        <span className="text-muted">Vertical Exaggeration:</span>
         <div className="flex items-center gap-1">
           {[1.0, 1.5, 2.5, 4.0].map((val) => (
             <Button
@@ -357,16 +357,16 @@ export function TerrainView(): React.JSX.Element {
       </div>
 
       {/* Cardinal direction badges on screen perimeter */}
-      <div className="pointer-events-none absolute top-3 right-1/2 translate-x-1/2 font-mono text-[10px] font-bold text-slate-500">
+      <div className="pointer-events-none absolute top-3 right-1/2 translate-x-1/2 font-mono text-[10px] font-bold text-muted">
         N (-Z)
       </div>
-      <div className="pointer-events-none absolute bottom-3 right-1/2 translate-x-1/2 font-mono text-[10px] font-bold text-slate-500">
+      <div className="pointer-events-none absolute bottom-3 right-1/2 translate-x-1/2 font-mono text-[10px] font-bold text-muted">
         S (+Z)
       </div>
-      <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[10px] font-bold text-slate-500">
+      <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[10px] font-bold text-muted">
         E (+X)
       </div>
-      <div className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 font-mono text-[10px] font-bold text-slate-500">
+      <div className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 font-mono text-[10px] font-bold text-muted">
         W (-X)
       </div>
     </div>

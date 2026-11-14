@@ -6,9 +6,9 @@ import * as THREE from 'three';
 export const LunarSurfaceShader = {
   uniforms: {
     uSunDirection: { value: new THREE.Vector3(1, 0, 0) },
-    uDayColor: { value: new THREE.Color('#94A3B8') },
-    uNightColor: { value: new THREE.Color('#080C16') },
-    uTerminatorColor: { value: new THREE.Color('#334155') }
+    uDayColor: { value: new THREE.Color('#948F85') },
+    uNightColor: { value: new THREE.Color('#0B0A09') },
+    uTerminatorColor: { value: new THREE.Color('#3D362E') }
   },
   vertexShader: `
     varying vec3 vNormal;

@@ -76,9 +76,9 @@ export function SiteDetailView(): React.JSX.Element {
 
   if (isLoading || !site || !metrics) {
     return (
-      <div className="flex h-full items-center justify-center p-6 font-mono text-xs text-slate-500">
+      <div className="flex h-full items-center justify-center p-6 font-mono text-xs text-muted">
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 animate-spin rounded-full border-2 border-sun-amber border-t-transparent" />
+          <div className="h-3 w-3 animate-spin rounded-full border-2 border-amber border-t-transparent" />
           <span>Computing ephemeris & horizon metrics...</span>
         </div>
       </div>
@@ -97,13 +97,13 @@ export function SiteDetailView(): React.JSX.Element {
   const earthClearanceDeg = currentEphemeris.earth.elevationDeg - earthTerrainElevationDeg;
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto space-y-4 pr-1 text-slate-200">
+    <div className="flex h-full flex-col overflow-y-auto space-y-4 pr-1 text-ink">
       {/* 1. Header & Badges */}
-      <div className="border-b border-space-800 pb-3">
+      <div className="border-b border-panel-border pb-3">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h2 className="text-base font-bold text-slate-100">{site.name}</h2>
-            <div className="flex items-center gap-2 pt-0.5 font-mono text-[11px] text-slate-400">
+            <h2 className="text-base font-bold text-ink">{site.name}</h2>
+            <div className="flex items-center gap-2 pt-0.5 font-mono text-[11px] text-muted">
               <span>{site.agencyOrOperator}</span>
               <span>•</span>
               <span>
@@ -143,7 +143,7 @@ export function SiteDetailView(): React.JSX.Element {
           )}
 
           {site.isSouthPoleRegion && (
-            <Badge variant="info" size="sm">
+            <Badge variant="warning" size="sm">
               South Pole Region
             </Badge>
           )}
@@ -153,23 +153,23 @@ export function SiteDetailView(): React.JSX.Element {
       {/* 2. Real-time Countdown Chips */}
       <div className="grid grid-cols-2 gap-2 font-mono text-xs">
         {/* Sun Countdown */}
-        <div className="flex flex-col rounded-md border border-space-800 bg-space-900/60 p-2">
-          <div className="flex items-center justify-between text-[11px] text-slate-400">
+        <div className="flex flex-col rounded-2xl border border-panel-border bg-panel p-2.5">
+          <div className="flex items-center justify-between text-[11px] text-muted">
             <span>Solar Status</span>
             <span
               className={`h-2 w-2 rounded-full ${
-                isSunVisible ? 'bg-sun-amber shadow-sm shadow-sun-amber' : 'bg-slate-700'
+                isSunVisible ? 'bg-amber shadow-sm shadow-amber/50' : 'bg-[#2E2A26]'
               }`}
             />
           </div>
-          <div className="mt-1 font-semibold text-slate-100">
+          <div className="mt-1 font-semibold text-ink">
             {isSunVisible ? (
-              <span className="text-amber-400">Sunlit</span>
+              <span className="text-amber">Sunlit</span>
             ) : (
-              <span className="text-slate-400">In Shadow</span>
+              <span className="text-muted">In Shadow</span>
             )}
           </div>
-          <div className="mt-0.5 text-[10px] text-slate-400">
+          <div className="mt-0.5 text-[10px] text-muted">
             {isSunVisible
               ? metrics.timeToNextSunsetHours !== null
                 ? `Sunset in ${metrics.timeToNextSunsetHours.toFixed(1)} hrs`
@@ -181,23 +181,23 @@ export function SiteDetailView(): React.JSX.Element {
         </div>
 
         {/* Earth Countdown */}
-        <div className="flex flex-col rounded-md border border-space-800 bg-space-900/60 p-2">
-          <div className="flex items-center justify-between text-[11px] text-slate-400">
+        <div className="flex flex-col rounded-2xl border border-panel-border bg-panel p-2.5">
+          <div className="flex items-center justify-between text-[11px] text-muted">
             <span>DTE Comms Link</span>
             <span
               className={`h-2 w-2 rounded-full ${
-                isEarthVisible ? 'bg-comms-green shadow-sm shadow-comms-green' : 'bg-rose-600'
+                isEarthVisible ? 'bg-emerald shadow-sm shadow-emerald/50' : 'bg-critical'
               }`}
             />
           </div>
-          <div className="mt-1 font-semibold text-slate-100">
+          <div className="mt-1 font-semibold text-ink">
             {isEarthVisible ? (
-              <span className="text-emerald-400">Direct Earth LOS</span>
+              <span className="text-emerald">Direct Earth LOS</span>
             ) : (
-              <span className="text-rose-400">Blackout</span>
+              <span className="text-critical">Blackout</span>
             )}
           </div>
-          <div className="mt-0.5 text-[10px] text-slate-400">
+          <div className="mt-0.5 text-[10px] text-muted">
             {isEarthVisible
               ? metrics.timeToNextEarthsetHours !== null
                 ? `Earthset in ${metrics.timeToNextEarthsetHours.toFixed(1)} hrs`
@@ -210,10 +210,10 @@ export function SiteDetailView(): React.JSX.Element {
       </div>
 
       {/* 3. Polar Sky Dial (Horizon Silhouette & Sub-body Angles) */}
-      <div className="rounded-lg border border-space-800 bg-space-900/40 p-3">
+      <div className="rounded-2xl border border-panel-border bg-panel p-3">
         <div className="flex items-center justify-between pb-2">
-          <span className="text-xs font-semibold text-slate-300">Topocentric Sky Dial</span>
-          <span className="font-mono text-[10px] text-slate-500">Azimuth / Elevation Polar View</span>
+          <span className="text-xs font-semibold text-ink">Topocentric Sky Dial</span>
+          <span className="font-mono text-[10px] text-muted">Azimuth / Elevation Polar View</span>
         </div>
         <SkyDial
           horizon={horizon}
@@ -227,9 +227,9 @@ export function SiteDetailView(): React.JSX.Element {
       {/* 4. Telemetry (Overview vs Technical) */}
       {mode === 'overview' ? (
         <div className="space-y-2.5">
-          <div className="rounded-lg border border-space-800 bg-space-900/50 p-3">
-            <h4 className="text-xs font-semibold text-amber-400">Solar Power Environment</h4>
-            <p className="mt-1 text-xs leading-relaxed text-slate-300">
+          <div className="rounded-2xl border border-panel-border bg-panel p-3">
+            <h4 className="text-xs font-semibold text-amber">Solar Power Environment</h4>
+            <p className="mt-1 text-xs leading-relaxed text-ink">
               {isSunVisible
                 ? `Sun is at ${currentEphemeris.sun.elevationDeg.toFixed(
                     1
@@ -244,9 +244,9 @@ export function SiteDetailView(): React.JSX.Element {
             </p>
           </div>
 
-          <div className="rounded-lg border border-space-800 bg-space-900/50 p-3">
-            <h4 className="text-xs font-semibold text-sky-400">Earth Direct Communications</h4>
-            <p className="mt-1 text-xs leading-relaxed text-slate-300">
+          <div className="rounded-2xl border border-panel-border bg-panel p-3">
+            <h4 className="text-xs font-semibold text-emerald">Earth Direct Communications</h4>
+            <p className="mt-1 text-xs leading-relaxed text-ink">
               {isEarthVisible
                 ? `Earth is positioned ${currentEphemeris.earth.elevationDeg.toFixed(
                     1
@@ -260,60 +260,60 @@ export function SiteDetailView(): React.JSX.Element {
       ) : (
         <div className="space-y-3 font-mono text-[11px]">
           {/* Detailed Astrometric Readings */}
-          <div className="rounded-lg border border-space-800 bg-space-900/50 p-2.5">
-            <div className="text-xs font-semibold text-amber-400 font-sans pb-1.5 border-b border-space-800">
+          <div className="rounded-2xl border border-panel-border bg-panel p-3">
+            <div className="text-xs font-semibold text-amber font-sans pb-1.5 border-b border-panel-border">
               Solar Astrometric Vector
             </div>
-            <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1.5 text-slate-300">
-              <div>Azimuth: <span className="text-slate-100">{currentEphemeris.sun.azimuthDeg.toFixed(2)}°</span></div>
-              <div>Elevation: <span className="text-slate-100">{currentEphemeris.sun.elevationDeg.toFixed(2)}°</span></div>
-              <div>Terrain Elev: <span className="text-slate-100">{sunTerrainElevationDeg.toFixed(2)}°</span></div>
-              <div>Terrain Clearance: <span className={sunClearanceDeg >= 0 ? 'text-emerald-400' : 'text-rose-400'}>{sunClearanceDeg.toFixed(2)}°</span></div>
-              <div>Solar Distance: <span className="text-slate-100">{(currentEphemeris.sun.distanceKm / 1e6).toFixed(3)}M km</span></div>
-              <div>Diameter: <span className="text-slate-100">{currentEphemeris.sun.angularDiameterDeg.toFixed(3)}°</span></div>
-              <div>Sub-Solar Lat/Lon: <span className="text-slate-100">{currentEphemeris.subSolarCoordinates.latDeg.toFixed(2)}°, {currentEphemeris.subSolarCoordinates.lonDeg.toFixed(2)}°</span></div>
-              <div>Vert Proxy: <span className="text-amber-400">{(metrics.solarPowerProxyVertical * 100).toFixed(1)}%</span></div>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1.5 text-muted">
+              <div>Azimuth: <span className="text-ink">{currentEphemeris.sun.azimuthDeg.toFixed(2)}°</span></div>
+              <div>Elevation: <span className="text-ink">{currentEphemeris.sun.elevationDeg.toFixed(2)}°</span></div>
+              <div>Terrain Elev: <span className="text-ink">{sunTerrainElevationDeg.toFixed(2)}°</span></div>
+              <div>Terrain Clearance: <span className={sunClearanceDeg >= 0 ? 'text-emerald' : 'text-critical'}>{sunClearanceDeg.toFixed(2)}°</span></div>
+              <div>Solar Distance: <span className="text-ink">{(currentEphemeris.sun.distanceKm / 1e6).toFixed(3)}M km</span></div>
+              <div>Diameter: <span className="text-ink">{currentEphemeris.sun.angularDiameterDeg.toFixed(3)}°</span></div>
+              <div>Sub-Solar Lat/Lon: <span className="text-ink">{currentEphemeris.subSolarCoordinates.latDeg.toFixed(2)}°, {currentEphemeris.subSolarCoordinates.lonDeg.toFixed(2)}°</span></div>
+              <div>Vert Proxy: <span className="text-amber">{(metrics.solarPowerProxyVertical * 100).toFixed(1)}%</span></div>
             </div>
           </div>
 
-          <div className="rounded-lg border border-space-800 bg-space-900/50 p-2.5">
-            <div className="text-xs font-semibold text-sky-400 font-sans pb-1.5 border-b border-space-800">
+          <div className="rounded-2xl border border-panel-border bg-panel p-3">
+            <div className="text-xs font-semibold text-emerald font-sans pb-1.5 border-b border-panel-border">
               Earth Astrometric & Libration Vector
             </div>
-            <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1.5 text-slate-300">
-              <div>Azimuth: <span className="text-slate-100">{currentEphemeris.earth.azimuthDeg.toFixed(2)}°</span></div>
-              <div>Elevation: <span className="text-slate-100">{currentEphemeris.earth.elevationDeg.toFixed(2)}°</span></div>
-              <div>Terrain Elev: <span className="text-slate-100">{earthTerrainElevationDeg.toFixed(2)}°</span></div>
-              <div>LOS Margin: <span className={earthClearanceDeg >= 0 ? 'text-emerald-400' : 'text-rose-400'}>{earthClearanceDeg.toFixed(2)}°</span></div>
-              <div>Earth Phase: <span className="text-slate-100">{Math.round(currentEphemeris.earth.phaseFraction * 100)}%</span></div>
-              <div>Distance: <span className="text-slate-100">{Math.round(currentEphemeris.earth.distanceKm).toLocaleString()} km</span></div>
-              <div>Libration (lon/lat): <span className="text-slate-100">{currentEphemeris.opticalLibrationDeg.longitude.toFixed(2)}°, {currentEphemeris.opticalLibrationDeg.latitude.toFixed(2)}°</span></div>
-              <div>Sub-Earth Lat/Lon: <span className="text-slate-100">{currentEphemeris.subEarthCoordinates.latDeg.toFixed(2)}°, {currentEphemeris.subEarthCoordinates.lonDeg.toFixed(2)}°</span></div>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1.5 text-muted">
+              <div>Azimuth: <span className="text-ink">{currentEphemeris.earth.azimuthDeg.toFixed(2)}°</span></div>
+              <div>Elevation: <span className="text-ink">{currentEphemeris.earth.elevationDeg.toFixed(2)}°</span></div>
+              <div>Terrain Elev: <span className="text-ink">{earthTerrainElevationDeg.toFixed(2)}°</span></div>
+              <div>LOS Margin: <span className={earthClearanceDeg >= 0 ? 'text-emerald' : 'text-critical'}>{earthClearanceDeg.toFixed(2)}°</span></div>
+              <div>Earth Phase: <span className="text-ink">{Math.round(currentEphemeris.earth.phaseFraction * 100)}%</span></div>
+              <div>Distance: <span className="text-ink">{Math.round(currentEphemeris.earth.distanceKm).toLocaleString()} km</span></div>
+              <div>Libration (lon/lat): <span className="text-ink">{currentEphemeris.opticalLibrationDeg.longitude.toFixed(2)}°, {currentEphemeris.opticalLibrationDeg.latitude.toFixed(2)}°</span></div>
+              <div>Sub-Earth Lat/Lon: <span className="text-ink">{currentEphemeris.subEarthCoordinates.latDeg.toFixed(2)}°, {currentEphemeris.subEarthCoordinates.lonDeg.toFixed(2)}°</span></div>
             </div>
           </div>
 
           {/* Synodic Window Statistics */}
-          <div className="rounded-lg border border-space-800 bg-space-900/50 p-2.5">
-            <div className="text-xs font-semibold text-slate-200 font-sans pb-1.5 border-b border-space-800">
+          <div className="rounded-2xl border border-panel-border bg-panel p-3">
+            <div className="text-xs font-semibold text-ink font-sans pb-1.5 border-b border-panel-border">
               Synodic Window ({metrics.windowDays}d Month Analysis)
             </div>
-            <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1.5 text-slate-300">
-              <div>Illumination: <span className="text-amber-400">{Math.round(metrics.illuminationFraction * 100)}%</span></div>
-              <div>DTE Availability: <span className="text-sky-400">{Math.round(metrics.dteAvailabilityFraction * 100)}%</span></div>
-              <div>Max Sunlit: <span className="text-slate-100">{metrics.longestSunlitStretchHours.toFixed(1)} hrs</span></div>
-              <div>Max Darkness: <span className="text-slate-100">{metrics.longestDarkStretchHours.toFixed(1)} hrs</span></div>
-              <div>Max Blackout: <span className="text-slate-100">{metrics.longestDteBlackoutHours.toFixed(1)} hrs</span></div>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-1 pt-1.5 text-muted">
+              <div>Illumination: <span className="text-amber">{Math.round(metrics.illuminationFraction * 100)}%</span></div>
+              <div>DTE Availability: <span className="text-emerald">{Math.round(metrics.dteAvailabilityFraction * 100)}%</span></div>
+              <div>Max Sunlit: <span className="text-ink">{metrics.longestSunlitStretchHours.toFixed(1)} hrs</span></div>
+              <div>Max Darkness: <span className="text-ink">{metrics.longestDarkStretchHours.toFixed(1)} hrs</span></div>
+              <div>Max Blackout: <span className="text-ink">{metrics.longestDteBlackoutHours.toFixed(1)} hrs</span></div>
             </div>
           </div>
         </div>
       )}
 
       {/* 5. Mission Scorecard */}
-      <div className="rounded-lg border border-space-800 bg-space-900/60 p-3">
-        <div className="flex items-center justify-between pb-2 border-b border-space-800">
+      <div className="rounded-2xl border border-panel-border bg-panel p-3">
+        <div className="flex items-center justify-between pb-2 border-b border-panel-border">
           <div>
-            <h4 className="text-xs font-semibold text-slate-100">Mission Feasibility Scorecard</h4>
-            <div className="font-mono text-[10px] text-slate-500">Rules v{scorecard.rulesVersion}</div>
+            <h4 className="text-xs font-semibold text-ink">Mission Feasibility Scorecard</h4>
+            <div className="font-mono text-[10px] text-muted">Rules v{scorecard.rulesVersion}</div>
           </div>
           <Badge variant={scoreBadgeVariant} size="md">
             Score: {scorecard.overallScore}/100
@@ -321,18 +321,18 @@ export function SiteDetailView(): React.JSX.Element {
         </div>
 
         {/* Sub-scores */}
-        <div className="grid grid-cols-3 gap-2 py-3 text-center font-mono text-xs border-b border-space-800">
-          <div className="rounded bg-space-950/60 p-1.5 border border-space-800">
-            <div className="text-[10px] text-slate-400 font-sans">Power</div>
-            <div className="text-sm font-bold text-amber-400">{scorecard.powerScore}</div>
+        <div className="grid grid-cols-3 gap-2 py-3 text-center font-mono text-xs border-b border-panel-border">
+          <div className="rounded-xl bg-[#12110F] p-2 border border-panel-border">
+            <div className="text-[10px] text-muted font-sans">Power</div>
+            <div className="text-sm font-bold text-amber">{scorecard.powerScore}</div>
           </div>
-          <div className="rounded bg-space-950/60 p-1.5 border border-space-800">
-            <div className="text-[10px] text-slate-400 font-sans">Comms</div>
-            <div className="text-sm font-bold text-sky-400">{scorecard.communicationScore}</div>
+          <div className="rounded-xl bg-[#12110F] p-2 border border-panel-border">
+            <div className="text-[10px] text-muted font-sans">Comms</div>
+            <div className="text-sm font-bold text-emerald">{scorecard.communicationScore}</div>
           </div>
-          <div className="rounded bg-space-950/60 p-1.5 border border-space-800">
-            <div className="text-[10px] text-slate-400 font-sans">Thermal</div>
-            <div className="text-sm font-bold text-emerald-400">{scorecard.thermalSurvivabilityScore}</div>
+          <div className="rounded-xl bg-[#12110F] p-2 border border-panel-border">
+            <div className="text-[10px] text-muted font-sans">Thermal</div>
+            <div className="text-sm font-bold text-ink">{scorecard.thermalSurvivabilityScore}</div>
           </div>
         </div>
 
@@ -341,18 +341,18 @@ export function SiteDetailView(): React.JSX.Element {
           {scorecard.factors.map((f, i) => (
             <div key={i} className="text-[11px]">
               <div className="flex items-center justify-between font-mono">
-                <span className="text-slate-300">{f.name}</span>
-                <span className="text-slate-100 font-semibold">{f.metricValue} ({f.score} pts)</span>
+                <span className="text-muted">{f.name}</span>
+                <span className="text-ink font-semibold">{f.metricValue} ({f.score} pts)</span>
               </div>
-              <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-space-800">
+              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[#12110F]">
                 <div
                   className={`h-full rounded-full ${
-                    f.score >= 70 ? 'bg-emerald-500' : f.score >= 40 ? 'bg-amber-500' : 'bg-rose-500'
+                    f.score >= 70 ? 'bg-emerald' : f.score >= 40 ? 'bg-amber' : 'bg-critical'
                   }`}
                   style={{ width: `${f.score}%` }}
                 />
               </div>
-              <div className="text-[10px] text-slate-400 mt-0.5">{f.explanation}</div>
+              <div className="text-[10px] text-muted mt-0.5">{f.explanation}</div>
             </div>
           ))}
         </div>

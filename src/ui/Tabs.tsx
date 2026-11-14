@@ -18,7 +18,7 @@ export function Tabs({ tabs, activeTab, onChange, className = '' }: TabsProps): 
     <div
       role="tablist"
       aria-label="View tabs"
-      className={`inline-flex rounded-md border border-space-700 bg-space-950/60 p-1 select-none ${className}`}
+      className={`inline-flex rounded-full border border-panel-border bg-panel p-1 select-none ${className}`}
     >
       {tabs.map((tab) => {
         const isActive = tab.id === activeTab;
@@ -31,10 +31,10 @@ export function Tabs({ tabs, activeTab, onChange, className = '' }: TabsProps): 
             id={`tab-${tab.id}`}
             type="button"
             onClick={() => onChange(tab.id)}
-            className={`flex items-center gap-2 rounded px-3 py-1.5 text-xs font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sun-amber/50 ${
+            className={`flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-sans font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-amber/50 ${
               isActive
-                ? 'bg-space-800 text-slate-100 shadow-sm border border-space-600/50'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-space-900/50'
+                ? 'bg-amber text-amber-text font-semibold shadow-sm'
+                : 'text-muted hover:text-ink hover:bg-white/5'
             }`}
           >
             {tab.icon}

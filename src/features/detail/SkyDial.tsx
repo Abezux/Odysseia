@@ -82,9 +82,9 @@ export function SkyDial({
       >
         <defs>
           <radialGradient id="skyDialGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#1E2942" stopOpacity="0.4" />
-            <stop offset="85%" stopColor="#0B0F19" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#05070D" stopOpacity="0.95" />
+            <stop offset="0%" stopColor="#1A1816" stopOpacity="0.8" />
+            <stop offset="70%" stopColor="#12110F" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#0B0A09" stopOpacity="1.0" />
           </radialGradient>
           <filter id="sunGlow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
@@ -92,7 +92,7 @@ export function SkyDial({
         </defs>
 
         {/* Sky Background circle */}
-        <circle cx={cx} cy={cy} r={maxR} fill="url(#skyDialGlow)" stroke="#1E2942" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={maxR} fill="url(#skyDialGlow)" stroke="#2E2A26" strokeWidth="1" />
 
         {/* Elevation Rings: 0°, 30°, 60° */}
         <circle
@@ -100,7 +100,7 @@ export function SkyDial({
           cy={cy}
           r={elevToRadius(60)}
           fill="none"
-          stroke="#1E2942"
+          stroke="#2E2A26"
           strokeDasharray="2,2"
           strokeWidth="1"
         />
@@ -109,7 +109,7 @@ export function SkyDial({
           cy={cy}
           r={elevToRadius(30)}
           fill="none"
-          stroke="#1E2942"
+          stroke="#2E2A26"
           strokeDasharray="2,2"
           strokeWidth="1"
         />
@@ -119,21 +119,20 @@ export function SkyDial({
           cy={cy}
           r={zeroR}
           fill="none"
-          stroke="#38BDF8"
-          strokeOpacity="0.25"
+          stroke="rgba(244, 239, 232, 0.25)"
           strokeWidth="1.2"
         />
 
         {/* Cardinal Axis Crosshairs */}
-        <line x1={cx} y1={cy - maxR} x2={cx} y2={cy + maxR} stroke="#1E2942" strokeWidth="1" />
-        <line x1={cx - maxR} y1={cy} x2={cx + maxR} y2={cy} stroke="#1E2942" strokeWidth="1" />
+        <line x1={cx} y1={cy - maxR} x2={cx} y2={cy + maxR} stroke="#2E2A26" strokeWidth="1" />
+        <line x1={cx - maxR} y1={cy} x2={cx + maxR} y2={cy} stroke="#2E2A26" strokeWidth="1" />
 
         {/* Cardinal Direction Labels */}
         <text
           x={cx}
           y={cy - maxR - 7}
           textAnchor="middle"
-          className="fill-slate-400 font-mono text-[10px] font-bold"
+          className="fill-muted font-mono text-[10px] font-bold"
         >
           N (0°)
         </text>
@@ -141,7 +140,7 @@ export function SkyDial({
           x={cx + maxR + 8}
           y={cy + 3}
           textAnchor="start"
-          className="fill-slate-400 font-mono text-[10px] font-bold"
+          className="fill-muted font-mono text-[10px] font-bold"
         >
           E (90°)
         </text>
@@ -149,7 +148,7 @@ export function SkyDial({
           x={cx}
           y={cy + maxR + 14}
           textAnchor="middle"
-          className="fill-slate-400 font-mono text-[10px] font-bold"
+          className="fill-muted font-mono text-[10px] font-bold"
         >
           S (180°)
         </text>
@@ -157,7 +156,7 @@ export function SkyDial({
           x={cx - maxR - 8}
           y={cy + 3}
           textAnchor="end"
-          className="fill-slate-400 font-mono text-[10px] font-bold"
+          className="fill-muted font-mono text-[10px] font-bold"
         >
           W (270°)
         </text>
@@ -166,21 +165,21 @@ export function SkyDial({
         <text
           x={cx + 3}
           y={cy - elevToRadius(30) + 3}
-          className="fill-slate-600 font-mono text-[8px]"
+          className="fill-muted font-mono text-[8px]"
         >
           30°
         </text>
         <text
           x={cx + 3}
           y={cy - elevToRadius(60) + 3}
-          className="fill-slate-600 font-mono text-[8px]"
+          className="fill-muted font-mono text-[8px]"
         >
           60°
         </text>
         <text
           x={cx + 3}
           y={cy - zeroR + 3}
-          className="fill-sky-500/50 font-mono text-[8px]"
+          className="fill-muted/70 font-mono text-[8px]"
         >
           0°
         </text>
@@ -189,10 +188,10 @@ export function SkyDial({
         {terrainPath ? (
           <path
             d={terrainPath}
-            fill="none"
-            stroke="#6366F1"
-            strokeWidth="1.75"
-            strokeOpacity="0.9"
+            fill="#1A1816"
+            fillOpacity="0.7"
+            stroke="rgba(244, 239, 232, 0.4)"
+            strokeWidth="1.5"
             className="transition-all duration-300"
           />
         ) : (
@@ -202,7 +201,7 @@ export function SkyDial({
             cy={cy}
             r={zeroR}
             fill="none"
-            stroke="#6366F1"
+            stroke="rgba(244, 239, 232, 0.4)"
             strokeWidth="1.5"
             strokeOpacity="0.5"
           />
@@ -214,9 +213,9 @@ export function SkyDial({
           y1={cy}
           x2={sunX}
           y2={sunY}
-          stroke={isSunUp ? '#F59E0B' : '#78350F'}
+          stroke={isSunUp ? '#F5A524' : '#664614'}
           strokeWidth="1"
-          strokeOpacity="0.4"
+          strokeOpacity="0.5"
           strokeDasharray="2,3"
         />
         <line
@@ -224,9 +223,9 @@ export function SkyDial({
           y1={cy}
           x2={earthX}
           y2={earthY}
-          stroke={isEarthUp ? '#38BDF8' : '#075985'}
+          stroke={isEarthUp ? '#10B981' : '#064E3B'}
           strokeWidth="1"
-          strokeOpacity="0.4"
+          strokeOpacity="0.5"
           strokeDasharray="2,3"
         />
 
@@ -244,14 +243,14 @@ export function SkyDial({
           )}
           <circle
             r="5"
-            fill={isEarthUp ? '#38BDF8' : '#1E2942'}
-            stroke={isEarthUp ? '#10B981' : '#EF4444'}
+            fill={isEarthUp ? '#10B981' : '#1A1816'}
+            stroke={isEarthUp ? '#065F46' : '#EF4444'}
             strokeWidth="1.5"
           />
           <text
             x="8"
             y="3"
-            className="fill-sky-300 font-mono text-[9px] font-semibold"
+            className="fill-emerald font-mono text-[9px] font-semibold"
           >
             Earth {earthEl.toFixed(1)}°
           </text>
@@ -262,46 +261,46 @@ export function SkyDial({
           {isSunUp && (
             <circle
               r="8"
-              fill="#F59E0B"
+              fill="#F5A524"
               opacity="0.3"
               filter="url(#sunGlow)"
             />
           )}
           <circle
             r="5"
-            fill={isSunUp ? '#F59E0B' : '#78350F'}
-            stroke={isSunUp ? '#FCD34D' : '#451A03'}
+            fill={isSunUp ? '#F5A524' : '#451A03'}
+            stroke={isSunUp ? '#FFD58A' : '#2E2A26'}
             strokeWidth="1.5"
           />
           <text
             x="8"
             y="3"
-            className="fill-amber-300 font-mono text-[9px] font-semibold"
+            className="fill-amber font-mono text-[9px] font-semibold"
           >
             Sun {sunEl.toFixed(1)}°
           </text>
         </g>
 
         {/* Center Zenith crosshair */}
-        <circle cx={cx} cy={cy} r="1.5" fill="#94A3B8" />
+        <circle cx={cx} cy={cy} r="1.5" fill="#8A847B" />
         <text
           x={cx}
           y={cy - 4}
           textAnchor="middle"
-          className="fill-slate-500 font-mono text-[7px]"
+          className="fill-muted font-mono text-[7px]"
         >
           Zenith
         </text>
       </svg>
 
       {/* Legend below SkyDial */}
-      <div className="flex items-center justify-between w-full px-2 pt-2 text-[10px] font-mono text-slate-400 border-t border-space-800">
+      <div className="flex items-center justify-between w-full px-2 pt-2 text-[10px] font-mono text-muted border-t border-panel-border">
         <div className="flex items-center gap-1.5">
-          <span className="inline-block h-2 w-2 rounded-full bg-sun-amber" />
+          <span className="inline-block h-2 w-2 rounded-full bg-amber" />
           <span>Sun: {isSunUp ? 'Visible' : 'Terrain Obscured'}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="inline-block h-2 w-2 rounded-full bg-earth-blue" />
+          <span className="inline-block h-2 w-2 rounded-full bg-emerald" />
           <span>Earth: {isEarthUp ? 'DTE Line-of-Sight' : 'Blackout'}</span>
         </div>
       </div>

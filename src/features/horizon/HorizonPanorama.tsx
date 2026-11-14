@@ -178,9 +178,9 @@ export function HorizonView(): React.JSX.Element {
 
   if (!site || !ephemeris) {
     return (
-      <div className="flex h-full w-full items-center justify-center font-mono text-xs text-slate-500">
+      <div className="flex h-full w-full items-center justify-center font-mono text-xs text-muted">
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 animate-spin rounded-full border-2 border-sun-amber border-t-transparent" />
+          <div className="h-3 w-3 animate-spin rounded-full border-2 border-amber border-t-transparent" />
           <span>Generating panoramic horizon view...</span>
         </div>
       </div>
@@ -213,12 +213,12 @@ export function HorizonView(): React.JSX.Element {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-full w-full flex-col select-none overflow-hidden bg-space-950 font-mono"
+      className="relative flex h-full w-full flex-col select-none overflow-hidden bg-[#0B0A09] font-mono"
     >
       {/* Top Header & Navigation Bar */}
-      <div className="flex items-center justify-between border-b border-space-800 bg-space-900/90 px-4 py-2 text-xs">
+      <div className="flex items-center justify-between border-b border-panel-border bg-panel/90 px-4 py-2 text-xs backdrop-blur-md">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-slate-200 font-sans">First-Person Skyline</span>
+          <span className="font-semibold text-ink font-sans">First-Person Skyline</span>
           <Badge
             variant={
               horizon === null
@@ -243,7 +243,7 @@ export function HorizonView(): React.JSX.Element {
             size="sm"
             variant="outline"
             onClick={handleTrackSun}
-            className="text-[10px] h-6 px-2 text-amber-400 border-amber-500/30 hover:border-amber-500"
+            className="text-[10px] h-6 px-2 text-amber border-amber/30 hover:border-amber"
           >
             ☀️ Look at Sun ({sunAz.toFixed(0)}°)
           </Button>
@@ -251,7 +251,7 @@ export function HorizonView(): React.JSX.Element {
             size="sm"
             variant="outline"
             onClick={handleTrackEarth}
-            className="text-[10px] h-6 px-2 text-sky-400 border-sky-500/30 hover:border-sky-500"
+            className="text-[10px] h-6 px-2 text-emerald border-emerald/30 hover:border-emerald"
           >
             🌍 Look at Earth ({earthAz.toFixed(0)}°)
           </Button>
@@ -259,7 +259,7 @@ export function HorizonView(): React.JSX.Element {
             size="sm"
             variant="ghost"
             onClick={() => setCenterAzimuth(0)}
-            className="text-[10px] h-6 px-1.5"
+            className="text-[10px] h-6 px-1.5 text-muted hover:text-ink"
           >
             N (0°)
           </Button>
@@ -267,19 +267,19 @@ export function HorizonView(): React.JSX.Element {
             size="sm"
             variant="ghost"
             onClick={() => setCenterAzimuth(180)}
-            className="text-[10px] h-6 px-1.5"
+            className="text-[10px] h-6 px-1.5 text-muted hover:text-ink"
           >
             S (180°)
           </Button>
 
           {/* FOV Toggle */}
-          <div className="ml-2 flex rounded border border-space-700 bg-space-950 p-0.5">
+          <div className="ml-2 flex rounded-lg border border-panel-border bg-panel p-0.5">
             {[90, 120, 180].map((fov) => (
               <button
                 key={fov}
                 onClick={() => setFovDegrees(fov)}
                 className={`px-1.5 py-0.5 text-[9px] rounded ${
-                  fovDegrees === fov ? 'bg-space-700 text-slate-100 font-bold' : 'text-slate-400'
+                  fovDegrees === fov ? 'bg-amber text-amber-text font-bold' : 'text-muted hover:text-ink'
                 }`}
               >
                 {fov}° FOV
@@ -304,16 +304,16 @@ export function HorizonView(): React.JSX.Element {
           <defs>
             {/* Deep Space Sky Gradient */}
             <linearGradient id="deepSpaceSky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#030508" />
-              <stop offset="60%" stopColor="#080C14" />
-              <stop offset="100%" stopColor="#0F172A" />
+              <stop offset="0%" stopColor="#0B0A09" />
+              <stop offset="60%" stopColor="#12110F" />
+              <stop offset="100%" stopColor="#1A1816" />
             </linearGradient>
 
             {/* Terrain Regolith Gradient */}
             <linearGradient id="lunarTerrain" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#334155" />
-              <stop offset="15%" stopColor="#1E293B" />
-              <stop offset="100%" stopColor="#090D16" />
+              <stop offset="0%" stopColor="#2E2A26" />
+              <stop offset="25%" stopColor="#1A1816" />
+              <stop offset="100%" stopColor="#12110F" />
             </linearGradient>
 
             {/* Sun Glow Filter */}
@@ -336,16 +336,16 @@ export function HorizonView(): React.JSX.Element {
                   y1={y}
                   x2={containerWidth}
                   y2={y}
-                  stroke={isZero ? '#38BDF8' : '#1E2942'}
+                  stroke={isZero ? '#F5A524' : '#2E2A26'}
                   strokeWidth={isZero ? 1.2 : 0.8}
                   strokeDasharray={isZero ? '4,4' : '2,4'}
-                  opacity={isZero ? 0.5 : 0.3}
+                  opacity={isZero ? 0.6 : 0.3}
                 />
                 <text
                   x={8}
                   y={y - 3}
                   className={`font-mono text-[9px] ${
-                    isZero ? 'fill-sky-400 font-bold' : 'fill-slate-600'
+                    isZero ? 'fill-amber font-bold' : 'fill-muted'
                   }`}
                 >
                   {el > 0 ? `+${el}°` : `${el}°`}
@@ -362,9 +362,9 @@ export function HorizonView(): React.JSX.Element {
                 y1={0}
                 x2={tick.x}
                 y2={height}
-                stroke="#1E2942"
+                stroke="#2E2A26"
                 strokeWidth={tick.isMajor ? 1 : 0.5}
-                opacity={tick.isMajor ? 0.4 : 0.2}
+                opacity={tick.isMajor ? 0.5 : 0.25}
               />
               <text
                 x={tick.x}
@@ -372,8 +372,8 @@ export function HorizonView(): React.JSX.Element {
                 textAnchor="middle"
                 className={`font-mono ${
                   tick.isMajor
-                    ? 'fill-slate-300 font-bold text-[10px]'
-                    : 'fill-slate-600 text-[8px]'
+                    ? 'fill-ink font-bold text-[10px]'
+                    : 'fill-muted text-[8px]'
                 }`}
               >
                 {tick.label}
@@ -386,15 +386,15 @@ export function HorizonView(): React.JSX.Element {
             {/* Halo glow */}
             <circle
               r={sunRadiusPx * 3}
-              fill="#F59E0B"
+              fill="#F5A524"
               opacity={isSunVisible ? 0.35 : 0.08}
               filter="url(#panoSunGlow)"
             />
             {/* Core Sun Disk */}
             <circle
               r={sunRadiusPx}
-              fill={isSunVisible ? '#FEF08A' : '#78350F'}
-              stroke={isSunVisible ? '#F59E0B' : '#451A03'}
+              fill={isSunVisible ? '#FFD58A' : '#451A03'}
+              stroke={isSunVisible ? '#F5A524' : '#2E2A26'}
               strokeWidth="1.5"
             />
             {/* Sun Label */}
@@ -402,7 +402,7 @@ export function HorizonView(): React.JSX.Element {
               x={sunRadiusPx + 4}
               y={3}
               className={`font-mono text-[10px] font-semibold ${
-                isSunVisible ? 'fill-amber-300' : 'fill-amber-700'
+                isSunVisible ? 'fill-amber' : 'fill-muted'
               }`}
             >
               Sun {sunEl.toFixed(1)}°
@@ -414,14 +414,14 @@ export function HorizonView(): React.JSX.Element {
             {/* Earth atmosphere glow */}
             <circle
               r={earthRadiusPx * 1.5}
-              fill="#38BDF8"
+              fill="#10B981"
               opacity={isEarthVisible ? 0.25 : 0.05}
               filter="url(#panoSunGlow)"
             />
-            {/* Earth Blue Marble Body */}
+            {/* Earth Marble Body */}
             <circle
               r={earthRadiusPx}
-              fill={isEarthVisible ? '#0284C7' : '#0F172A'}
+              fill={isEarthVisible ? '#065F46' : '#1A1816'}
               stroke={isEarthVisible ? '#10B981' : '#EF4444'}
               strokeWidth="1.5"
             />
@@ -430,7 +430,7 @@ export function HorizonView(): React.JSX.Element {
               d={`M 0 ${-earthRadiusPx} A ${earthRadiusPx} ${earthRadiusPx} 0 0 1 0 ${earthRadiusPx} A ${
                 earthRadiusPx * Math.cos(ephemeris.earth.phaseFraction * Math.PI)
               } ${earthRadiusPx} 0 0 ${ephemeris.earth.phaseFraction > 0.5 ? 1 : 0} 0 ${-earthRadiusPx}`}
-              fill="#38BDF8"
+              fill="#10B981"
               opacity="0.8"
             />
             {/* Earth Label */}
@@ -438,7 +438,7 @@ export function HorizonView(): React.JSX.Element {
               x={earthRadiusPx + 6}
               y={3}
               className={`font-mono text-[10px] font-semibold ${
-                isEarthVisible ? 'fill-sky-300' : 'fill-rose-400'
+                isEarthVisible ? 'fill-emerald' : 'fill-critical'
               }`}
             >
               Earth {earthEl.toFixed(1)}° ({Math.round(ephemeris.earth.phaseFraction * 100)}%)
@@ -450,7 +450,7 @@ export function HorizonView(): React.JSX.Element {
             <path
               d={terrainPath}
               fill="url(#lunarTerrain)"
-              stroke="#818CF8"
+              stroke="rgba(244, 239, 232, 0.4)"
               strokeWidth="1.5"
               className="transition-all duration-75"
             />
@@ -462,38 +462,38 @@ export function HorizonView(): React.JSX.Element {
             y1={elevToY(0)}
             x2={containerWidth}
             y2={elevToY(0)}
-            stroke="#38BDF8"
+            stroke="#8A847B"
             strokeWidth="0.8"
             strokeOpacity="0.4"
           />
 
           {/* Center Reticle crosshair */}
           <g transform={`translate(${containerWidth / 2}, ${height / 2})`}>
-            <line x1="-12" y1="0" x2="12" y2="0" stroke="#94A3B8" strokeWidth="0.8" strokeDasharray="3,3" opacity="0.6" />
-            <line x1="0" y1="-12" x2="0" y2="12" stroke="#94A3B8" strokeWidth="0.8" strokeDasharray="3,3" opacity="0.6" />
-            <circle r="2" fill="none" stroke="#94A3B8" strokeWidth="0.8" opacity="0.6" />
+            <line x1="-12" y1="0" x2="12" y2="0" stroke="#8A847B" strokeWidth="0.8" strokeDasharray="3,3" opacity="0.6" />
+            <line x1="0" y1="-12" x2="0" y2="12" stroke="#8A847B" strokeWidth="0.8" strokeDasharray="3,3" opacity="0.6" />
+            <circle r="2" fill="none" stroke="#8A847B" strokeWidth="0.8" opacity="0.6" />
           </g>
         </svg>
 
         {/* Overlay Telemetry HUD (Bottom Left & Right) */}
-        <div className="pointer-events-none absolute bottom-3 left-3 z-10 flex flex-col gap-1.5 rounded-md border border-space-800 bg-space-950/85 px-3 py-2 text-[10px] text-slate-300 backdrop-blur">
+        <div className="pointer-events-none absolute bottom-3 left-3 z-10 flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 text-[10px] text-ink backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <span className="text-amber-400">☀️ Solar Line-of-Sight:</span>
-            <span className={isSunVisible ? 'text-emerald-400 font-bold' : 'text-slate-400 font-semibold'}>
+            <span className="text-amber">☀️ Solar Line-of-Sight:</span>
+            <span className={isSunVisible ? 'text-emerald font-bold' : 'text-muted font-semibold'}>
               {isSunVisible ? `CLEAR (+${sunClearance.toFixed(2)}°)` : `OBSCURED (${sunClearance.toFixed(2)}°)`}
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sky-400">🌍 Earth DTE Link:</span>
-            <span className={isEarthVisible ? 'text-emerald-400 font-bold' : 'text-rose-400 font-semibold'}>
+            <span className="text-emerald">🌍 Earth DTE Link:</span>
+            <span className={isEarthVisible ? 'text-emerald font-bold' : 'text-critical font-semibold'}>
               {isEarthVisible ? `LOCKED (+${earthClearance.toFixed(2)}°)` : `TERRAIN BLOCKED (${earthClearance.toFixed(2)}°)`}
             </span>
           </div>
         </div>
 
-        <div className="pointer-events-none absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-md border border-space-800 bg-space-950/85 px-3 py-1.5 text-[10px] text-slate-400 backdrop-blur">
+        <div className="pointer-events-none absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-2xl border border-panel-border bg-panel/90 px-3 py-1.5 text-[10px] text-muted backdrop-blur-md">
           <span>Center Azimuth:</span>
-          <span className="font-bold text-slate-100">{centerAzimuth.toFixed(1)}°</span>
+          <span className="font-bold text-ink">{centerAzimuth.toFixed(1)}°</span>
           <span>(Drag left/right to pan)</span>
         </div>
       </div>

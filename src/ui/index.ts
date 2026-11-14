@@ -5,3 +5,5 @@ export * from './Chip';
 export * from './Panel';
 export * from './Tabs';
 export * from './Tooltip';
+export * from './toastStore';
+export * from './Toast';

@@ -48,7 +48,9 @@ export function MultiTimeline({
 
   const rowHeaderWidth = 180;
   const margin = { top: 20, right: 20, bottom: 25, left: rowHeaderWidth };
-  const plotWidth = Math.max(200, containerWidth - margin.left - margin.right);
+  const plotWidth = Math.max(100, containerWidth - margin.left - margin.right);
+  const rowHeight = 44;
+  const svgHeight = margin.top + scenarios.length * rowHeight + margin.bottom;
 
   const timeToX = useCallback(
     (tMs: number): number => {
@@ -67,144 +69,126 @@ export function MultiTimeline({
     [margin.left, plotWidth, windowStartMs, durationMs]
   );
 
-  // Compute intervals for each scenario across visible window
+  // Sample data points across window for each scenario
   const scenarioTracks = useMemo(() => {
-    const numSamples = Math.min(160, Math.max(60, Math.floor(plotWidth / 5)));
+    const numSamples = Math.min(120, Math.max(40, Math.floor(plotWidth / 6)));
     return scenarios.map((sc) => {
       const site = sites[sc.siteId];
-      const horizon = horizons[sc.siteId] ?? null;
-      if (!site) return { scenario: sc, samples: [] };
+      const horiz = horizons[sc.siteId];
+      if (!site) return { scenario: sc, site: null, samples: [] };
 
       const lat = sc.customCoordinates?.latDeg ?? site.latDeg;
       const lon = sc.customCoordinates?.lonDeg ?? site.lonDeg;
       const elev = site.elevationM;
 
-      const samples = [];
-      for (let i = 0; i < numSamples; i++) {
+      const pts = [];
+      for (let i = 0; i <= numSamples; i++) {
         const tMs = windowStartMs + (i / numSamples) * durationMs;
         const t = new Date(tMs);
         const ephem = ephemerisEngine.sample({ latDeg: lat, lonDeg: lon, elevationM: elev }, t);
-        const sunTerr = getHorizonThresholdAtAzimuth(horizon, ephem.sun.azimuthDeg);
-        const earthTerr = getHorizonThresholdAtAzimuth(horizon, ephem.earth.azimuthDeg);
+
+        const sunTerr = getHorizonThresholdAtAzimuth(horiz, ephem.sun.azimuthDeg);
+        const earthTerr = getHorizonThresholdAtAzimuth(horiz, ephem.earth.azimuthDeg);
 
         const isSunlit = ephem.sun.elevationDeg + 0.267 >= sunTerr && ephem.sun.elevationDeg >= -0.267;
         const isDte = ephem.earth.elevationDeg >= earthTerr && ephem.earth.elevationDeg >= 0;
 
-        samples.push({ tMs, isSunlit, isDte });
+        pts.push({ tMs, isSunlit, isDte });
       }
 
-      return { scenario: sc, site, samples };
+      return { scenario: sc, site, samples: pts };
     });
   }, [scenarios, sites, horizons, windowStartMs, durationMs, plotWidth]);
 
-  // Pointer interactions
   const handlePointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
     isDraggingRef.current = true;
     (e.target as Element).setPointerCapture?.(e.pointerId);
-    handlePointerMove(e);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x >= margin.left) {
+      setTime(xToTime(x));
+    }
   };
 
   const handlePointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const clampedX = Math.max(margin.left, Math.min(containerWidth - margin.right, mouseX));
-    const targetTime = xToTime(clampedX);
+    const x = e.clientX - rect.left;
 
-    if (isDraggingRef.current) {
-      setTime(targetTime);
+    if (isDraggingRef.current && x >= margin.left) {
+      setTime(xToTime(x));
     }
-    setHoverData({ x: clampedX, time: targetTime });
+
+    if (x >= margin.left && x <= margin.left + plotWidth) {
+      setHoverData({ x, time: xToTime(x) });
+    } else {
+      setHoverData(null);
+    }
   };
 
   const handlePointerUp = () => {
     isDraggingRef.current = false;
   };
 
-  const handlePointerLeave = () => {
-    isDraggingRef.current = false;
-    setHoverData(null);
-  };
+  const playheadX = timeToX(currentTime.getTime());
 
   // Time Axis Ticks
   const timeTicks = useMemo(() => {
+    const ticksCount = 6;
     const ticks = [];
-    const count = Math.max(4, Math.floor(plotWidth / 120));
-    for (let i = 0; i <= count; i++) {
-      const tMs = windowStartMs + (i / count) * durationMs;
+    for (let i = 0; i <= ticksCount; i++) {
+      const tMs = windowStartMs + (i / ticksCount) * durationMs;
       const d = new Date(tMs);
       const x = timeToX(tMs);
       const label =
         zoom === '24h'
-          ? d.toISOString().slice(11, 16) + ' UTC'
-          : `${d.toISOString().slice(5, 10)} ${d.toISOString().slice(11, 16)}`;
+          ? d.toISOString().slice(11, 16)
+          : `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
       ticks.push({ x, label });
     }
     return ticks;
-  }, [windowStartMs, durationMs, plotWidth, timeToX, zoom]);
-
-  const rowHeight = 44;
-  const svgHeight = margin.top + scenarios.length * rowHeight + margin.bottom;
-  const nowX = timeToX(currentTime.getTime());
+  }, [windowStartMs, durationMs, zoom, timeToX]);
 
   return (
     <div
       ref={containerRef}
-      className="flex flex-col space-y-3 rounded-lg border border-space-800 bg-space-950/70 p-3 font-mono text-xs select-none"
+      className="flex flex-col space-y-3 rounded-2xl border border-panel-border bg-panel p-5 font-mono text-xs text-ink select-none shadow-xl"
     >
-      {/* Controls Bar */}
-      <div className="flex items-center justify-between border-b border-space-800 pb-2 text-[11px]">
+      {/* Controls & Legend */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-panel-border pb-3">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-slate-200 font-sans">Multi-Scenario Synodic Strip</span>
-          <div className="flex rounded border border-space-700 bg-space-900 p-0.5">
+          <span className="text-[11px] text-muted uppercase font-sans font-semibold">Timeline Window:</span>
+          {(['24h', '7d', '29.5d'] as ZoomPreset[]).map((z) => (
             <button
+              key={z}
+              type="button"
               onClick={() => {
-                setZoom('24h');
+                setZoom(z);
                 setWindowCenter(currentTime.getTime());
               }}
-              className={`px-2 py-0.5 text-[10px] rounded ${
-                zoom === '24h' ? 'bg-space-700 text-sun-amber font-semibold' : 'text-slate-400'
+              className={`rounded-full px-2.5 py-1 text-[11px] transition-colors ${
+                zoom === z
+                  ? 'bg-amber text-amber-text font-bold'
+                  : 'bg-[#161412] border border-panel-border text-muted hover:text-ink'
               }`}
             >
-              24h
+              {z === '29.5d' ? '29.5d Synodic' : z}
             </button>
-            <button
-              onClick={() => {
-                setZoom('7d');
-                setWindowCenter(currentTime.getTime());
-              }}
-              className={`px-2 py-0.5 text-[10px] rounded ${
-                zoom === '7d' ? 'bg-space-700 text-sun-amber font-semibold' : 'text-slate-400'
-              }`}
-            >
-              7d
-            </button>
-            <button
-              onClick={() => {
-                setZoom('29.5d');
-                setWindowCenter(currentTime.getTime());
-              }}
-              className={`px-2 py-0.5 text-[10px] rounded ${
-                zoom === '29.5d' ? 'bg-space-700 text-sun-amber font-semibold' : 'text-slate-400'
-              }`}
-            >
-              29.5d Synodic Month
-            </button>
-          </div>
+          ))}
         </div>
 
         {/* Legend */}
-        <div className="flex items-center gap-3 text-[10px]">
+        <div className="flex items-center gap-4 text-[11px]">
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-3 rounded-sm bg-sun-amber" />
-            <span className="text-slate-300">Sunlit</span>
+            <span className="h-2 w-3 rounded-sm bg-amber" />
+            <span className="text-muted">Solar Illumination</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-3 rounded-sm bg-comms-green" />
-            <span className="text-slate-300">DTE Link</span>
+            <span className="h-2 w-3 rounded-sm bg-emerald" />
+            <span className="text-muted">DTE Radio Link</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-3 rounded-sm bg-rose-900" />
-            <span className="text-slate-400">Blackout / Shadow</span>
+            <span className="h-2 w-3 rounded-sm bg-critical/40" />
+            <span className="text-muted">Blackout / Shadow</span>
           </div>
         </div>
       </div>
@@ -217,7 +201,10 @@ export function MultiTimeline({
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerLeave}
+          onPointerLeave={() => {
+            isDraggingRef.current = false;
+            setHoverData(null);
+          }}
           className="cursor-crosshair overflow-visible touch-none"
         >
           {/* Vertical Grid Lines */}
@@ -228,14 +215,14 @@ export function MultiTimeline({
                 y1={margin.top}
                 x2={tick.x}
                 y2={svgHeight - margin.bottom}
-                stroke="#1E2942"
+                stroke="#2E2A26"
                 strokeWidth="1"
               />
               <text
                 x={tick.x}
                 y={svgHeight - margin.bottom + 14}
                 textAnchor="middle"
-                className="fill-slate-400 font-mono text-[9px]"
+                className="fill-muted font-mono text-[10px]"
               >
                 {tick.label}
               </text>
@@ -256,28 +243,23 @@ export function MultiTimeline({
                   y={y}
                   width={containerWidth}
                   height={rowHeight - 4}
-                  fill={rowIdx % 2 === 0 ? '#0B0F19' : '#080C16'}
-                  rx="4"
+                  fill={rowIdx % 2 === 0 ? '#1A1816' : '#141210'}
+                  rx="6"
                 />
 
                 {/* Left Label */}
-                <circle
-                  cx={12}
-                  cy={y + 14}
-                  r={5}
-                  fill={sc.themeColor}
-                />
+                <circle cx={12} cy={y + 14} r={5} fill={sc.themeColor} />
                 <text
                   x={24}
                   y={y + 16}
-                  className="fill-slate-100 font-mono text-[11px] font-bold"
+                  className="fill-ink font-mono text-[11px] font-bold"
                 >
                   {sc.label.length > 18 ? sc.label.slice(0, 16) + '...' : sc.label}
                 </text>
                 <text
                   x={24}
                   y={y + 30}
-                  className="fill-slate-400 font-mono text-[9px]"
+                  className="fill-muted font-mono text-[9px]"
                 >
                   {site?.name ?? sc.siteId}
                 </text>
@@ -299,8 +281,8 @@ export function MultiTimeline({
                             y={y + 6}
                             width={w}
                             height={12}
-                            fill={s.isSunlit ? '#F59E0B' : '#1E293B'}
-                            opacity={s.isSunlit ? 0.95 : 0.3}
+                            fill={s.isSunlit ? '#F5A524' : 'rgba(244, 239, 232, 0.08)'}
+                            opacity={s.isSunlit ? 0.95 : 0.4}
                           />
                           {/* DTE band */}
                           <rect
@@ -308,8 +290,8 @@ export function MultiTimeline({
                             y={y + 20}
                             width={w}
                             height={12}
-                            fill={s.isDte ? '#10B981' : '#881337'}
-                            opacity={s.isDte ? 0.95 : 0.3}
+                            fill={s.isDte ? '#10B981' : 'rgba(239, 68, 68, 0.25)'}
+                            opacity={s.isDte ? 0.95 : 0.4}
                           />
                         </g>
                       );
@@ -320,6 +302,21 @@ export function MultiTimeline({
             );
           })}
 
+          {/* Scrubbable Playhead (Amber) */}
+          {playheadX >= margin.left && playheadX <= margin.left + plotWidth && (
+            <g className="pointer-events-none">
+              <line
+                x1={playheadX}
+                y1={margin.top - 4}
+                x2={playheadX}
+                y2={svgHeight - margin.bottom + 4}
+                stroke="#F5A524"
+                strokeWidth="2"
+              />
+              <circle cx={playheadX} cy={margin.top - 4} r="4" fill="#F5A524" />
+            </g>
+          )}
+
           {/* Hover Crosshair */}
           {hoverData && (
             <line
@@ -327,50 +324,20 @@ export function MultiTimeline({
               y1={margin.top}
               x2={hoverData.x}
               y2={svgHeight - margin.bottom}
-              stroke="#94A3B8"
-              strokeWidth="1"
+              stroke="rgba(244, 239, 232, 0.4)"
               strokeDasharray="2,2"
-              opacity="0.8"
+              strokeWidth="1"
             />
-          )}
-
-          {/* Draggable "NOW" cursor */}
-          {nowX >= margin.left && nowX <= margin.left + plotWidth && (
-            <g>
-              <line
-                x1={nowX}
-                y1={margin.top - 4}
-                x2={nowX}
-                y2={svgHeight - margin.bottom + 4}
-                stroke="#EF4444"
-                strokeWidth="2"
-              />
-              <polygon
-                points={`${nowX - 4},${margin.top - 6} ${nowX + 4},${margin.top - 6} ${nowX},${margin.top}`}
-                fill="#EF4444"
-              />
-              <text
-                x={nowX}
-                y={margin.top - 8}
-                textAnchor="middle"
-                className="fill-rose-400 font-mono text-[8px] font-bold"
-              >
-                NOW
-              </text>
-            </g>
           )}
         </svg>
 
-        {/* Hover Tooltip */}
+        {/* Hover Time Tooltip */}
         {hoverData && (
           <div
-            className="pointer-events-none absolute z-20 rounded border border-space-700 bg-space-950/95 px-2.5 py-1 text-[10px] text-slate-200 shadow-lg"
-            style={{
-              left: Math.min(containerWidth - 170, Math.max(margin.left, hoverData.x - 60)),
-              top: 0
-            }}
+            className="pointer-events-none absolute bottom-full mb-1 -translate-x-1/2 z-40 rounded-xl glass-panel px-2.5 py-1 font-mono text-[10px] text-ink shadow-lg"
+            style={{ left: hoverData.x }}
           >
-            {hoverData.time.toISOString().replace('T', ' ').slice(0, 19)} UTC
+            {hoverData.time.toISOString().replace('T', ' ').slice(0, 16)} UTC
           </div>
         )}
       </div>

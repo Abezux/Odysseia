@@ -27,9 +27,9 @@ function GlobeMesh({ sunDirection, onGlobeClick }: GlobeMeshProps): React.JSX.El
     return new THREE.ShaderMaterial({
       uniforms: {
         uSunDirection: { value: sunDirection.clone() },
-        uDayColor: { value: new THREE.Color('#94A3B8') },
-        uNightColor: { value: new THREE.Color('#080C16') },
-        uTerminatorColor: { value: new THREE.Color('#334155') }
+        uDayColor: { value: new THREE.Color('#948F85') },
+        uNightColor: { value: new THREE.Color('#0B0A09') },
+        uTerminatorColor: { value: new THREE.Color('#3D362E') }
       },
       vertexShader: LunarSurfaceShader.vertexShader,
       fragmentShader: LunarSurfaceShader.fragmentShader
@@ -75,7 +75,7 @@ function PolarRings(): React.JSX.Element {
       pts.push(latLonToVector3(lat80, lon, GLOBE_RADIUS * 1.001));
     }
     const geo = new THREE.BufferGeometry().setFromPoints(pts);
-    const mat = new THREE.LineBasicMaterial({ color: '#38BDF8', transparent: true, opacity: 0.3 });
+    const mat = new THREE.LineBasicMaterial({ color: '#F5A524', transparent: true, opacity: 0.35 });
     return new THREE.Line(geo, mat);
   }, []);
 
@@ -132,14 +132,14 @@ export function MoonGlobeView(): React.JSX.Element {
   };
 
   return (
-    <div className="relative h-full w-full select-none bg-space-950 overflow-hidden">
+    <div className="relative h-full w-full select-none bg-[#0B0A09] overflow-hidden">
       {/* 3D Canvas */}
       <Canvas
         camera={{ position: [0, -3.2, 3.2], fov: 45 }}
         gl={{ antialias: true, alpha: false }}
         className="h-full w-full"
       >
-        <color attach="background" args={['#05070D']} />
+        <color attach="background" args={['#0B0A09']} />
         <ambientLight intensity={0.15} />
 
         <GlobeMesh sunDirection={sunDirection} onGlobeClick={handleGlobeClick} />
@@ -178,13 +178,13 @@ export function MoonGlobeView(): React.JSX.Element {
       </div>
 
       {/* Ephemeris Legend */}
-      <div className="absolute top-4 right-4 flex flex-col gap-1.5 rounded border border-space-800 bg-space-900/80 p-2.5 backdrop-blur font-mono text-[11px] text-slate-300 z-10">
+      <div className="absolute top-4 right-4 flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 p-2.5 backdrop-blur-md font-mono text-[11px] text-ink z-10">
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-sun-amber" />
+          <span className="h-2 w-2 rounded-full bg-amber" />
           <span>Sub-Solar: {ephem.subSolarCoordinates.latDeg.toFixed(1)}°N, {ephem.subSolarCoordinates.lonDeg.toFixed(1)}°E</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-earth-blue" />
+          <span className="h-2 w-2 rounded-full bg-emerald" />
           <span>Sub-Earth (Libration): {ephem.subEarthCoordinates.latDeg.toFixed(1)}°N, {ephem.subEarthCoordinates.lonDeg.toFixed(1)}°E</span>
         </div>
       </div>

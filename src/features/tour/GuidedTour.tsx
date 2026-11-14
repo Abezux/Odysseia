@@ -111,21 +111,21 @@ export function GuidedTour(): React.JSX.Element | null {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-space-950/80 p-4 backdrop-blur-sm select-none">
-      <div className="flex w-full max-w-xl flex-col rounded-xl border border-space-700 bg-space-900 shadow-2xl overflow-hidden font-sans">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0A09]/80 p-4 backdrop-blur-md select-none animate-fadeIn">
+      <div className="glass-panel flex w-full max-w-xl flex-col rounded-3xl p-6 shadow-2xl overflow-hidden font-sans space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-space-800 bg-space-950/80 px-5 py-3">
+        <div className="flex items-center justify-between border-b border-panel-border pb-3.5">
           <div className="flex items-center gap-2.5">
-            <span className="font-mono text-sm font-bold tracking-wider text-sun-amber">
+            <span className="font-mono text-sm font-bold tracking-wider text-amber">
               MISSION CONTROL GUIDE
             </span>
-            <Badge variant="info" size="sm">
+            <Badge variant="amber" size="sm">
               {step.badge}
             </Badge>
           </div>
           <button
             onClick={handleClose}
-            className="text-slate-400 hover:text-slate-100 transition-colors p-1"
+            className="flex h-7 w-7 items-center justify-center rounded-lg border border-panel-border bg-panel text-muted hover:text-ink hover:border-muted transition-colors"
             title="Close guide"
           >
             ✕
@@ -133,21 +133,21 @@ export function GuidedTour(): React.JSX.Element | null {
         </div>
 
         {/* Body Content */}
-        <div className="p-6 space-y-4">
+        <div className="space-y-4">
           <div>
-            <h3 className="text-base font-bold text-slate-100">{step.title}</h3>
-            <p className="mt-2 text-xs leading-relaxed text-slate-300">{step.content}</p>
+            <h3 className="text-base font-bold text-ink">{step.title}</h3>
+            <p className="mt-2 text-xs leading-relaxed text-muted">{step.content}</p>
           </div>
 
           {/* Key Takeaways Card */}
-          <div className="rounded-lg border border-space-800 bg-space-950/60 p-3.5 space-y-2">
-            <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-sun-amber">
+          <div className="rounded-2xl border border-panel-border bg-panel p-4 space-y-2">
+            <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-amber">
               Operational Key Highlights
             </div>
-            <ul className="space-y-1.5 text-xs text-slate-300">
+            <ul className="space-y-1.5 text-xs text-ink">
               {step.keyTakeaways.map((item, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-amber-400 font-bold">•</span>
+                  <span className="text-amber font-bold">•</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -156,7 +156,7 @@ export function GuidedTour(): React.JSX.Element | null {
         </div>
 
         {/* Footer with Step Dots and Navigation */}
-        <div className="flex items-center justify-between border-t border-space-800 bg-space-950/80 px-5 py-3">
+        <div className="flex items-center justify-between border-t border-panel-border pt-4">
           {/* Step Indicator Dots */}
           <div className="flex items-center gap-1.5">
             {TOUR_STEPS.map((_, idx) => (
@@ -164,12 +164,12 @@ export function GuidedTour(): React.JSX.Element | null {
                 key={idx}
                 onClick={() => setCurrentStep(idx)}
                 className={`h-2 rounded-full transition-all ${
-                  idx === currentStep ? 'w-5 bg-sun-amber' : 'w-2 bg-space-700 hover:bg-space-600'
+                  idx === currentStep ? 'w-5 bg-amber' : 'w-2 bg-[#2E2A26] hover:bg-muted'
                 }`}
                 title={`Go to step ${idx + 1}`}
               />
             ))}
-            <span className="font-mono text-[10px] text-slate-500 ml-2">
+            <span className="font-mono text-[10px] text-muted ml-2">
               {currentStep + 1} of {TOUR_STEPS.length}
             </span>
           </div>

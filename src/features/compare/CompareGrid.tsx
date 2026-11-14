@@ -2,7 +2,6 @@ import React from 'react';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import type { Scenario, MetricsResult, Site } from '../../contracts';
 import { Badge } from '../../ui/Badge';
-import { Button } from '../../ui/Button';
 
 export interface CompareGridProps {
   scenarios: Scenario[];
@@ -16,7 +15,7 @@ export function CompareGrid({
   scenarios,
   results,
   sites,
-  isLoading,
+  isLoading: _isLoading,
   onAddScenarioClick
 }: CompareGridProps): React.JSX.Element {
   const { activeScenarioId, setActiveScenario, removeScenario, updateScenario } =
@@ -30,236 +29,208 @@ export function CompareGrid({
   };
 
   return (
-    <div className="flex h-full flex-col space-y-4 font-mono text-xs text-slate-200">
+    <div className="flex h-full flex-col space-y-4 font-mono text-xs text-ink select-none">
       {/* Scenario Columns */}
-      <div className="grid flex-1 grid-cols-1 gap-4 overflow-x-auto overflow-y-auto sm:grid-cols-2 lg:grid-cols-4 pb-2">
+      <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 pb-2">
         {scenarios.map((sc) => {
           const res = results[sc.id];
           const site = sites[sc.siteId];
           const isActive = sc.id === activeScenarioId;
 
+          const sunEl = res?.currentEphemeris.sun.elevationDeg ?? 0;
+          const earthEl = res?.currentEphemeris.earth.elevationDeg ?? 0;
+          const powerProxy = res?.solarPowerProxyVertical ?? 0;
+          const overallScore = res?.scorecard.overallScore ?? 50;
+
           return (
             <div
               key={sc.id}
-              className={`flex flex-col rounded-lg border bg-space-900/60 p-3.5 transition-all ${
+              onClick={() => setActiveScenario(sc.id)}
+              className={`flex flex-col justify-between rounded-2xl border bg-panel p-5 shadow-lg transition-all cursor-pointer ${
                 isActive
-                  ? 'border-sun-amber shadow-md shadow-sun-amber/10'
-                  : 'border-space-800 hover:border-space-700'
+                  ? 'border-amber shadow-[0_0_20px_rgba(245,165,36,0.15)] bg-[#201D1A]'
+                  : 'border-panel-border hover:border-muted/50'
               }`}
             >
-              {/* Header: Theme color pill, Label & Remove Button */}
-              <div className="flex items-center justify-between border-b border-space-800 pb-2.5">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: sc.themeColor }}
-                  />
-                  <input
-                    type="text"
-                    value={sc.label}
-                    onChange={(e) => updateScenario(sc.id, { label: e.target.value })}
-                    className="bg-transparent font-bold text-slate-100 focus:outline-none focus:ring-1 focus:ring-sun-amber rounded px-1 -ml-1 text-xs"
-                    title="Click to rename scenario"
-                  />
-                </div>
+              <div className="space-y-4">
+                {/* Header: Site Inspector Style */}
+                <div className="flex items-start justify-between border-b border-panel-border pb-3">
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <span
+                      className="h-3.5 w-3.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: sc.themeColor }}
+                    />
+                    <input
+                      type="text"
+                      value={sc.label}
+                      onChange={(e) => updateScenario(sc.id, { label: e.target.value })}
+                      className="bg-transparent font-sans text-xs font-bold text-ink focus:outline-none focus:ring-1 focus:ring-amber rounded px-1 -ml-1 truncate"
+                      title="Click to rename scenario"
+                    />
+                  </div>
 
-                {scenarios.length > 1 && (
-                  <button
-                    onClick={() => removeScenario(sc.id)}
-                    className="text-slate-500 hover:text-rose-400 p-0.5 rounded transition-colors text-sm"
-                    title="Remove scenario from comparison"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-
-              {/* Site Details */}
-              <div className="pt-2 pb-2 border-b border-space-800/80">
-                <div className="flex items-center justify-between">
-                  <span className="font-sans font-semibold text-slate-200">
-                    {site?.name ?? sc.siteId}
-                  </span>
-                  {site && (
-                    <Badge variant="neutral" size="sm">
-                      {site.agencyOrOperator}
-                    </Badge>
+                  {scenarios.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeScenario(sc.id);
+                      }}
+                      className="text-muted hover:text-critical p-1 transition-colors text-xs"
+                      title="Remove scenario"
+                    >
+                      ✕
+                    </button>
                   )}
                 </div>
-                <div className="mt-1 text-[11px] text-slate-400">
-                  {sc.customCoordinates
-                    ? `${sc.customCoordinates.latDeg.toFixed(2)}°, ${sc.customCoordinates.lonDeg.toFixed(2)}°`
-                    : site
-                    ? `${site.latDeg.toFixed(2)}°, ${site.lonDeg.toFixed(2)}° (${site.elevationM ?? 0}m)`
-                    : 'Coordinates unavailable'}
-                </div>
-              </div>
 
-              {/* Landing Date Epoch Picker */}
-              <div className="py-2.5 border-b border-space-800/80">
-                <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">
-                  Landing Epoch (UTC)
-                </label>
-                <input
-                  type="datetime-local"
-                  value={sc.landingTimeIso.slice(0, 16)}
-                  onChange={(e) => handleDateChange(sc.id, e.target.value)}
-                  className="w-full rounded border border-space-700 bg-space-950 px-2 py-1 text-[11px] text-slate-200 focus:border-sun-amber focus:outline-none"
-                />
-              </div>
-
-              {/* Scorecard Gauge & Sub-scores */}
-              {isLoading || !res ? (
-                <div className="flex flex-1 items-center justify-center py-8 text-slate-500">
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 w-3 animate-spin rounded-full border-2 border-sun-amber border-t-transparent" />
-                    <span>Evaluating...</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex-1 flex flex-col space-y-3 pt-3">
-                  {/* Overall Score Badge */}
-                  <div className="flex items-center justify-between rounded bg-space-950/70 p-2 border border-space-800">
-                    <span className="text-[11px] font-sans font-medium text-slate-300">
-                      Overall Feasibility
+                {/* Site Metadata & Coordinates in JetBrains Mono */}
+                <div className="border-b border-panel-border pb-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-sans text-xs font-semibold text-ink">
+                      {site?.name ?? sc.siteId}
                     </span>
-                    <Badge
-                      variant={
-                        res.scorecard.overallScore >= 70
-                          ? 'success'
-                          : res.scorecard.overallScore >= 40
-                          ? 'warning'
-                          : 'danger'
-                      }
-                      size="md"
-                    >
-                      {res.scorecard.overallScore}/100
-                    </Badge>
+                    {site && (
+                      <Badge variant="neutral" size="sm">
+                        {site.agencyOrOperator}
+                      </Badge>
+                    )}
                   </div>
-
-                  {/* Sub-Score Bars */}
-                  <div className="grid grid-cols-3 gap-1.5 text-center text-[10px]">
-                    <div className="rounded bg-space-950/50 p-1 border border-space-800/60">
-                      <div className="text-slate-400 font-sans">Power</div>
-                      <div className="font-bold text-amber-400">{res.scorecard.powerScore}</div>
-                    </div>
-                    <div className="rounded bg-space-950/50 p-1 border border-space-800/60">
-                      <div className="text-slate-400 font-sans">Comms</div>
-                      <div className="font-bold text-sky-400">
-                        {res.scorecard.communicationScore}
-                      </div>
-                    </div>
-                    <div className="rounded bg-space-950/50 p-1 border border-space-800/60">
-                      <div className="text-slate-400 font-sans">Thermal</div>
-                      <div className="font-bold text-emerald-400">
-                        {res.scorecard.thermalSurvivabilityScore}
-                      </div>
-                    </div>
+                  <div className="mt-1 font-mono text-[11px] text-muted">
+                    {site
+                      ? `${Math.abs(site.latDeg).toFixed(2)}°${site.latDeg >= 0 ? 'N' : 'S'}, ${Math.abs(
+                          site.lonDeg
+                        ).toFixed(2)}°${site.lonDeg >= 0 ? 'E' : 'W'} (${site.elevationM ?? 0}m)`
+                      : 'Coordinates unavailable'}
                   </div>
+                </div>
 
-                  {/* Instantaneous Status at Epoch */}
-                  <div className="rounded bg-space-950/40 p-2 border border-space-800/60 space-y-1.5 text-[11px]">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400">Sun Status:</span>
-                      <span
-                        className={
-                          res.currentEphemeris.sun.elevationDeg + 0.267 >=
-                          res.sunTerrainElevationDeg
-                            ? 'text-amber-400 font-semibold'
-                            : 'text-slate-400'
-                        }
-                      >
-                        {res.currentEphemeris.sun.elevationDeg >= -0.267
-                          ? `${res.currentEphemeris.sun.elevationDeg.toFixed(1)}° (Lit)`
-                          : 'In Shadow'}
-                      </span>
+                {/* Landing Date Epoch Picker */}
+                <div className="border-b border-panel-border pb-3">
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">
+                    Landing Epoch (UTC)
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={sc.landingTimeIso.slice(0, 16)}
+                    onChange={(e) => handleDateChange(sc.id, e.target.value)}
+                    className="w-full rounded-lg border border-panel-border bg-[#161412] px-2 py-1 font-mono text-[11px] text-amber focus:border-amber focus:outline-none"
+                  />
+                </div>
+
+                {/* Site Inspector 3-Column Stats Row & Gauges */}
+                <div className="grid grid-cols-3 gap-2 font-mono text-center">
+                  <div className="rounded-xl border border-panel-border bg-[#161412] p-2">
+                    <div className="text-[9px] uppercase text-muted font-sans">Sun Elev</div>
+                    <div className="mt-1 text-xs font-bold text-ink">
+                      {sunEl >= 0 ? `+${sunEl.toFixed(1)}°` : `${sunEl.toFixed(1)}°`}
                     </div>
-
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400">Earth Link:</span>
-                      <span
-                        className={
-                          res.currentEphemeris.earth.elevationDeg >=
-                          res.earthTerrainElevationDeg
-                            ? 'text-emerald-400 font-semibold'
-                            : 'text-rose-400'
-                        }
-                      >
-                        {res.currentEphemeris.earth.elevationDeg >= 0
-                          ? `${res.currentEphemeris.earth.elevationDeg.toFixed(1)}° (LOS)`
-                          : 'Blackout'}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400">Vertical Solar Proxy:</span>
-                      <span className="text-amber-300 font-semibold">
-                        {(res.solarPowerProxyVertical * 100).toFixed(0)}%
-                      </span>
+                    <div className="mt-1.5 h-1 w-full rounded-full bg-[#2E2A26] overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-amber"
+                        style={{ width: `${Math.min(100, Math.max(0, (sunEl + 2) * 20))}%` }}
+                      />
                     </div>
                   </div>
 
-                  {/* 29.53d Synodic Month Metrics */}
-                  <div className="space-y-1 text-[11px] text-slate-300 pt-1">
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Illumination Fraction:</span>
-                      <span className="font-semibold text-slate-100">
-                        {(res.illuminationFraction * 100).toFixed(1)}%
+                  <div className="rounded-xl border border-panel-border bg-[#161412] p-2">
+                    <div className="text-[9px] uppercase text-muted font-sans">Earth Elev</div>
+                    <div className="mt-1 text-xs font-bold text-ink">
+                      {earthEl >= 0 ? `+${earthEl.toFixed(1)}°` : `${earthEl.toFixed(1)}°`}
+                    </div>
+                    <div className="mt-1.5 h-1 w-full rounded-full bg-[#2E2A26] overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-emerald"
+                        style={{ width: `${Math.min(100, Math.max(0, (earthEl + 2) * 10))}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-panel-border bg-[#161412] p-2">
+                    <div className="text-[9px] uppercase text-muted font-sans">Power Proxy</div>
+                    <div className="mt-1 text-xs font-bold text-amber">
+                      {Math.round(powerProxy * 100)}%
+                    </div>
+                    <div className="mt-1.5 h-1 w-full rounded-full bg-[#2E2A26] overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-amber"
+                        style={{ width: `${Math.round(powerProxy * 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Scorecard Metric Breakdown */}
+                {res ? (
+                  <div className="space-y-2 pt-1 font-mono text-[11px]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted">Illumination:</span>
+                      <span className="text-amber font-bold">
+                        {Math.round(res.illuminationFraction * 100)}%
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">DTE Availability:</span>
-                      <span className="font-semibold text-slate-100">
-                        {(res.dteAvailabilityFraction * 100).toFixed(1)}%
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted">DTE Availability:</span>
+                      <span className="text-emerald font-bold">
+                        {Math.round(res.dteAvailabilityFraction * 100)}%
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Max Sunlit Stretch:</span>
-                      <span className="font-semibold text-slate-100">
-                        {res.longestSunlitStretchHours.toFixed(1)} hrs
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted">Max Dark Stretch:</span>
+                      <span className="text-ink font-bold">
+                        {res.longestDarkStretchHours.toFixed(1)} hrs
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Max Comms Blackout:</span>
-                      <span className="font-semibold text-slate-100">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted">Max DTE Blackout:</span>
+                      <span className="text-ink font-bold">
                         {res.longestDteBlackoutHours.toFixed(1)} hrs
                       </span>
                     </div>
                   </div>
-
-                  {/* Set Active Button */}
-                  <div className="pt-2 mt-auto">
-                    <Button
-                      variant={isActive ? 'primary' : 'outline'}
-                      size="sm"
-                      onClick={() => setActiveScenario(sc.id)}
-                      className="w-full text-[11px]"
-                    >
-                      {isActive ? '✓ Active Scenario' : 'Select Scenario'}
-                    </Button>
+                ) : (
+                  <div className="py-4 text-center font-mono text-[11px] text-muted">
+                    Computing ephemeris...
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
+              {/* Overall Feasibility Score */}
+              <div className="mt-4 flex items-center justify-between rounded-xl border border-panel-border bg-[#161412] p-2.5">
+                <span className="font-sans text-[11px] font-semibold text-muted">Feasibility</span>
+                <span
+                  className={`font-mono text-sm font-bold ${
+                    overallScore >= 75
+                      ? 'text-emerald'
+                      : overallScore >= 50
+                      ? 'text-amber'
+                      : 'text-critical'
+                  }`}
+                >
+                  {overallScore}/100
+                </span>
+              </div>
             </div>
           );
         })}
 
-        {/* Add Scenario Slot Card (if < 4) */}
+        {/* Empty Scenario Slot Trigger (up to 4) */}
         {scenarios.length < 4 && onAddScenarioClick && (
-          <div
+          <button
+            type="button"
             onClick={onAddScenarioClick}
-            className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-space-800 bg-space-900/20 p-6 text-center hover:border-space-600 hover:bg-space-900/40 cursor-pointer transition-all min-h-[300px]"
+            className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-dashed border-panel-border bg-panel/30 p-6 text-center transition-all hover:border-amber hover:bg-panel/60 focus:outline-none"
           >
-            <div className="h-10 w-10 rounded-full border border-space-700 bg-space-800 flex items-center justify-center text-slate-300 font-bold text-lg mb-2">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber/15 text-amber text-xl">
               +
             </div>
-            <div className="font-sans font-semibold text-slate-300 text-xs">
-              Add Comparative Scenario
-            </div>
-            <div className="mt-1 text-[11px] text-slate-500">
-              Compare up to 4 lunar landing sites or dates simultaneously
-            </div>
-          </div>
+            <span className="mt-3 font-sans text-xs font-semibold text-ink">
+              Add Comparative Site
+            </span>
+            <span className="mt-1 font-mono text-[10px] text-muted">
+              {4 - scenarios.length} slots available
+            </span>
+          </button>
         )}
       </div>
     </div>

@@ -54,39 +54,39 @@ export function CustomSiteModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="custom-site-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 select-none"
     >
-      <div className="w-full max-w-md rounded-lg border border-space-700 bg-space-900 p-6 shadow-2xl">
-        <h2 id="custom-site-title" className="text-sm font-bold uppercase tracking-wider text-sun-amber">
-          Input Custom Selenographic Coordinates
+      <div className="w-full max-w-md rounded-3xl glass-panel p-6 shadow-2xl border border-glass-border">
+        <h2 id="custom-site-title" className="font-sans text-xs font-bold uppercase tracking-wider text-amber">
+          Custom Selenographic Coordinates
         </h2>
-        <p className="mt-1 text-xs text-slate-400">
-          Enter custom lunar coordinates. The engine will evaluate ephemeris and fall back to a smooth 0° horizon.
+        <p className="mt-1 font-sans text-xs text-muted">
+          Input arbitrary lunar landing coordinates. Ephemeris vectors will be evaluated against a smooth 0° horizon.
         </p>
 
         {error && (
-          <div className="mt-3 rounded border border-warning-red/40 bg-rose-950/40 p-2 text-xs text-rose-300">
+          <div className="mt-3 rounded-xl border border-critical/40 bg-critical/15 p-2.5 font-mono text-xs text-critical">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-3 font-mono text-xs">
           <div>
-            <label htmlFor="custom-site-name" className="block text-slate-400 mb-1">
-              Location Name
+            <label htmlFor="custom-site-name" className="block text-muted text-[11px] mb-1">
+              Location Label
             </label>
             <input
               id="custom-site-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded border border-space-700 bg-space-950 px-2.5 py-1.5 text-slate-200 focus:border-sun-amber focus:outline-none"
+              className="w-full rounded-lg border border-panel-border bg-panel px-3 py-2 text-ink focus:border-amber focus:outline-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="custom-site-lat" className="block text-slate-400 mb-1">
+              <label htmlFor="custom-site-lat" className="block text-muted text-[11px] mb-1">
                 Latitude (-90° to 90°)
               </label>
               <input
@@ -97,11 +97,12 @@ export function CustomSiteModal({
                 max="90"
                 value={lat}
                 onChange={(e) => setLat(e.target.value)}
-                className="w-full rounded border border-space-700 bg-space-950 px-2.5 py-1.5 text-slate-200 focus:border-sun-amber focus:outline-none"
+                className="w-full rounded-lg border border-panel-border bg-panel px-3 py-2 text-ink focus:border-amber focus:outline-none"
               />
             </div>
+
             <div>
-              <label htmlFor="custom-site-lon" className="block text-slate-400 mb-1">
+              <label htmlFor="custom-site-lon" className="block text-muted text-[11px] mb-1">
                 Longitude (-180° to 180°)
               </label>
               <input
@@ -112,31 +113,31 @@ export function CustomSiteModal({
                 max="180"
                 value={lon}
                 onChange={(e) => setLon(e.target.value)}
-                className="w-full rounded border border-space-700 bg-space-950 px-2.5 py-1.5 text-slate-200 focus:border-sun-amber focus:outline-none"
+                className="w-full rounded-lg border border-panel-border bg-panel px-3 py-2 text-ink focus:border-amber focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="custom-site-elev" className="block text-slate-400 mb-1">
-              Elevation (meters above 1737.4 km sphere)
+            <label htmlFor="custom-site-elev" className="block text-muted text-[11px] mb-1">
+              Elevation above Datum (meters)
             </label>
             <input
               id="custom-site-elev"
               type="number"
-              step="10"
+              step="1"
               value={elevation}
               onChange={(e) => setElevation(e.target.value)}
-              className="w-full rounded border border-space-700 bg-space-950 px-2.5 py-1.5 text-slate-200 focus:border-sun-amber focus:outline-none"
+              className="w-full rounded-lg border border-panel-border bg-panel px-3 py-2 text-ink focus:border-amber focus:outline-none"
             />
           </div>
 
-          <div className="mt-6 flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" size="sm" onClick={onClose}>
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-panel-border">
+            <Button variant="ghost" size="sm" type="button" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="sm">
-              Add Custom Site
+            <Button variant="primary" size="sm" type="submit">
+              Pin Custom Site
             </Button>
           </div>
         </form>

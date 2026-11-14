@@ -4,7 +4,6 @@ import { useUIStore } from '../../store/useUIStore';
 import { dataProvider } from '../../lib/data';
 import { evaluateMetricsAsync } from '../../lib/workers/workerClient';
 import type { Site, HorizonProfile, MetricsResult } from '../../contracts';
-import { Button } from '../../ui/Button';
 import { Tabs, type TabItem } from '../../ui/Tabs';
 import { CompareGrid } from './CompareGrid';
 import { MultiTimeline } from './MultiTimeline';
@@ -12,6 +11,7 @@ import { MetricBarCompare } from './MetricBarCompare';
 import { DeltaAnalysis } from './DeltaAnalysis';
 import { DateSweepHeatmap } from './DateSweepHeatmap';
 import { downloadComparisonCsv, copyComparisonMarkdown } from './exportUtils';
+import { safeViewTransition } from '../../lib/viewTransition';
 
 type CompareSubTab = 'grid' | 'timeline' | 'bars' | 'delta' | 'datesweep';
 
@@ -92,37 +92,49 @@ export function CompareView(): React.JSX.Element {
     }
   };
 
+  const handleClose = () => {
+    safeViewTransition(() => {
+      setCompareOpen(false);
+    });
+  };
+
   const handleAddScenarioPrompt = () => {
     const siteKeys = Object.keys(sites);
     if (siteKeys.length === 0) return;
     const randomSite = sites[siteKeys[Math.floor(Math.random() * siteKeys.length)]];
 
-    const colors = ['#F59E0B', '#38BDF8', '#10B981', '#A855F7'];
-    const chosenColor = colors[scenarios.length % colors.length];
-
+    const colors = ['#F5A524', '#10B981', '#FFD58A', '#E8590C'];
     addScenario({
       id: crypto.randomUUID(),
-      label: `${randomSite.name} Alt`,
+      label: randomSite.name,
       siteId: randomSite.id,
       landingTimeIso: new Date().toISOString(),
-      themeColor: chosenColor
+      themeColor: colors[scenarios.length % colors.length]
     });
   };
 
   return (
-    <div className="flex h-full w-full flex-col bg-space-950 font-sans text-slate-100 overflow-hidden">
+    <div className="fixed inset-4 z-50 flex flex-col rounded-3xl glass-panel p-6 shadow-2xl overflow-hidden select-none border border-glass-border">
       {/* Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-space-800 bg-space-900/90 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-panel-border pb-4">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-sm font-bold tracking-wider text-sun-amber">
-            COMPARATIVE SCENARIO MATRIX
-          </span>
-          <span className="rounded bg-space-800 px-2 py-0.5 font-mono text-[11px] text-slate-300 border border-space-700">
-            {scenarios.length} / 4 Scenarios
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber/15 text-amber font-mono font-bold">
+            VS
+          </div>
+          <div>
+            <h1 className="font-sans text-sm font-bold uppercase tracking-wider text-ink">
+              Comparative Scenario Matrix
+            </h1>
+            <p className="font-mono text-[11px] text-muted">
+              Side-by-side multi-site evaluation across synchronized ephemeris and LOLA terrain
+            </p>
+          </div>
+          <span className="rounded-full bg-panel border border-panel-border px-3 py-1 font-mono text-[11px] text-amber">
+            {scenarios.length} / 4 SLOTS
           </span>
         </div>
 
-        {/* View Sub-Tabs */}
+        {/* Sub-Tabs Pill */}
         <Tabs
           tabs={compareTabs}
           activeTab={activeTab}
@@ -132,42 +144,36 @@ export function CompareView(): React.JSX.Element {
         {/* Action Buttons: Export & Close */}
         <div className="flex items-center gap-2">
           {copyFeedback && (
-            <span className="text-[11px] text-emerald-400 font-mono animate-pulse">
+            <span className="text-[11px] text-emerald font-mono animate-pulse">
               {copyFeedback}
             </span>
           )}
-          <Button
-            size="sm"
-            variant="outline"
+          <button
+            type="button"
             onClick={handleCopyMarkdown}
-            title="Copy comparative summary table in Markdown format"
-            className="text-[11px] font-mono h-7"
+            className="rounded-lg border border-panel-border bg-panel px-3 py-1.5 font-mono text-xs text-muted hover:text-ink hover:border-muted transition-colors"
           >
             📋 Copy MD
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
+          </button>
+          <button
+            type="button"
             onClick={handleExportCsv}
-            title="Export comparative scenario metrics to CSV file"
-            className="text-[11px] font-mono h-7"
+            className="rounded-lg border border-panel-border bg-panel px-3 py-1.5 font-mono text-xs text-muted hover:text-ink hover:border-muted transition-colors"
           >
             ⬇️ Export CSV
-          </Button>
-          <Button
-            size="sm"
-            variant="primary"
-            onClick={() => setCompareOpen(false)}
-            title="Return to primary mission control view"
-            className="text-[11px] font-mono h-7 px-3"
+          </button>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="rounded-lg bg-amber px-4 py-1.5 font-sans text-xs font-bold text-amber-text transition-colors hover:bg-amber-hover active:bg-amber-pressed"
           >
-            ✕ Close Compare
-          </Button>
+            ✕ Close Matrix
+          </button>
         </div>
       </div>
 
-      {/* Main Content View */}
-      <div className="flex-1 overflow-y-auto p-4">
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto pt-4 space-y-4">
         {activeTab === 'grid' && (
           <CompareGrid
             scenarios={scenarios}
@@ -179,26 +185,13 @@ export function CompareView(): React.JSX.Element {
         )}
 
         {activeTab === 'timeline' && (
-          <MultiTimeline
-            scenarios={scenarios}
-            sites={sites}
-            horizons={horizons}
-          />
+          <MultiTimeline scenarios={scenarios} sites={sites} horizons={horizons} />
         )}
 
-        {activeTab === 'bars' && (
-          <MetricBarCompare
-            scenarios={scenarios}
-            results={results}
-          />
-        )}
+        {activeTab === 'bars' && <MetricBarCompare scenarios={scenarios} results={results} />}
 
         {activeTab === 'delta' && (
-          <DeltaAnalysis
-            scenarios={scenarios}
-            results={results}
-            sites={sites}
-          />
+          <DeltaAnalysis scenarios={scenarios} results={results} sites={sites} />
         )}
 
         {activeTab === 'datesweep' && (

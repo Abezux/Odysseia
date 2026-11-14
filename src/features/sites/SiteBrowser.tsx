@@ -75,12 +75,12 @@ export function SiteBrowserView(): React.JSX.Element {
       landingTimeIso: new Date().toISOString(),
       themeColor:
         site.category === 'artemis_candidate'
-          ? '#F59E0B'
+          ? '#F5A524'
           : site.category === 'clps'
           ? '#10B981'
           : site.category === 'international'
-          ? '#38BDF8'
-          : '#E2E8F0'
+          ? '#E8590C'
+          : '#F4EFE8'
     });
     if (!success) {
       alert('Maximum of 4 comparative scenarios reached. Remove a scenario before adding another.');
@@ -88,7 +88,7 @@ export function SiteBrowserView(): React.JSX.Element {
   };
 
   return (
-    <div className="flex h-full flex-col font-sans text-slate-200">
+    <div className="flex h-full flex-col font-sans text-ink">
       {/* Search Bar & Custom Pin Button */}
       <div className="flex items-center gap-2 pb-3">
         <input
@@ -96,7 +96,7 @@ export function SiteBrowserView(): React.JSX.Element {
           placeholder="Search site, agency..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-1 rounded border border-space-700 bg-space-950 px-2.5 py-1.5 font-mono text-xs text-slate-200 placeholder:text-slate-500 focus:border-sun-amber focus:outline-none"
+          className="flex-1 rounded-lg border border-panel-border bg-panel px-3 py-1.5 font-mono text-xs text-ink placeholder:text-muted focus:border-amber focus:outline-none"
         />
         <Button
           variant="outline"
@@ -109,7 +109,7 @@ export function SiteBrowserView(): React.JSX.Element {
       </div>
 
       {/* Filter Chips */}
-      <div className="flex flex-wrap gap-1.5 pb-3 border-b border-space-800">
+      <div className="flex flex-wrap gap-1.5 pb-3 border-b border-panel-border">
         <Chip
           size="sm"
           active={selectedCategory === 'all'}
@@ -157,7 +157,7 @@ export function SiteBrowserView(): React.JSX.Element {
       {/* Sites List */}
       <div className="flex-1 overflow-y-auto space-y-2 pt-3 pr-1">
         {filteredSites.length === 0 ? (
-          <div className="py-8 text-center text-xs text-slate-500 font-mono">
+          <div className="py-8 text-center text-xs text-muted font-mono">
             No landing sites match your criteria.
           </div>
         ) : (
@@ -169,22 +169,22 @@ export function SiteBrowserView(): React.JSX.Element {
               <div
                 key={site.id}
                 onClick={() => setActiveSiteId(site.id)}
-                className={`flex flex-col gap-1.5 rounded-lg border p-2.5 transition-all cursor-pointer ${
+                className={`flex flex-col gap-1.5 rounded-2xl border p-3 transition-all cursor-pointer ${
                   isActive
-                    ? 'border-sun-amber/60 bg-space-800/90 shadow-md shadow-sun-amber/5'
-                    : 'border-space-800 bg-space-900/50 hover:bg-space-800/40 hover:border-space-700'
+                    ? 'border-amber/80 bg-amber/10 shadow-lg'
+                    : 'border-panel-border bg-panel hover:border-muted'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-xs text-slate-100">{site.name}</span>
+                  <span className="font-semibold text-xs text-ink">{site.name}</span>
                   <Badge
                     variant={
                       site.category === 'artemis_candidate'
-                        ? 'warning'
+                        ? 'amber'
                         : site.category === 'clps'
-                        ? 'success'
+                        ? 'emerald'
                         : site.category === 'international'
-                        ? 'info'
+                        ? 'warning'
                         : 'neutral'
                     }
                     size="sm"
@@ -193,7 +193,7 @@ export function SiteBrowserView(): React.JSX.Element {
                   </Badge>
                 </div>
 
-                <div className="flex items-center justify-between font-mono text-[11px] text-slate-400">
+                <div className="flex items-center justify-between font-mono text-[11px] text-muted">
                   <span>
                     {site.latDeg.toFixed(2)}°, {site.lonDeg.toFixed(2)}°
                   </span>
@@ -201,7 +201,7 @@ export function SiteBrowserView(): React.JSX.Element {
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-[10px] text-slate-500 uppercase tracking-wider">
+                  <span className="text-[10px] text-muted uppercase tracking-wider font-mono">
                     {site.isSouthPoleRegion ? 'Polar Region' : 'Equatorial/Mid'}
                   </span>
                   <Button

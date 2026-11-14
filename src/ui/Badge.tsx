@@ -6,12 +6,15 @@ export type BadgeVariant =
   | 'success'
   | 'warning'
   | 'danger'
+  | 'critical'
   | 'info'
+  | 'amber'
+  | 'emerald'
   | 'neutral';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
   children?: React.ReactNode;
 }
 
@@ -22,49 +25,51 @@ export function Badge({
   children,
   ...props
 }: BadgeProps): React.JSX.Element {
-  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-sm';
+  const sizeClasses =
+    size === 'sm'
+      ? 'px-2 py-0.5 text-[11px]'
+      : size === 'lg'
+      ? 'px-3 py-1 text-xs'
+      : 'px-2.5 py-1 text-xs';
 
-  let variantClasses = 'bg-space-800 text-slate-300 border-space-700';
+  let variantClasses = 'bg-panel text-muted border-panel-border';
   let defaultLabel = children;
 
   switch (variant) {
     case 'simulated':
-      variantClasses = 'bg-amber-950/40 text-sun-amber border-sun-amber/40';
+      variantClasses = 'bg-amber/10 text-amber border-amber/30';
       defaultLabel = children ?? 'Simulated terrain';
       break;
     case 'no-terrain':
-      variantClasses = 'bg-slate-900/60 text-slate-400 border-slate-700 border-dashed';
+      variantClasses = 'bg-panel/60 text-muted border-panel-border border-dashed';
       defaultLabel = children ?? 'Terrain not included';
       break;
     case 'success':
-      variantClasses = 'bg-emerald-950/40 text-comms-signal border-comms-green/40';
+    case 'emerald':
+      variantClasses = 'bg-emerald/10 text-emerald border-emerald/30';
       break;
     case 'warning':
-      variantClasses = 'bg-amber-950/40 text-amber-300 border-amber-500/40';
+      variantClasses = 'bg-warning/10 text-warning border-warning/30';
       break;
     case 'danger':
-      variantClasses = 'bg-rose-950/40 text-rose-300 border-rose-500/40';
+    case 'critical':
+      variantClasses = 'bg-critical/10 text-critical border-critical/30';
       break;
     case 'info':
-      variantClasses = 'bg-sky-950/40 text-earth-blue border-sky-500/40';
+    case 'amber':
+      variantClasses = 'bg-amber/10 text-amber border-amber/30';
       break;
     case 'neutral':
     default:
-      variantClasses = 'bg-space-800 text-slate-300 border-space-700';
+      variantClasses = 'bg-panel text-muted border-panel-border';
       break;
   }
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border font-mono font-medium tracking-wide ${sizeClasses} ${variantClasses} ${className}`}
+      className={`inline-flex items-center gap-1 font-mono font-medium rounded-full border ${sizeClasses} ${variantClasses} ${className}`}
       {...props}
     >
-      {variant === 'simulated' && (
-        <span className="h-1.5 w-1.5 rounded-full bg-sun-amber animate-pulse" aria-hidden="true" />
-      )}
-      {variant === 'success' && (
-        <span className="h-1.5 w-1.5 rounded-full bg-comms-green" aria-hidden="true" />
-      )}
       {defaultLabel}
     </span>
   );

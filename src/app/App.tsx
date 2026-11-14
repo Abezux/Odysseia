@@ -1,36 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout } from './Layout';
-import { TimeControlsBar } from '../features/time';
-import { MoonGlobeView } from '../features/globe';
-import { SiteBrowserView } from '../features/sites';
-import { SiteDetailView } from '../features/detail';
-import { TimelineStripView } from '../features/timeline';
-import { TerrainView } from '../features/terrain';
-import { HorizonView } from '../features/horizon';
+import { TopBar } from '../features/dashboard/TopBar';
+import { LeftSidebar } from '../features/dashboard/LeftSidebar';
+import { CenterWorkspace } from '../features/dashboard/CenterWorkspace';
+import { RightUtilityColumn } from '../features/dashboard/RightUtilityColumn';
+import { TimelineDock } from '../features/dashboard/TimelineDock';
 import { CompareView } from '../features/compare';
 import { GuidedTour } from '../features/tour';
 import { LandingPage } from '../features/landing';
-import { Tabs, type TabItem } from '../ui/Tabs';
-import { useUIStore, type CenterTab } from '../store/useUIStore';
+import { ToastContainer } from '../ui/Toast';
+import { showToast } from '../ui/toastStore';
+import { CustomSiteModal } from '../features/sites/CustomSiteModal';
+import { ScorecardModal } from '../features/detail/ScorecardModal';
+import { useUIStore } from '../store/useUIStore';
 import { useScenarioStore } from '../store/useScenarioStore';
 import { useTimeStore } from '../store/useTimeStore';
 import { initializeUrlSync } from '../store/urlSync';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-
-const centerTabs: TabItem[] = [
-  { id: 'globe', label: '🌐 3D Moon Globe' },
-  { id: 'terrain', label: '🏔️ 3D Local Terrain' },
-  { id: 'horizon', label: '🔭 Horizon Panorama' }
-];
+import { dataProvider } from '../lib/data';
+import { evaluateMetricsAsync } from '../lib/workers/workerClient';
+import type { Site, HorizonProfile, MetricsResult } from '../contracts';
+import { safeViewTransition } from '../lib/viewTransition';
 
 export default function App(): React.JSX.Element {
   const {
     view,
     setView,
-    mode,
     toggleMode,
-    activeCenterTab,
     setActiveCenterTab,
     isCompareOpen,
     setCompareOpen,
@@ -38,16 +33,122 @@ export default function App(): React.JSX.Element {
     setTourOpen
   } = useUIStore();
 
-  const { scenarios } = useScenarioStore();
-  const { togglePlay, stepTime } = useTimeStore();
+  const { activeSiteId, setActiveSiteId } = useScenarioStore();
+  const { togglePlay, stepTime, currentTime } = useTimeStore();
 
+  // Dashboard UI State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isOpenMobile, setIsOpenMobile] = useState(false);
+  const [isScorecardOpen, setIsScorecardOpen] = useState(false);
+  const [isCustomSiteOpen, setIsCustomSiteOpen] = useState(false);
+
+  // Active Site, Horizon & Live Evaluated Metrics
+  const [site, setSite] = useState<Site | null>(null);
+  const [horizon, setHorizon] = useState<HorizonProfile | null>(null);
+  const [metrics, setMetrics] = useState<MetricsResult | null>(null);
+
+  // Initialize URL Query Sync
   useEffect(() => {
-    // Initialize two-way synchronization with URL query parameters
     const cleanup = initializeUrlSync();
     return cleanup;
   }, []);
 
-  // Keyboard navigation shortcuts
+  // Fetch active site and horizon profile whenever activeSiteId changes
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function loadSiteData() {
+      try {
+        const cat = await dataProvider.getCatalog();
+        const currentSite = cat.sites.find((s) => s.id === activeSiteId) || cat.sites[0];
+        if (isCancelled) return;
+        setSite(currentSite);
+
+        const horiz = await dataProvider.getHorizon(currentSite.id);
+        if (isCancelled) return;
+        setHorizon(horiz);
+      } catch (err) {
+        console.error('[App] Failed to load site catalog or horizon:', err);
+      }
+    }
+
+    loadSiteData();
+    return () => {
+      isCancelled = true;
+    };
+  }, [activeSiteId]);
+
+  // Evaluate ephemeris & metrics whenever site, horizon or currentTime changes
+  useEffect(() => {
+    let isCancelled = false;
+    if (!site) return;
+
+    evaluateMetricsAsync({
+      site: {
+        latDeg: site.latDeg,
+        lonDeg: site.lonDeg,
+        elevationM: site.elevationM
+      },
+      horizon,
+      t: currentTime
+    })
+      .then((res) => {
+        if (!isCancelled) {
+          setMetrics(res);
+        }
+      })
+      .catch((err) => {
+        console.error('[App] Metrics evaluation failed:', err);
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [site, horizon, currentTime]);
+
+  // Handle adding custom coordinates site
+  const handleAddCustomSite = async (custom: {
+    name: string;
+    latDeg: number;
+    lonDeg: number;
+    elevationM: number;
+  }) => {
+    const customId = `custom-${Date.now()}`;
+    const customSite: Site = {
+      id: customId,
+      name: custom.name,
+      agencyOrOperator: 'User Defined',
+      category: 'custom',
+      status: 'custom',
+      latDeg: custom.latDeg,
+      lonDeg: custom.lonDeg,
+      elevationM: custom.elevationM,
+      description: `Custom selenographic target at ${custom.latDeg.toFixed(2)}°, ${custom.lonDeg.toFixed(2)}°`,
+      referenceUrl: 'https://moon.nasa.gov',
+      isSouthPoleRegion: custom.latDeg <= -75,
+      tags: ['custom', 'user-defined']
+    };
+
+    // Inject into dataProvider cache
+    try {
+      const cat = await dataProvider.getCatalog();
+      cat.sites.unshift(customSite);
+    } catch {
+      // ignore
+    }
+
+    setSite(customSite);
+    setHorizon(null);
+    setActiveSiteId(customId);
+
+    showToast({
+      title: 'Custom Coordinates Created',
+      subtitle: `${customSite.name} · ${customSite.latDeg.toFixed(2)}°, ${customSite.lonDeg.toFixed(2)}°`,
+      severity: 'success'
+    });
+  };
+
+  // Global keyboard navigation shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -65,144 +166,129 @@ export default function App(): React.JSX.Element {
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          stepTime(e.shiftKey ? -86400 : -3600); // 1h or 1d with Shift
+          stepTime(e.shiftKey ? -86400 : -3600); // 1d with Shift, else 1h
           break;
         case 'ArrowRight':
           e.preventDefault();
           stepTime(e.shiftKey ? 86400 : 3600);
           break;
         case '1':
-          setActiveCenterTab('globe');
+          safeViewTransition(() => setActiveCenterTab('globe'));
           break;
         case '2':
-          setActiveCenterTab('terrain');
+          safeViewTransition(() => setActiveCenterTab('terrain'));
           break;
         case '3':
-          setActiveCenterTab('horizon');
+          safeViewTransition(() => setActiveCenterTab('horizon'));
           break;
         case 'm':
         case 'M':
-          toggleMode();
+          safeViewTransition(() => toggleMode());
           break;
         case 'c':
         case 'C':
-          setCompareOpen(!isCompareOpen);
+          safeViewTransition(() => setCompareOpen(!isCompareOpen));
           break;
         case '?':
           setTourOpen(!isTourOpen);
           break;
         case 'Escape':
           if (isCompareOpen) setCompareOpen(false);
+          if (isScorecardOpen) setIsScorecardOpen(false);
+          if (isCustomSiteOpen) setIsCustomSiteOpen(false);
           if (isTourOpen) setTourOpen(false);
+          if (isOpenMobile) setIsOpenMobile(false);
           break;
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [togglePlay, stepTime, setActiveCenterTab, toggleMode, isCompareOpen, setCompareOpen, isTourOpen, setTourOpen]);
+  }, [
+    togglePlay,
+    stepTime,
+    setActiveCenterTab,
+    toggleMode,
+    isCompareOpen,
+    setCompareOpen,
+    isScorecardOpen,
+    isCustomSiteOpen,
+    isTourOpen,
+    setTourOpen,
+    isOpenMobile
+  ]);
 
-  // If viewing the Landing Page
+  // Landing page view
   if (view === 'landing') {
     return <LandingPage onEnterApp={() => setView('app')} />;
   }
 
-  const topBarContent = (
-    <div className="flex w-full items-center justify-between gap-4">
-      {/* Brand, Mode Toggle, Compare, Tour & Back to Landing */}
-      <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setView('landing')}
-          title="Return to Landing Page"
-          className="text-xs font-mono"
-        >
-          ← LANDING
-        </Button>
-        <span className="font-mono text-sm font-bold tracking-wider text-amber">
-          ODYSSEIA
-        </span>
-        <Badge variant="neutral" size="sm">
-          LUNAR SOUTH POLE
-        </Badge>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={toggleMode}
-          title="Toggle between Overview (plain language) and Technical (frames & angles) [Shortcut: M]"
-          className="text-xs font-mono"
-        >
-          {mode === 'overview' ? '⚡ Mode: Overview' : '🔬 Mode: Technical'}
-        </Button>
-        <Button
-          variant={isCompareOpen ? 'primary' : 'outline'}
-          size="sm"
-          onClick={() => setCompareOpen(!isCompareOpen)}
-          title="Open Comparative Scenario Matrix [Shortcut: C]"
-          className="text-xs font-mono"
-        >
-          📊 Compare ({scenarios.length})
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setTourOpen(true)}
-          title="Interactive Mission Control Walkthrough [Shortcut: ?]"
-          className="text-xs font-mono text-slate-300 hover:text-amber"
-        >
-          🚀 Guide (?)
-        </Button>
-      </div>
-
-      {/* Synchronized Time Controls */}
-      <div className="flex-1 max-w-2xl">
-        <TimeControlsBar />
-      </div>
-    </div>
-  );
-
-  const centerViewContent = (
-    <div className="relative h-full w-full flex flex-col">
-      {/* Tab Switcher Overlay */}
-      <div className="absolute top-3 right-3 z-30">
-        <Tabs
-          tabs={centerTabs}
-          activeTab={activeCenterTab}
-          onChange={(id) => setActiveCenterTab(id as CenterTab)}
-        />
-      </div>
-
-      {/* Viewport content */}
-      <div className="flex-1 w-full h-full">
-        {activeCenterTab === 'globe' && <MoonGlobeView />}
-        {activeCenterTab === 'terrain' && <TerrainView />}
-        {activeCenterTab === 'horizon' && <HorizonView />}
-      </div>
-    </div>
-  );
-
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className="relative h-screen w-screen overflow-hidden bg-[#0B0A09]">
       <Layout
         slots={{
-          TopBarSlot: topBarContent,
-          LeftSidebarSlot: <SiteBrowserView />,
-          CenterViewSlot: centerViewContent,
-          RightDetailSlot: <SiteDetailView />,
-          BottomTimelineSlot: <TimelineStripView />
+          TopBarSlot: (
+            <TopBar
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              onToggleMobileDrawer={() => setIsOpenMobile((v) => !v)}
+              onOpenAlertsMobile={() => {}}
+              onBackToLanding={() => setView('landing')}
+              isRealLolaData={horizon?.source === 'lola'}
+            />
+          ),
+          LeftSidebarSlot: (
+            <LeftSidebar
+              searchQuery={searchQuery}
+              isOpenMobile={isOpenMobile}
+              onCloseMobile={() => setIsOpenMobile(false)}
+              onOpenCustomModal={() => setIsCustomSiteOpen(true)}
+            />
+          ),
+          CenterViewSlot: (
+            <CenterWorkspace metrics={metrics} activeSite={site} />
+          ),
+          RightDetailSlot: (
+            <RightUtilityColumn
+              site={site}
+              horizon={horizon}
+              metrics={metrics}
+              onOpenScorecardModal={() => setIsScorecardOpen(true)}
+            />
+          ),
+          BottomTimelineSlot: (
+            <TimelineDock metrics={metrics} />
+          )
         }}
       />
 
       {/* Full-Screen Comparison Matrix Overlay */}
       {isCompareOpen && (
-        <div className="fixed inset-0 z-50 flex bg-space-950/95 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex bg-[#0B0A09]/90 backdrop-blur-md">
           <CompareView />
         </div>
       )}
 
+      {/* Custom Site Coordinate Entry Modal */}
+      <CustomSiteModal
+        isOpen={isCustomSiteOpen}
+        onClose={() => setIsCustomSiteOpen(false)}
+        onSubmit={handleAddCustomSite}
+      />
+
+      {/* Full Feasibility Scorecard Modal */}
+      <ScorecardModal
+        isOpen={isScorecardOpen}
+        onClose={() => setIsScorecardOpen(false)}
+        site={site}
+        metrics={metrics}
+      />
+
       {/* Interactive Guided Tour Overlay */}
       <GuidedTour />
+
+      {/* Industrial Dark Toast Container */}
+      <ToastContainer />
     </div>
   );
 }

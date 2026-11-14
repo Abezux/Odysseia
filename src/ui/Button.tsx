@@ -32,26 +32,26 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantClasses = {
       primary:
-        'bg-sun-amber text-space-950 font-semibold hover:bg-sun-glow focus-visible:ring-sun-amber/50 shadow-sm shadow-sun-amber/20',
+        'bg-amber text-amber-text font-semibold hover:bg-amber-hover active:bg-amber-pressed focus-visible:ring-amber/50 shadow-sm shadow-amber/10',
       secondary:
-        'bg-space-800 text-slate-200 border border-space-700 hover:bg-space-700 hover:text-white focus-visible:ring-slate-400',
+        'bg-panel text-ink border border-panel-border hover:bg-[#25221F] hover:border-muted/50 focus-visible:ring-amber/30',
       outline:
-        'bg-transparent border border-space-600 text-slate-300 hover:bg-space-800 hover:text-white focus-visible:ring-slate-400',
+        'bg-transparent border border-panel-border text-muted hover:text-ink hover:border-muted/60 focus-visible:ring-amber/30',
       ghost:
-        'bg-transparent text-slate-300 hover:bg-space-800/60 hover:text-white focus-visible:ring-slate-400',
+        'bg-transparent text-muted hover:text-ink hover:bg-panel/60 focus-visible:ring-amber/30',
       danger:
-        'bg-warning-red/20 border border-warning-red/50 text-rose-300 hover:bg-warning-red/30 focus-visible:ring-rose-500'
+        'bg-critical/15 border border-critical/40 text-critical hover:bg-critical/25 focus-visible:ring-critical/50'
     }[variant];
 
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={`inline-flex items-center justify-center rounded transition-all select-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 ${sizeClasses} ${variantClasses} ${className}`}
+        className={`inline-flex items-center justify-center rounded-lg font-sans transition-all select-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 ${sizeClasses} ${variantClasses} ${className}`}
         {...props}
       >
         {isLoading ? (
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
         ) : (
           icon
         )}

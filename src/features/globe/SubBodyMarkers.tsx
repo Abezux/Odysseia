@@ -23,21 +23,21 @@ export function SubBodyMarkers({
       {/* Sub-Solar Point Marker (Amber) */}
       <mesh position={sunPos}>
         <sphereGeometry args={[0.03, 16, 16]} />
-        <meshBasicMaterial color="#F59E0B" />
+        <meshBasicMaterial color="#F5A524" />
       </mesh>
       <mesh position={sunPos}>
         <ringGeometry args={[0.04, 0.055, 32]} />
-        <meshBasicMaterial color="#FCD34D" side={THREE.DoubleSide} transparent opacity={0.6} />
+        <meshBasicMaterial color="#FFD58A" side={THREE.DoubleSide} transparent opacity={0.6} />
       </mesh>
 
-      {/* Sub-Earth Point Marker (Blue) */}
+      {/* Sub-Earth Point Marker (Emerald) */}
       <mesh position={earthPos}>
         <sphereGeometry args={[0.03, 16, 16]} />
-        <meshBasicMaterial color="#38BDF8" />
+        <meshBasicMaterial color="#10B981" />
       </mesh>
       <mesh position={earthPos}>
         <ringGeometry args={[0.04, 0.055, 32]} />
-        <meshBasicMaterial color="#0284C7" side={THREE.DoubleSide} transparent opacity={0.6} />
+        <meshBasicMaterial color="#10B981" side={THREE.DoubleSide} transparent opacity={0.5} />
       </mesh>
     </group>
   );
