@@ -1,0 +1,14 @@
+{
+  "siteId": "malapert-massif",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -85.99,
+  "centerLon": 2.94,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "malapert-massif.bin",
+  "minElevationM": 3673.6,
+  "maxElevationM": 5733.1,
+  "source": "mock"
+}

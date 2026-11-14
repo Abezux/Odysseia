@@ -1,0 +1,14 @@
+{
+  "siteId": "haworth-crater",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -87.4,
+  "centerLon": -5.1,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "haworth-crater.bin",
+  "minElevationM": -1741.5,
+  "maxElevationM": 242.7,
+  "source": "mock"
+}

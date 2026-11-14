@@ -1,0 +1,14 @@
+{
+  "siteId": "shackleton-rim",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20.0,
+  "centerLat": -89.9,
+  "centerLon": 0.0,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "shackleton-rim.bin",
+  "minElevationM": -3296.8,
+  "maxElevationM": 1290.7,
+  "source": "lola"
+}

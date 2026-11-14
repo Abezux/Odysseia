@@ -1,0 +1,14 @@
+{
+  "siteId": "im-1-odysseus",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -80.13,
+  "centerLon": 1.44,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "im-1-odysseus.bin",
+  "minElevationM": 955.2,
+  "maxElevationM": 2828.8,
+  "source": "mock"
+}

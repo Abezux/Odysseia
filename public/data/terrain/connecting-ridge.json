@@ -1,0 +1,14 @@
+{
+  "siteId": "connecting-ridge",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -89.44,
+  "centerLon": -137.5,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "connecting-ridge.bin",
+  "minElevationM": -416.9,
+  "maxElevationM": 1523.2,
+  "source": "mock"
+}

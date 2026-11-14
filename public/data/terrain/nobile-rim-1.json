@@ -1,0 +1,14 @@
+{
+  "siteId": "nobile-rim-1",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -85.2,
+  "centerLon": 35.8,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "nobile-rim-1.bin",
+  "minElevationM": 180.4,
+  "maxElevationM": 2163.9,
+  "source": "mock"
+}

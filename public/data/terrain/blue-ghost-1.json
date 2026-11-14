@@ -1,0 +1,14 @@
+{
+  "siteId": "blue-ghost-1",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": 18.56,
+  "centerLon": 61.81,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "blue-ghost-1.bin",
+  "minElevationM": -3785,
+  "maxElevationM": -3198,
+  "source": "mock"
+}

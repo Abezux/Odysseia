@@ -1,0 +1,14 @@
+{
+  "siteId": "chandrayaan-3",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -69.373,
+  "centerLon": 32.319,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "chandrayaan-3.bin",
+  "minElevationM": -3149.3,
+  "maxElevationM": -1039,
+  "source": "mock"
+}

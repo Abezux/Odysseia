@@ -1,0 +1,14 @@
+{
+  "siteId": "slim",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -13.316,
+  "centerLon": 25.251,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "slim.bin",
+  "minElevationM": -2974.5,
+  "maxElevationM": -2415.1,
+  "source": "mock"
+}

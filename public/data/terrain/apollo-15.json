@@ -1,0 +1,14 @@
+{
+  "siteId": "apollo-15",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": 26.13222,
+  "centerLon": 3.63386,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "apollo-15.bin",
+  "minElevationM": -2887,
+  "maxElevationM": -2365.3,
+  "source": "mock"
+}

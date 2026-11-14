@@ -1,0 +1,14 @@
+{
+  "siteId": "change-4",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -45.4446,
+  "centerLon": 177.5991,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "change-4.bin",
+  "minElevationM": -6315.6,
+  "maxElevationM": -5723.7,
+  "source": "mock"
+}

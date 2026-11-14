@@ -1,0 +1,14 @@
+{
+  "siteId": "im-2-shackleton",
+  "width": 256,
+  "height": 256,
+  "metersPerPixel": 20,
+  "centerLat": -89.28,
+  "centerLon": -136,
+  "elevationUnit": "m",
+  "referenceRadiusM": 1737400,
+  "heightsFile": "im-2-shackleton.bin",
+  "minElevationM": -369.1,
+  "maxElevationM": 1651.9,
+  "source": "mock"
+}
