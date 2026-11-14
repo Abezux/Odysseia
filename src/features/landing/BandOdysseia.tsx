@@ -222,11 +222,11 @@ export function BandOdysseia(): React.JSX.Element {
       <picture className="absolute inset-0 h-full w-full pointer-events-none">
         <source
           media="(max-width: 768px)"
-          srcSet="/odysseia-astronaut-open-portrait.webp"
+          srcSet={`${import.meta.env.BASE_URL}odysseia-astronaut-open-portrait.webp`}
           type="image/webp"
         />
         <img
-          src="/odysseia-astronaut-open.webp"
+          src={`${import.meta.env.BASE_URL}odysseia-astronaut-open.webp`}
           alt="Astronaut with open eyes seeing through lander instruments"
           className="h-full w-full object-cover object-right opacity-30 will-change-transform"
           style={{

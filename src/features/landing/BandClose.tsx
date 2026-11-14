@@ -40,11 +40,11 @@ export function BandClose({ onEnterApp }: BandCloseProps): React.JSX.Element {
       <picture className="absolute inset-0 h-full w-full pointer-events-none">
         <source
           media="(max-width: 768px)"
-          srcSet="/launch-astronaut-horizon-portrait.webp"
+          srcSet={`${import.meta.env.BASE_URL}launch-astronaut-horizon-portrait.webp`}
           type="image/webp"
         />
         <img
-          src="/launch-astronaut-horizon.webp"
+          src={`${import.meta.env.BASE_URL}launch-astronaut-horizon.webp`}
           alt="Astronaut looking out toward the lunar horizon"
           loading="lazy"
           className="h-full w-full object-cover object-right transition-transform duration-100 ease-out will-change-transform"

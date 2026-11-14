@@ -20,8 +20,12 @@ export class LocalDataProvider implements DataProvider {
 
   private baseUrl: string;
 
-  constructor(baseUrl: string = '/data') {
-    this.baseUrl = baseUrl.replace(/\/$/, '');
+  constructor(baseUrl?: string) {
+    const defaultBase =
+      typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL
+        ? `${import.meta.env.BASE_URL.replace(/\/$/, '')}/data`
+        : '/data';
+    this.baseUrl = (baseUrl ?? defaultBase).replace(/\/$/, '');
   }
 
   /**
