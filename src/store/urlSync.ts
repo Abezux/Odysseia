@@ -1,15 +1,19 @@
 import { useTimeStore } from './useTimeStore';
 import { useScenarioStore } from './useScenarioStore';
-import { useUIStore, type DisplayMode } from './useUIStore';
+import { useUIStore, type DisplayMode, type AppView } from './useUIStore';
 
 export function initializeUrlSync(): () => void {
   // Read on initial load
   try {
     const params = new URLSearchParams(window.location.search);
+    const view = params.get('view');
     const site = params.get('site');
     const t = params.get('t');
     const mode = params.get('mode');
 
+    if (view === 'app' || view === 'landing') {
+      useUIStore.getState().setView(view as AppView);
+    }
     if (site) {
       useScenarioStore.getState().setActiveSiteId(site);
     }
@@ -29,11 +33,13 @@ export function initializeUrlSync(): () => void {
   // Subscribe to store updates to keep URL in sync
   const updateUrl = () => {
     try {
+      const view = useUIStore.getState().view;
       const siteId = useScenarioStore.getState().activeSiteId;
       const timeIso = useTimeStore.getState().currentTime.toISOString();
       const mode = useUIStore.getState().mode;
 
       const params = new URLSearchParams();
+      if (view === 'app') params.set('view', 'app');
       if (siteId) params.set('site', siteId);
       params.set('t', timeIso);
       params.set('mode', mode);

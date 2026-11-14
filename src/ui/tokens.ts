@@ -1,41 +1,22 @@
 /**
- * Design Tokens for LunarSite Compare
- * Dark cinematic mission-control palette.
+ * Design Tokens for Odysseia
+ * Near-black warm void ground with one committed amber accent.
+ * No blue, violet or cyan anywhere. Radii 0 everywhere.
  */
 
 export const colors = {
-  space: {
-    950: '#05070D',
-    900: '#0B0F19',
-    800: '#131B2E',
-    700: '#1E2942',
-    600: '#2F3E61',
-    border: 'rgba(255, 255, 255, 0.08)',
-    glass: 'rgba(11, 15, 25, 0.75)'
+  ground: '#0B0A09',
+  secondaryGround: '#12110F',
+  panel: '#1A1816',
+  ink: '#F4EFE8',
+  muted: '#8A847B',
+  amber: {
+    DEFAULT: '#F5A524',
+    pressed: '#C77F0A',
+    paleGold: '#FFD58A'
   },
-  sun: {
-    amber: '#F59E0B',
-    glow: '#FCD34D',
-    dim: '#78350F'
-  },
-  earth: {
-    blue: '#38BDF8',
-    deep: '#0284C7',
-    dim: '#075985'
-  },
-  shadow: {
-    indigo: '#6366F1',
-    crater: '#080C16'
-  },
-  comms: {
-    green: '#10B981',
-    signal: '#34D399',
-    dim: '#064E3B'
-  },
-  warning: {
-    red: '#EF4444',
-    orange: '#F97316'
-  }
+  hairline: 'rgba(255, 240, 220, 0.10)',
+  hairlineSubtle: 'rgba(255, 240, 220, 0.06)'
 } as const;
 
 export const typography = {

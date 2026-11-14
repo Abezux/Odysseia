@@ -9,6 +9,7 @@ import { TerrainView } from '../features/terrain';
 import { HorizonView } from '../features/horizon';
 import { CompareView } from '../features/compare';
 import { GuidedTour } from '../features/tour';
+import { LandingPage } from '../features/landing';
 import { Tabs, type TabItem } from '../ui/Tabs';
 import { useUIStore, type CenterTab } from '../store/useUIStore';
 import { useScenarioStore } from '../store/useScenarioStore';
@@ -25,6 +26,8 @@ const centerTabs: TabItem[] = [
 
 export default function App(): React.JSX.Element {
   const {
+    view,
+    setView,
     mode,
     toggleMode,
     activeCenterTab,
@@ -99,15 +102,29 @@ export default function App(): React.JSX.Element {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [togglePlay, stepTime, setActiveCenterTab, toggleMode, isCompareOpen, setCompareOpen, isTourOpen, setTourOpen]);
 
+  // If viewing the Landing Page
+  if (view === 'landing') {
+    return <LandingPage onEnterApp={() => setView('app')} />;
+  }
+
   const topBarContent = (
     <div className="flex w-full items-center justify-between gap-4">
-      {/* Brand, Mode Toggle, Compare & Tour */}
+      {/* Brand, Mode Toggle, Compare, Tour & Back to Landing */}
       <div className="flex items-center gap-2">
-        <span className="font-mono text-sm font-bold tracking-wider text-sun-amber">
-          LUNARSITE COMPARE
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setView('landing')}
+          title="Return to Landing Page"
+          className="text-xs font-mono"
+        >
+          ← LANDING
+        </Button>
+        <span className="font-mono text-sm font-bold tracking-wider text-amber">
+          ODYSSEIA
         </span>
         <Badge variant="neutral" size="sm">
-          NASA SPACE APPS
+          LUNAR SOUTH POLE
         </Badge>
         <Button
           variant="outline"
@@ -132,7 +149,7 @@ export default function App(): React.JSX.Element {
           size="sm"
           onClick={() => setTourOpen(true)}
           title="Interactive Mission Control Walkthrough [Shortcut: ?]"
-          className="text-xs font-mono text-slate-300 hover:text-sun-amber"
+          className="text-xs font-mono text-slate-300 hover:text-amber"
         >
           🚀 Guide (?)
         </Button>

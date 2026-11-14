@@ -6,37 +6,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        space: {
-          950: '#05070D',
-          900: '#0B0F19',
-          800: '#131B2E',
-          700: '#1E2942',
-          600: '#2F3E61'
+        ground: '#0B0A09',
+        'secondary-ground': '#12110F',
+        panel: '#1A1816',
+        ink: '#F4EFE8',
+        muted: '#8A847B',
+        amber: {
+          DEFAULT: '#F5A524',
+          pressed: '#C77F0A',
+          gold: '#FFD58A'
         },
-        sun: {
-          amber: '#F59E0B',
-          glow: '#FCD34D'
-        },
-        earth: {
-          blue: '#38BDF8',
-          deep: '#0284C7'
-        },
-        shadow: {
-          indigo: '#6366F1',
-          crater: '#080C16'
-        },
-        comms: {
-          green: '#10B981',
-          signal: '#34D399'
-        },
-        warning: {
-          red: '#EF4444',
-          orange: '#F97316'
-        }
+        hairline: 'rgba(255, 240, 220, 0.10)',
+        'hairline-subtle': 'rgba(255, 240, 220, 0.06)'
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+        sans: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace']
+      },
+      borderRadius: {
+        DEFAULT: '0px',
+        none: '0px',
+        sm: '0px',
+        md: '0px',
+        lg: '0px',
+        xl: '0px',
+        '2xl': '0px',
+        '3xl': '0px',
+        full: '0px'
       }
     }
   },
