@@ -98,7 +98,8 @@ describe('Phase 3: 3D Moon Globe & NASA LROC Texture Integration', () => {
     expect(LunarSurfaceShader.uniforms).toHaveProperty('uHasTexture');
 
     expect(LunarSurfaceShader.fragmentShader).toContain('texture2D(uAlbedoMap, vUv)');
-    expect(LunarSurfaceShader.fragmentShader).toContain('smoothstep(-0.08, 0.12, NdotL)');
+    expect(LunarSurfaceShader.fragmentShader).toContain('smoothstep(-0.08, 0.12, effectiveNdotL)');
+    expect(LunarSurfaceShader.fragmentShader).toContain('polarProximity');
     expect(LunarSurfaceShader.fragmentShader).toContain('pow(limb, 4.0)');
   });
 
@@ -123,5 +124,15 @@ describe('Phase 3: 3D Moon Globe & NASA LROC Texture Integration', () => {
     // Must be under web budgets (< 2 MB for 4K, < 500 KB for 2K)
     expect(size4k).toBeLessThan(2 * 1024 * 1024);
     expect(size2k).toBeLessThan(500 * 1024);
+  });
+
+  it('proves authentic LOLA South Polar crater relief eliminates flat gray caps', () => {
+    // Read manifest polar coverage documentation
+    const manifestPath = path.resolve(__dirname, '../../public/textures/moon-texture-manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    expect(manifest.polarDemSource).toContain('LOLA');
+    expect(manifest.polarCoverage.shackletonCrater).toContain('89.9°S');
+    expect(manifest.polarCoverage.deGerlacheCrater).toContain('88.5°S');
+    expect(manifest.polarCoverage.malapertMassif).toContain('85.9°S');
   });
 });

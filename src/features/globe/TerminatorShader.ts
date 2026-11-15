@@ -70,9 +70,22 @@ export const LunarSurfaceShader = {
         baseAlbedo = uDayColor + vec3(regolith);
       }
 
-      // Smooth terminator transition
-      float terminator = smoothstep(-0.08, 0.12, NdotL);
-      vec3 surfaceColor = mix(uNightColor, baseAlbedo * max(0.05, NdotL), terminator);
+      // Smooth terminator transition with polar illumination compensation
+      // Real lunar polar topography consists of steep crater rims (15°-35° slopes) that
+      // catch horizontal solar rays. On a smooth sphere, normal.y dominates at the poles,
+      // artificially forcing NdotL to zero and crushing albedo to gray.
+      // We calculate horizontal solar alignment to keep the sunlit hemisphere of polar crater rims
+      // crisp and recognizable while preserving realistic shadowing on the night side.
+      float polarProximity = smoothstep(0.65, 0.98, abs(normal.y));
+      vec2 horizNormal = normalize(normal.xz + vec2(0.0001));
+      vec2 horizSun = normalize(sunDir.xz + vec2(0.0001));
+      float horizSunAlignment = max(0.0, dot(horizNormal, horizSun));
+
+      float effectiveNdotL = mix(NdotL, max(NdotL, horizSunAlignment * 0.75), polarProximity);
+      float terminator = smoothstep(-0.08, 0.12, effectiveNdotL);
+
+      float minSunlitFactor = mix(0.05, 0.35, polarProximity);
+      vec3 surfaceColor = mix(uNightColor, baseAlbedo * max(minSunlitFactor, effectiveNdotL), terminator);
 
       // Subtle limb brightening characteristic of airless lunar regolith (Lommel-Seeliger law approximation)
       vec3 viewDir = normalize(cameraPosition - vPosition);

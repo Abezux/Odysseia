@@ -1,10 +1,17 @@
 {
-  "datasetName": "NASA SVS Lunar Reconnaissance Orbiter Camera (LROC) Global Morphology Mosaic",
+  "datasetName": "NASA SVS LROC Global Morphology Mosaic with LOLA South Polar Topography",
   "productId": "LROC_COLOR_POLES_4K",
   "svsId": 4720,
   "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_poles_4k.tif",
+  "polarDemSource": "NASA PDS LOLA South Polar 20m/px DEM (LDEM_80S_20M)",
+  "polarCoverage": {
+    "southPole": "75\u00b0S to 90\u00b0S authentic LOLA hillshade composite",
+    "shackletonCrater": "Visible at 89.9\u00b0S, 0.0\u00b0E",
+    "deGerlacheCrater": "Visible at 88.5\u00b0S, 88.3\u00b0W",
+    "malapertMassif": "Visible at 85.9\u00b0S, 0.0\u00b0E"
+  },
   "license": "Public Domain (NASA Open Data Policy / U.S. Government Work)",
-  "attribution": "NASA/GSFC/Arizona State University (LROC) / Ernie Wright (NASA SVS)",
+  "attribution": "NASA/GSFC/Arizona State University (LROC) / LOLA Science Team / Ernie Wright (NASA SVS)",
   "projection": "Equirectangular (ME frame)",
   "bounds": {
     "minLonDeg": -180.0,
@@ -18,15 +25,15 @@
       "width": 4096,
       "height": 2048,
       "file": "moon-lroc-wac-4k.webp",
-      "bytes": 1251628
+      "bytes": 1404466
     },
     "lod1": {
       "width": 2048,
       "height": 1024,
       "file": "moon-lroc-wac-2k.webp",
-      "bytes": 288968
+      "bytes": 331710
     }
   },
-  "generatedAt": "2026-11-15T09:47:53.943221+00:00",
-  "gitCommit": "db59e3064229734ab7c73d4dc837e2b24dcf32da"
+  "generatedAt": "2026-11-15T12:15:04.266264+00:00",
+  "gitCommit": "aef45456753b63965206ff200a013e6071f54d8f"
 }

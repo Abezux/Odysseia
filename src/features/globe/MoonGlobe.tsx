@@ -120,7 +120,7 @@ function GlobeMesh({ sunDirection, onGlobeClick }: GlobeMeshProps): React.JSX.El
 
   return (
     <mesh ref={meshRef} onClick={handleClick}>
-      <sphereGeometry args={[GLOBE_RADIUS, 64, 64, -Math.PI / 2]} />
+      <sphereGeometry args={[GLOBE_RADIUS, 96, 96, -Math.PI / 2]} />
       <primitive object={material} attach="material" />
     </mesh>
   );
