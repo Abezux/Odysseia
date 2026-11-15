@@ -10,5 +10,7 @@
   "heightsFile": "slim.bin",
   "minElevationM": -2974.5,
   "maxElevationM": -2415.1,
-  "source": "mock"
+  "source": "mock",
+  "demSource": "SYNTHETIC TERRAIN (OUTSIDE LOLA 80S)",
+  "coverageStatus": "SYNTHETIC"
 }

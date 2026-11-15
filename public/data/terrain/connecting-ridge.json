@@ -1,14 +1,33 @@
 {
   "siteId": "connecting-ridge",
-  "width": 256,
-  "height": 256,
-  "metersPerPixel": 20,
+  "width": 250,
+  "height": 250,
+  "metersPerPixel": 80.0,
   "centerLat": -89.44,
   "centerLon": -137.5,
   "elevationUnit": "m",
   "referenceRadiusM": 1737400,
   "heightsFile": "connecting-ridge.bin",
-  "minElevationM": -416.9,
-  "maxElevationM": 1523.2,
-  "source": "mock"
+  "minElevationM": -1364.5,
+  "maxElevationM": 1959.5,
+  "source": "lola",
+  "demSource": "NASA_LOLA_LDEM_80S_20M",
+  "encoding": "uint16",
+  "coverageStatus": "COMPLETE",
+  "lodLevels": [
+    {
+      "lod": 1,
+      "metersPerPixel": 80.0,
+      "width": 250,
+      "height": 250,
+      "heightsFile": "connecting-ridge.bin"
+    },
+    {
+      "lod": 0,
+      "metersPerPixel": 20.0,
+      "width": 1000,
+      "height": 1000,
+      "heightsFile": "connecting-ridge-lod0.bin"
+    }
+  ]
 }

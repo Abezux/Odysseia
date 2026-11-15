@@ -10,5 +10,7 @@
   "heightsFile": "apollo-17.bin",
   "minElevationM": -2909.2,
   "maxElevationM": -2338.1,
-  "source": "mock"
+  "source": "mock",
+  "demSource": "SYNTHETIC TERRAIN (OUTSIDE LOLA 80S)",
+  "coverageStatus": "SYNTHETIC"
 }

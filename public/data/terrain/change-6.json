@@ -10,5 +10,7 @@
   "heightsFile": "change-6.bin",
   "minElevationM": -5542.8,
   "maxElevationM": -4996.2,
-  "source": "mock"
+  "source": "mock",
+  "demSource": "SYNTHETIC TERRAIN (OUTSIDE LOLA 80S)",
+  "coverageStatus": "SYNTHETIC"
 }

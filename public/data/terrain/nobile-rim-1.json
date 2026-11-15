@@ -1,14 +1,33 @@
 {
   "siteId": "nobile-rim-1",
-  "width": 256,
-  "height": 256,
-  "metersPerPixel": 20,
+  "width": 250,
+  "height": 250,
+  "metersPerPixel": 80.0,
   "centerLat": -85.2,
   "centerLon": 35.8,
   "elevationUnit": "m",
   "referenceRadiusM": 1737400,
   "heightsFile": "nobile-rim-1.bin",
-  "minElevationM": 180.4,
-  "maxElevationM": 2163.9,
-  "source": "mock"
+  "minElevationM": 2585.0,
+  "maxElevationM": 6800.0,
+  "source": "lola",
+  "demSource": "NASA_LOLA_LDEM_80S_20M",
+  "encoding": "uint16",
+  "coverageStatus": "COMPLETE",
+  "lodLevels": [
+    {
+      "lod": 1,
+      "metersPerPixel": 80.0,
+      "width": 250,
+      "height": 250,
+      "heightsFile": "nobile-rim-1.bin"
+    },
+    {
+      "lod": 0,
+      "metersPerPixel": 20.0,
+      "width": 1000,
+      "height": 1000,
+      "heightsFile": "nobile-rim-1-lod0.bin"
+    }
+  ]
 }

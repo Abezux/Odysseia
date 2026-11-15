@@ -10,5 +10,7 @@
   "heightsFile": "chandrayaan-3.bin",
   "minElevationM": -3149.3,
   "maxElevationM": -1039,
-  "source": "mock"
+  "source": "mock",
+  "demSource": "SYNTHETIC TERRAIN (OUTSIDE LOLA 80S)",
+  "coverageStatus": "SYNTHETIC"
 }

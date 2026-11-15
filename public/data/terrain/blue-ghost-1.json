@@ -10,5 +10,7 @@
   "heightsFile": "blue-ghost-1.bin",
   "minElevationM": -3785,
   "maxElevationM": -3198,
-  "source": "mock"
+  "source": "mock",
+  "demSource": "SYNTHETIC TERRAIN (OUTSIDE LOLA 80S)",
+  "coverageStatus": "SYNTHETIC"
 }

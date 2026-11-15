@@ -1,14 +1,33 @@
 {
   "siteId": "haworth-crater",
-  "width": 256,
-  "height": 256,
-  "metersPerPixel": 20,
+  "width": 250,
+  "height": 250,
+  "metersPerPixel": 80.0,
   "centerLat": -87.4,
   "centerLon": -5.1,
   "elevationUnit": "m",
   "referenceRadiusM": 1737400,
   "heightsFile": "haworth-crater.bin",
-  "minElevationM": -1741.5,
-  "maxElevationM": 242.7,
-  "source": "mock"
+  "minElevationM": -4022.0,
+  "maxElevationM": -1379.0,
+  "source": "lola",
+  "demSource": "NASA_LOLA_LDEM_80S_20M",
+  "encoding": "uint16",
+  "coverageStatus": "COMPLETE",
+  "lodLevels": [
+    {
+      "lod": 1,
+      "metersPerPixel": 80.0,
+      "width": 250,
+      "height": 250,
+      "heightsFile": "haworth-crater.bin"
+    },
+    {
+      "lod": 0,
+      "metersPerPixel": 20.0,
+      "width": 1000,
+      "height": 1000,
+      "heightsFile": "haworth-crater-lod0.bin"
+    }
+  ]
 }

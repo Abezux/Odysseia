@@ -1,14 +1,33 @@
 {
   "siteId": "im-1-odysseus",
-  "width": 256,
-  "height": 256,
-  "metersPerPixel": 20,
+  "width": 250,
+  "height": 250,
+  "metersPerPixel": 80.0,
   "centerLat": -80.13,
   "centerLon": 1.44,
   "elevationUnit": "m",
   "referenceRadiusM": 1737400,
   "heightsFile": "im-1-odysseus.bin",
-  "minElevationM": 955.2,
-  "maxElevationM": 2828.8,
-  "source": "mock"
+  "minElevationM": 1776.5,
+  "maxElevationM": 2963.5,
+  "source": "lola",
+  "demSource": "NASA_LOLA_LDEM_80S_20M",
+  "encoding": "uint16",
+  "coverageStatus": "PARTIAL",
+  "lodLevels": [
+    {
+      "lod": 1,
+      "metersPerPixel": 80.0,
+      "width": 250,
+      "height": 250,
+      "heightsFile": "im-1-odysseus.bin"
+    },
+    {
+      "lod": 0,
+      "metersPerPixel": 20.0,
+      "width": 1000,
+      "height": 1000,
+      "heightsFile": "im-1-odysseus-lod0.bin"
+    }
+  ]
 }

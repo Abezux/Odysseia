@@ -1,14 +1,33 @@
 {
   "siteId": "shackleton-rim",
-  "width": 256,
-  "height": 256,
-  "metersPerPixel": 20.0,
+  "width": 250,
+  "height": 250,
+  "metersPerPixel": 80.0,
   "centerLat": -89.9,
   "centerLon": 0.0,
   "elevationUnit": "m",
   "referenceRadiusM": 1737400,
   "heightsFile": "shackleton-rim.bin",
-  "minElevationM": -3296.8,
-  "maxElevationM": 1290.7,
-  "source": "lola"
+  "minElevationM": -2872.5,
+  "maxElevationM": 1738.5,
+  "source": "lola",
+  "demSource": "NASA_LOLA_LDEM_80S_20M",
+  "encoding": "uint16",
+  "coverageStatus": "COMPLETE",
+  "lodLevels": [
+    {
+      "lod": 1,
+      "metersPerPixel": 80.0,
+      "width": 250,
+      "height": 250,
+      "heightsFile": "shackleton-rim.bin"
+    },
+    {
+      "lod": 0,
+      "metersPerPixel": 20.0,
+      "width": 1000,
+      "height": 1000,
+      "heightsFile": "shackleton-rim-lod0.bin"
+    }
+  ]
 }

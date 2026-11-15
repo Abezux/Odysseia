@@ -1,14 +1,33 @@
 {
   "siteId": "malapert-massif",
-  "width": 256,
-  "height": 256,
-  "metersPerPixel": 20,
+  "width": 250,
+  "height": 250,
+  "metersPerPixel": 80.0,
   "centerLat": -85.99,
   "centerLon": 2.94,
   "elevationUnit": "m",
   "referenceRadiusM": 1737400,
   "heightsFile": "malapert-massif.bin",
-  "minElevationM": 3673.6,
-  "maxElevationM": 5733.1,
-  "source": "mock"
+  "minElevationM": 538.0,
+  "maxElevationM": 5174.0,
+  "source": "lola",
+  "demSource": "NASA_LOLA_LDEM_80S_20M",
+  "encoding": "uint16",
+  "coverageStatus": "COMPLETE",
+  "lodLevels": [
+    {
+      "lod": 1,
+      "metersPerPixel": 80.0,
+      "width": 250,
+      "height": 250,
+      "heightsFile": "malapert-massif.bin"
+    },
+    {
+      "lod": 0,
+      "metersPerPixel": 20.0,
+      "width": 1000,
+      "height": 1000,
+      "heightsFile": "malapert-massif-lod0.bin"
+    }
+  ]
 }

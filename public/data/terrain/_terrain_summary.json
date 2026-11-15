@@ -1,0 +1,65 @@
+[
+  {
+    "siteId": "shackleton-rim",
+    "status": "COMPLETE",
+    "minElevationM": -2872.5,
+    "maxElevationM": 1738.5,
+    "reliefM": 4611.0,
+    "lod1SizeKB": 122.1,
+    "lod0SizeKB": 1953.1
+  },
+  {
+    "siteId": "connecting-ridge",
+    "status": "COMPLETE",
+    "minElevationM": -1364.5,
+    "maxElevationM": 1959.5,
+    "reliefM": 3324.0,
+    "lod1SizeKB": 122.1,
+    "lod0SizeKB": 1953.1
+  },
+  {
+    "siteId": "malapert-massif",
+    "status": "COMPLETE",
+    "minElevationM": 538.0,
+    "maxElevationM": 5174.0,
+    "reliefM": 4636.0,
+    "lod1SizeKB": 122.1,
+    "lod0SizeKB": 1953.1
+  },
+  {
+    "siteId": "haworth-crater",
+    "status": "COMPLETE",
+    "minElevationM": -4022.0,
+    "maxElevationM": -1379.0,
+    "reliefM": 2643.0,
+    "lod1SizeKB": 122.1,
+    "lod0SizeKB": 1953.1
+  },
+  {
+    "siteId": "nobile-rim-1",
+    "status": "COMPLETE",
+    "minElevationM": 2585.0,
+    "maxElevationM": 6800.0,
+    "reliefM": 4215.0,
+    "lod1SizeKB": 122.1,
+    "lod0SizeKB": 1953.1
+  },
+  {
+    "siteId": "im-1-odysseus",
+    "status": "PARTIAL",
+    "minElevationM": 1776.5,
+    "maxElevationM": 2963.5,
+    "reliefM": 1187.0,
+    "lod1SizeKB": 122.1,
+    "lod0SizeKB": 1953.1
+  },
+  {
+    "siteId": "im-2-shackleton",
+    "status": "COMPLETE",
+    "minElevationM": -2221.5,
+    "maxElevationM": 1959.5,
+    "reliefM": 4181.0,
+    "lod1SizeKB": 122.1,
+    "lod0SizeKB": 1953.1
+  }
+]
