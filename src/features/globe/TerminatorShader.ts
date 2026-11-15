@@ -1,14 +1,16 @@
 import * as THREE from 'three';
 
 /**
- * Custom lunar shader material providing realistic terminator shading and lunar albedo relief.
+ * Custom lunar shader material providing realistic terminator shading and authentic NASA LROC WAC albedo relief.
  */
 export const LunarSurfaceShader = {
   uniforms: {
     uSunDirection: { value: new THREE.Vector3(1, 0, 0) },
     uDayColor: { value: new THREE.Color('#948F85') },
     uNightColor: { value: new THREE.Color('#0B0A09') },
-    uTerminatorColor: { value: new THREE.Color('#3D362E') }
+    uTerminatorColor: { value: new THREE.Color('#3D362E') },
+    uAlbedoMap: { value: null as THREE.Texture | null },
+    uHasTexture: { value: 0.0 }
   },
   vertexShader: `
     varying vec3 vNormal;
@@ -27,12 +29,14 @@ export const LunarSurfaceShader = {
     uniform vec3 uDayColor;
     uniform vec3 uNightColor;
     uniform vec3 uTerminatorColor;
+    uniform sampler2D uAlbedoMap;
+    uniform float uHasTexture;
 
     varying vec3 vNormal;
     varying vec3 vPosition;
     varying vec2 vUv;
 
-    // Simple procedural noise for lunar regolith texture
+    // Simple procedural noise fallback if texture is not bound
     float hash(vec2 p) {
       return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
     }
@@ -55,10 +59,16 @@ export const LunarSurfaceShader = {
       // Diffuse solar illumination
       float NdotL = dot(normal, sunDir);
 
-      // Micro-texture for highland regolith
-      float regolith = noise(vUv * 80.0) * 0.12 + noise(vUv * 240.0) * 0.05;
-
-      vec3 baseAlbedo = uDayColor + vec3(regolith);
+      vec3 baseAlbedo;
+      if (uHasTexture > 0.5) {
+        // Authentic NASA LRO / LROC WAC Global Mosaic
+        vec4 texColor = texture2D(uAlbedoMap, vUv);
+        baseAlbedo = texColor.rgb;
+      } else {
+        // Micro-texture for highland regolith fallback
+        float regolith = noise(vUv * 80.0) * 0.12 + noise(vUv * 240.0) * 0.05;
+        baseAlbedo = uDayColor + vec3(regolith);
+      }
 
       // Smooth terminator transition
       float terminator = smoothstep(-0.08, 0.12, NdotL);

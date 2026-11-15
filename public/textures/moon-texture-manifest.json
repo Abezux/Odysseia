@@ -1,0 +1,32 @@
+{
+  "datasetName": "NASA SVS Lunar Reconnaissance Orbiter Camera (LROC) Global Morphology Mosaic",
+  "productId": "LROC_COLOR_POLES_4K",
+  "svsId": 4720,
+  "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_poles_4k.tif",
+  "license": "Public Domain (NASA Open Data Policy / U.S. Government Work)",
+  "attribution": "NASA/GSFC/Arizona State University (LROC) / Ernie Wright (NASA SVS)",
+  "projection": "Equirectangular (ME frame)",
+  "bounds": {
+    "minLonDeg": -180.0,
+    "maxLonDeg": 180.0,
+    "minLatDeg": -90.0,
+    "maxLatDeg": 90.0
+  },
+  "primeMeridianPosition": "center (x = width / 2, u = 0.5)",
+  "resolution": {
+    "lod0": {
+      "width": 4096,
+      "height": 2048,
+      "file": "moon-lroc-wac-4k.webp",
+      "bytes": 1251628
+    },
+    "lod1": {
+      "width": 2048,
+      "height": 1024,
+      "file": "moon-lroc-wac-2k.webp",
+      "bytes": 288968
+    }
+  },
+  "generatedAt": "2026-11-15T09:47:53.943221+00:00",
+  "gitCommit": "db59e3064229734ab7c73d4dc837e2b24dcf32da"
+}

@@ -14,6 +14,7 @@ import { SitePinLayer } from './SitePinLayer';
 import { SubBodyMarkers } from './SubBodyMarkers';
 import { latLonToVector3, GLOBE_RADIUS } from './globeMath';
 import { Button } from '../../ui/Button';
+import { Badge } from '../../ui/Badge';
 import { Icon } from '../../ui';
 
 interface GlobeMeshProps {
@@ -23,6 +24,7 @@ interface GlobeMeshProps {
 
 function GlobeMesh({ sunDirection, onGlobeClick }: GlobeMeshProps): React.JSX.Element {
   const meshRef = useRef<THREE.Mesh>(null);
+  const textureRef = useRef<THREE.Texture | null>(null);
 
   // Shader material
   const material = useMemo(() => {
@@ -31,13 +33,70 @@ function GlobeMesh({ sunDirection, onGlobeClick }: GlobeMeshProps): React.JSX.El
         uSunDirection: { value: sunDirection.clone() },
         uDayColor: { value: new THREE.Color('#948F85') },
         uNightColor: { value: new THREE.Color('#0B0A09') },
-        uTerminatorColor: { value: new THREE.Color('#3D362E') }
+        uTerminatorColor: { value: new THREE.Color('#3D362E') },
+        uAlbedoMap: { value: null },
+        uHasTexture: { value: 0.0 }
       },
       vertexShader: LunarSurfaceShader.vertexShader,
       fragmentShader: LunarSurfaceShader.fragmentShader
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Load authentic NASA LROC WAC global albedo map
+  useEffect(() => {
+    const baseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL || '/').replace(/\/$/, '');
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const textureFile = isMobile ? 'moon-lroc-wac-2k.webp' : 'moon-lroc-wac-4k.webp';
+    const textureUrl = `${baseUrl}/textures/${textureFile}`;
+
+    let active = true;
+    const loader = new THREE.TextureLoader();
+
+    loader.load(
+      textureUrl,
+      (tex) => {
+        if (!active) {
+          tex.dispose();
+          return;
+        }
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.generateMipmaps = true;
+        tex.minFilter = THREE.LinearMipmapLinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        textureRef.current = tex;
+
+        if (material) {
+          material.uniforms.uAlbedoMap.value = tex;
+          material.uniforms.uHasTexture.value = 1.0;
+          material.needsUpdate = true;
+        }
+      },
+      undefined,
+      (err) => {
+        console.warn('[MoonGlobe] Failed to load NASA LROC texture, falling back to base albedo:', err);
+      }
+    );
+
+    return () => {
+      active = false;
+      if (textureRef.current) {
+        textureRef.current.dispose();
+        textureRef.current = null;
+      }
+      if (material) {
+        material.uniforms.uAlbedoMap.value = null;
+        material.uniforms.uHasTexture.value = 0.0;
+      }
+    };
+  }, [material]);
+
+  // Clean up material on unmount
+  useEffect(() => {
+    return () => {
+      material.dispose();
+    };
+  }, [material]);
 
   useFrame(() => {
     if (material) {
@@ -61,7 +120,7 @@ function GlobeMesh({ sunDirection, onGlobeClick }: GlobeMeshProps): React.JSX.El
 
   return (
     <mesh ref={meshRef} onClick={handleClick}>
-      <sphereGeometry args={[GLOBE_RADIUS, 64, 64]} />
+      <sphereGeometry args={[GLOBE_RADIUS, 64, 64, -Math.PI / 2]} />
       <primitive object={material} attach="material" />
     </mesh>
   );
@@ -135,10 +194,23 @@ export function MoonGlobeView(): React.JSX.Element {
 
   return (
     <div className="relative h-full w-full select-none bg-[#0B0A09] overflow-hidden">
+      {/* Floating Provenance HUD Badges */}
+      <div className="pointer-events-none absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+        <div className="flex items-center gap-2">
+          <Badge variant="success" size="md">
+            NASA LRO / LROC WAC 4K
+          </Badge>
+          <Badge variant="neutral" size="md">
+            Global Albedo Mosaic
+          </Badge>
+        </div>
+      </div>
+
       {/* 3D Canvas */}
       <Canvas
         camera={{ position: [0, -3.2, 3.2], fov: 45 }}
-        gl={{ antialias: true, alpha: false }}
+        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+        dpr={Math.min(2, typeof window !== 'undefined' ? window.devicePixelRatio : 1)}
         className="h-full w-full"
       >
         <color attach="background" args={['#0B0A09']} />
