@@ -1,0 +1,439 @@
+[
+  {
+    "id": "shackleton-rim",
+    "name": "Shackleton Crater Rim",
+    "isPolar": true,
+    "status": "COMPLETE",
+    "before": {
+      "illumPct": 75.8,
+      "maxDarkHrs": 120.9,
+      "dtePct": 41.2,
+      "powerScore": 72,
+      "commsScore": 29,
+      "overallScore": 54
+    },
+    "after": {
+      "illumPct": 29.5,
+      "maxDarkHrs": 470.6,
+      "dtePct": 49.9,
+      "powerScore": 18,
+      "commsScore": 35,
+      "overallScore": 22
+    },
+    "deltaScore": -32
+  },
+  {
+    "id": "connecting-ridge",
+    "name": "Connecting Ridge",
+    "isPolar": true,
+    "status": "COMPLETE",
+    "before": {
+      "illumPct": 12,
+      "maxDarkHrs": 303.5,
+      "dtePct": 40.1,
+      "powerScore": 13,
+      "commsScore": 28,
+      "overallScore": 20
+    },
+    "after": {
+      "illumPct": 95.6,
+      "maxDarkHrs": 31.1,
+      "dtePct": 53.8,
+      "powerScore": 94,
+      "commsScore": 40,
+      "overallScore": 73
+    },
+    "deltaScore": 53
+  },
+  {
+    "id": "malapert-massif",
+    "name": "Malapert Massif",
+    "isPolar": true,
+    "status": "COMPLETE",
+    "before": {
+      "illumPct": 32.6,
+      "maxDarkHrs": 433.8,
+      "dtePct": 62.2,
+      "powerScore": 20,
+      "commsScore": 51,
+      "overallScore": 29
+    },
+    "after": {
+      "illumPct": 41.9,
+      "maxDarkHrs": 377,
+      "dtePct": 100,
+      "powerScore": 25,
+      "commsScore": 100,
+      "overallScore": 50
+    },
+    "deltaScore": 21
+  },
+  {
+    "id": "haworth-crater",
+    "name": "Haworth Rim",
+    "isPolar": true,
+    "status": "COMPLETE",
+    "before": {
+      "illumPct": 21.6,
+      "maxDarkHrs": 442.2,
+      "dtePct": 46.4,
+      "powerScore": 13,
+      "commsScore": 32,
+      "overallScore": 19
+    },
+    "after": {
+      "illumPct": 0,
+      "maxDarkHrs": 708.7,
+      "dtePct": 0,
+      "powerScore": 0,
+      "commsScore": 0,
+      "overallScore": 0
+    },
+    "deltaScore": -19
+  },
+  {
+    "id": "nobile-rim-1",
+    "name": "Nobile Crater Rim 1",
+    "isPolar": true,
+    "status": "COMPLETE",
+    "before": {
+      "illumPct": 35.2,
+      "maxDarkHrs": 428.7,
+      "dtePct": 53.7,
+      "powerScore": 21,
+      "commsScore": 40,
+      "overallScore": 25
+    },
+    "after": {
+      "illumPct": 42.8,
+      "maxDarkHrs": 341.2,
+      "dtePct": 77.8,
+      "powerScore": 27,
+      "commsScore": 71,
+      "overallScore": 40
+    },
+    "deltaScore": 15
+  },
+  {
+    "id": "chandrayaan-3",
+    "name": "Shiv Shakti Point (Chandrayaan-3)",
+    "isPolar": true,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 47.7,
+      "maxDarkHrs": 370.5,
+      "dtePct": 100,
+      "powerScore": 29,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 47.7,
+      "maxDarkHrs": 370.5,
+      "dtePct": 100,
+      "powerScore": 29,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "im-1-odysseus",
+    "name": "Malapert A (IM-1 Odysseus)",
+    "isPolar": true,
+    "status": "PARTIAL",
+    "before": {
+      "illumPct": 41.2,
+      "maxDarkHrs": 416.4,
+      "dtePct": 100,
+      "powerScore": 25,
+      "commsScore": 100,
+      "overallScore": 50
+    },
+    "after": {
+      "illumPct": 37.9,
+      "maxDarkHrs": 440,
+      "dtePct": 100,
+      "powerScore": 23,
+      "commsScore": 100,
+      "overallScore": 49
+    },
+    "deltaScore": -1
+  },
+  {
+    "id": "im-2-shackleton",
+    "name": "Shackleton Connecting Ridge (IM-2)",
+    "isPolar": true,
+    "status": "COMPLETE",
+    "before": {
+      "illumPct": 14.7,
+      "maxDarkHrs": 191.7,
+      "dtePct": 40.5,
+      "powerScore": 27,
+      "commsScore": 28,
+      "overallScore": 32
+    },
+    "after": {
+      "illumPct": 43.2,
+      "maxDarkHrs": 214.6,
+      "dtePct": 0,
+      "powerScore": 42,
+      "commsScore": 0,
+      "overallScore": 25
+    },
+    "deltaScore": -7
+  },
+  {
+    "id": "blue-ghost-1",
+    "name": "Mare Crisium (Blue Ghost 1)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.9,
+      "maxDarkHrs": 355.2,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 49.9,
+      "maxDarkHrs": 355.2,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "apollo-11",
+    "name": "Apollo 11 (Statio Tranquillitatis)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.9,
+      "maxDarkHrs": 355.3,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 49.9,
+      "maxDarkHrs": 355.3,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "apollo-12",
+    "name": "Apollo 12 (Oceanus Procellarum)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.9,
+      "maxDarkHrs": 355.3,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 49.9,
+      "maxDarkHrs": 355.3,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "apollo-14",
+    "name": "Apollo 14 (Fra Mauro)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.8,
+      "maxDarkHrs": 355.5,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 49.8,
+      "maxDarkHrs": 355.5,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "apollo-15",
+    "name": "Apollo 15 (Hadley-Apennine)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 50,
+      "maxDarkHrs": 354.3,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 50,
+      "maxDarkHrs": 354.3,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "apollo-16",
+    "name": "Apollo 16 (Descartes Highlands)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.8,
+      "maxDarkHrs": 356,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 49.8,
+      "maxDarkHrs": 356,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "apollo-17",
+    "name": "Apollo 17 (Taurus-Littrow)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.9,
+      "maxDarkHrs": 355.3,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 49.9,
+      "maxDarkHrs": 355.3,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "change-4",
+    "name": "Chang'e 4 (Von Kármán)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.4,
+      "maxDarkHrs": 251.5,
+      "dtePct": 0,
+      "powerScore": 41,
+      "commsScore": 0,
+      "overallScore": 22
+    },
+    "after": {
+      "illumPct": 49.4,
+      "maxDarkHrs": 251.5,
+      "dtePct": 0,
+      "powerScore": 41,
+      "commsScore": 0,
+      "overallScore": 22
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "change-5",
+    "name": "Chang'e 5 (Mons Rümker)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 50.1,
+      "maxDarkHrs": 353.8,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 50.1,
+      "maxDarkHrs": 353.8,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "change-6",
+    "name": "Chang'e 6 (Apollo Basin)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.4,
+      "maxDarkHrs": 197.2,
+      "dtePct": 0,
+      "powerScore": 47,
+      "commsScore": 0,
+      "overallScore": 28
+    },
+    "after": {
+      "illumPct": 49.4,
+      "maxDarkHrs": 197.2,
+      "dtePct": 0,
+      "powerScore": 47,
+      "commsScore": 0,
+      "overallScore": 28
+    },
+    "deltaScore": 0
+  },
+  {
+    "id": "slim",
+    "name": "SLIM (Shioli Crater)",
+    "isPolar": false,
+    "status": "SYNTHETIC",
+    "before": {
+      "illumPct": 49.8,
+      "maxDarkHrs": 355.7,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "after": {
+      "illumPct": 49.8,
+      "maxDarkHrs": 355.7,
+      "dtePct": 100,
+      "powerScore": 30,
+      "commsScore": 100,
+      "overallScore": 52
+    },
+    "deltaScore": 0
+  }
+]
