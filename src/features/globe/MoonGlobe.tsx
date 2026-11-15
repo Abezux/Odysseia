@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Html } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 import { Target, Globe, RotateCcw } from 'lucide-react';
@@ -35,9 +35,16 @@ export interface GlobeLayers {
 interface GlobeMeshProps {
   sunDirection: THREE.Vector3;
   onGlobeClick: (lat: number, lon: number) => void;
+  focusedBody?: 'earth' | 'sun' | 'southPole' | 'equator' | null;
+  onResetView?: () => void;
 }
 
-function GlobeMesh({ sunDirection, onGlobeClick }: GlobeMeshProps): React.JSX.Element {
+function GlobeMesh({
+  sunDirection,
+  onGlobeClick,
+  focusedBody,
+  onResetView
+}: GlobeMeshProps): React.JSX.Element {
   const meshRef = useRef<THREE.Mesh>(null);
   const textureRef = useRef<THREE.Texture | null>(null);
 
@@ -121,6 +128,13 @@ function GlobeMesh({ sunDirection, onGlobeClick }: GlobeMeshProps): React.JSX.El
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
+    if (focusedBody) {
+      if (typeof document !== 'undefined') {
+        document.body.style.cursor = 'auto';
+      }
+      onResetView?.();
+      return;
+    }
     if (!e.point) return;
 
     // Convert intersection point on sphere into selenographic lat/lon
@@ -134,7 +148,20 @@ function GlobeMesh({ sunDirection, onGlobeClick }: GlobeMeshProps): React.JSX.El
   };
 
   return (
-    <mesh ref={meshRef} onClick={handleClick}>
+    <mesh
+      ref={meshRef}
+      onClick={handleClick}
+      onPointerOver={() => {
+        if (focusedBody && typeof document !== 'undefined') {
+          document.body.style.cursor = 'pointer';
+        }
+      }}
+      onPointerOut={() => {
+        if (typeof document !== 'undefined') {
+          document.body.style.cursor = 'auto';
+        }
+      }}
+    >
       <sphereGeometry args={[GLOBE_RADIUS, 96, 96, -Math.PI / 2]} />
       <primitive object={material} attach="material" />
     </mesh>
@@ -311,10 +338,37 @@ export function MoonGlobeView({
     return THREE.MathUtils.radToDeg(Math.acos(dot));
   }, [sunDirection, earthDirection]);
 
-  // Click on globe to select or create a pin
-  const handleGlobeClick = (lat: number, lon: number) => {
+  // Reset Camera View to previous or default
+  const resetCameraView = useCallback(() => {
+    if (typeof document !== 'undefined') {
+      document.body.style.cursor = 'auto';
+    }
+    const defaultTarget: CameraTarget = previousCameraRef.current || {
+      position: new THREE.Vector3(0, -3.2, 3.2),
+      target: new THREE.Vector3(0, 0, 0)
+    };
+    setCameraTarget(defaultTarget);
+    setFocusedBody(null);
+    previousCameraRef.current = null;
+  }, []);
+
+  // Click on globe to select or create a pin, or reset view if focused on another body
+  const handleGlobeClick = useCallback((lat: number, lon: number) => {
+    if (focusedBody) {
+      resetCameraView();
+      return;
+    }
     console.log(`[MoonGlobe] Surface clicked: Lat ${lat}°, Lon ${lon}°`);
-  };
+  }, [focusedBody, resetCameraView]);
+
+  // Clean up cursor on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.style.cursor = 'auto';
+      }
+    };
+  }, []);
 
   // Focus Earth
   const focusEarth = useCallback(() => {
@@ -352,17 +406,6 @@ export function MoonGlobeView({
       setFocusedBody('sun');
     }
   }, [controlsRef, focusedBody, sunDirection]);
-
-  // Reset Camera View to previous or default
-  const resetCameraView = useCallback(() => {
-    const defaultTarget: CameraTarget = previousCameraRef.current || {
-      position: new THREE.Vector3(0, -3.2, 3.2),
-      target: new THREE.Vector3(0, 0, 0)
-    };
-    setCameraTarget(defaultTarget);
-    setFocusedBody(null);
-    previousCameraRef.current = null;
-  }, []);
 
   // Quick focus to South Pole
   const focusSouthPole = () => {
@@ -460,8 +503,61 @@ export function MoonGlobeView({
           </>
         )}
 
-        <GlobeMesh sunDirection={sunDirection} onGlobeClick={handleGlobeClick} />
+        <GlobeMesh
+          sunDirection={sunDirection}
+          onGlobeClick={handleGlobeClick}
+          focusedBody={focusedBody}
+          onResetView={resetCameraView}
+        />
         <PolarRings />
+
+        {/* Clickable Hit-Target & Label for Moon when camera is focused on Sun, Earth, or other bodies */}
+        {focusedBody && (
+          <>
+            <mesh
+              onClick={(e) => {
+                e.stopPropagation();
+                resetCameraView();
+              }}
+              onPointerOver={() => {
+                if (typeof document !== 'undefined') {
+                  document.body.style.cursor = 'pointer';
+                }
+              }}
+              onPointerOut={() => {
+                if (typeof document !== 'undefined') {
+                  document.body.style.cursor = 'auto';
+                }
+              }}
+            >
+              <sphereGeometry args={[GLOBE_RADIUS * 1.5, 32, 32]} />
+              <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+            </mesh>
+
+            {activeLayers.labels && (
+              <Html
+                position={[0, GLOBE_RADIUS + 0.35, 0]}
+                center
+                distanceFactor={18}
+                style={{ pointerEvents: 'auto', userSelect: 'none' }}
+              >
+                <div
+                  className="group relative flex flex-col items-center cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    resetCameraView();
+                  }}
+                >
+                  <div className="flex items-center gap-1.5 rounded-md border border-amber/60 bg-[#0B0A09]/85 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-amber shadow-md backdrop-blur-xs transition-colors hover:border-amber-hover hover:text-amber-hover">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber" />
+                    <span>MOON</span>
+                    <span className="text-[9px] text-muted font-normal hidden sm:inline">(Click to Reset)</span>
+                  </div>
+                </div>
+              </Html>
+            )}
+          </>
+        )}
 
         {activeLayers.siteMarkers && (
           <SitePinLayer
@@ -495,7 +591,7 @@ export function MoonGlobeView({
           isFullscreen
             ? hideDetails
               ? 'bottom-4 left-4'
-              : 'bottom-[195px] left-4'
+              : 'bottom-[235px] left-4'
             : 'bottom-3 sm:bottom-4 left-3 sm:left-4'
         }`}
       >

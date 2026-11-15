@@ -645,7 +645,7 @@ export function HorizonView({
         <div
           className={`pointer-events-none absolute z-panel flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 text-[10px] text-ink backdrop-blur-md transition-opacity duration-200 ${
             hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          } ${isFullscreen ? 'bottom-[195px] left-4' : 'bottom-3 left-3 sm:bottom-4 sm:left-4'}`}
+          } ${isFullscreen ? 'bottom-[235px] left-4' : 'bottom-3 left-3 sm:bottom-4 sm:left-4'}`}
         >
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5 text-amber">
