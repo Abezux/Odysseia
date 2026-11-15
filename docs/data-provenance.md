@@ -87,3 +87,25 @@ For the 12 non-polar sites currently labeled `SYNTHETIC` (e.g. Apollo 11–17, C
    .venv/bin/python scripts/dem/cropLolaTerrainTiles.py
    ```
 
+---
+
+## 5. Phase 3: Authentic NASA LRO Global Lunar Surface
+1. **Source Product**: NASA Scientific Visualization Studio (SVS) - Studio Ernie Wright: CGI Moon Kit (SVS 4720).
+2. **Original Map**: `lroc_color_poles_4k.tif` (4096 × 2048 Equirectangular Color / Albedo Mosaic).
+3. **Repository URL**: `https://svs.gsfc.nasa.gov/4720`
+4. **Attribution**: NASA / Goddard Space Flight Center / Arizona State University (LROC) / Ernie Wright (NASA SVS).
+5. **License**: NASA Open Data Policy / Public Domain (U.S. Government Work).
+6. **Coordinate Reference**: Mean Earth / Polar Axis (ME) frame.
+   - Longitude: $-180^\circ$ (left) to $+180^\circ$ (right), with Prime Meridian ($0^\circ$) at center ($x = 2048$, $u = 0.5$).
+   - Latitude: $+90^\circ$ (top row, $v = 1.0$) to $-90^\circ$ (bottom row, $v = 0.0$).
+7. **Processing Script**: `scripts/textures/processGlobeTexture.py`
+8. **Generated Web Assets**:
+   - `public/textures/moon-lroc-wac-4k.webp`: $4096 \times 2048$, 1.19 MB (LOD 0 for desktop).
+   - `public/textures/moon-lroc-wac-2k.webp`: $2048 \times 1024$, 282 KB (LOD 1 for mobile / low bandwidth).
+   - `public/textures/moon-texture-manifest.json`: metadata manifest and checksums.
+9. **Reproduction Command**:
+   ```bash
+   .venv/bin/python scripts/textures/processGlobeTexture.py
+   ```
+
+
