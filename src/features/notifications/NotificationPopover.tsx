@@ -114,7 +114,7 @@ export function NotificationPopover({
         role="dialog"
         aria-label={`Notifications (${unreadCount} unread)`}
         aria-modal="true"
-        className="max-[819px]:fixed max-[819px]:inset-x-0 max-[819px]:bottom-0 max-[819px]:w-full max-[819px]:max-h-[85vh] max-[819px]:rounded-t-2xl max-[819px]:rounded-b-none min-[820px]:absolute min-[820px]:right-0 min-[820px]:top-full min-[820px]:mt-2 min-[820px]:w-[360px] min-[820px]:rounded-2xl z-50 flex flex-col border border-panel-border bg-[#141210]/95 backdrop-blur-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+        className="max-[819px]:fixed max-[819px]:inset-x-0 max-[819px]:bottom-0 max-[819px]:w-full max-[819px]:max-h-[85vh] max-[819px]:rounded-t-2xl max-[819px]:rounded-b-none min-[820px]:absolute min-[820px]:right-0 min-[820px]:top-full min-[820px]:mt-2 min-[820px]:w-[360px] min-[820px]:rounded-2xl z-modal flex flex-col border border-panel-border bg-[#141210]/95 backdrop-blur-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-panel-border px-4 py-3 bg-[#181614]/80">

@@ -11,7 +11,7 @@ export function ToastContainer(): React.JSX.Element {
   return (
     <aside
       aria-label="Mission notifications"
-      className="fixed top-6 right-6 z-[100] flex flex-col gap-2.5 pointer-events-none"
+      className="fixed top-6 right-6 z-toast flex flex-col gap-2.5 pointer-events-none"
     >
       {toasts.map((t) => {
         const severityBorder =

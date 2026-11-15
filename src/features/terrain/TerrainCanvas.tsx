@@ -158,7 +158,15 @@ function CompassReticle({ radius = 32 }: { radius?: number }): React.JSX.Element
   return <primitive object={lineObj} />;
 }
 
-export function TerrainView(): React.JSX.Element {
+export interface TerrainViewProps {
+  hideDetails?: boolean;
+  isFullscreen?: boolean;
+}
+
+export function TerrainView({
+  hideDetails = false,
+  isFullscreen = false
+}: TerrainViewProps = {}): React.JSX.Element {
   const { activeSiteId } = useScenarioStore();
   const { currentTime } = useTimeStore();
 
@@ -312,79 +320,97 @@ export function TerrainView(): React.JSX.Element {
         />
       </Canvas>
 
-      {/* Floating HUD Badges & Metadata */}
-      <div className="pointer-events-none absolute top-3 left-3 z-10 flex flex-col gap-2">
-        <div className="flex items-center gap-2">
+      {/* Slot Top-Left: Provenance & Telemetry Badges */}
+      <div
+        className={`pointer-events-none absolute z-panel flex flex-col gap-1.5 transition-all duration-250 ${
+          isFullscreen
+            ? hideDetails
+              ? 'top-4 left-4 opacity-100'
+              : 'top-4 left-4 mt-[200px] opacity-100'
+            : 'top-3 left-3 opacity-100'
+        }`}
+      >
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {manifest.source === 'lola' ? (
             <Badge
               variant={manifest.coverageStatus === 'PARTIAL' ? 'warning' : 'success'}
-              size="md"
+              size="sm"
             >
               {manifest.coverageStatus === 'PARTIAL'
-                ? 'LOLA DEM (PARTIAL - EDGE CLIPPED)'
+                ? 'LOLA DEM (PARTIAL)'
                 : 'LOLA 20m/px DEM Tile'}
             </Badge>
           ) : (
-            <Badge variant="warning" size="md">
-              SYNTHETIC TERRAIN (OUTSIDE LOLA 80S)
+            <Badge variant="warning" size="sm">
+              SYNTHETIC TERRAIN
             </Badge>
           )}
-          <Badge variant="neutral" size="md">
-            Tile: {(manifest.width * manifest.metersPerPixel / 1000).toFixed(1)} km × {(manifest.height * manifest.metersPerPixel / 1000).toFixed(1)} km ({manifest.metersPerPixel}m/px)
+          <Badge variant="neutral" size="sm" className="hidden sm:inline-flex">
+            {(manifest.width * manifest.metersPerPixel / 1000).toFixed(0)}km × {(manifest.height * manifest.metersPerPixel / 1000).toFixed(0)}km ({manifest.metersPerPixel}m/px)
           </Badge>
         </div>
 
-        <div className="rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 font-mono text-[11px] text-ink backdrop-blur-md">
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-amber">Sun Elevation:</span>
-            <span className="font-semibold text-ink">{sunElevDeg.toFixed(2)}°</span>
+        <div className="rounded-xl border border-panel-border bg-panel/90 p-2 font-mono text-[10px] text-ink backdrop-blur-md max-w-[240px]">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-amber">Sun Elev:</span>
+            <span className="font-semibold text-ink">{sunElevDeg.toFixed(1)}°</span>
           </div>
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-emerald">Earth Elevation:</span>
-            <span className="font-semibold text-ink">{earthElevDeg.toFixed(2)}°</span>
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-emerald">Earth Elev:</span>
+            <span className="font-semibold text-ink">{earthElevDeg.toFixed(1)}°</span>
           </div>
-          <div className="flex items-center justify-between gap-4 border-t border-panel-border pt-1 mt-1 text-[10px] text-muted">
-            <span>Elevation Relief:</span>
+          <div className="flex items-center justify-between gap-3 border-t border-panel-border pt-1 mt-1 text-[9px] text-muted">
+            <span>Relief:</span>
             <span>{manifest.minElevationM}m to {manifest.maxElevationM}m</span>
           </div>
         </div>
       </div>
 
-      {/* Floating Controls Overlay: LOD & Vertical Exaggeration */}
-      <div className="absolute bottom-3 right-3 z-10 flex flex-wrap items-center gap-3 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 font-mono text-xs text-ink backdrop-blur-md">
+      {/* Slot Bottom-Right: LOD & Vertical Exaggeration Controls */}
+      <div
+        className={`absolute z-panel flex flex-wrap items-center gap-2 rounded-2xl border border-panel-border bg-panel/90 p-2 font-mono text-xs text-ink backdrop-blur-md max-w-[360px] transition-opacity duration-250 ${
+          isFullscreen
+            ? hideDetails
+              ? 'opacity-0 pointer-events-none'
+              : 'bottom-4 right-4'
+            : hideDetails
+            ? 'opacity-0 pointer-events-none'
+            : 'bottom-3 right-3'
+        }`}
+      >
         {manifest.lodLevels && manifest.lodLevels.length > 1 && (
-          <div className="flex items-center gap-1.5 border-r border-panel-border pr-3">
-            <span className="text-muted">LOD:</span>
+          <div className="flex items-center gap-1 border-r border-panel-border pr-2">
+            <span className="text-muted text-[10px]">LOD:</span>
             <Button
               size="sm"
               variant={lod === 1 ? 'primary' : 'outline'}
               onClick={() => setLod(1)}
-              className="px-2 py-0.5 h-6 text-[10px]"
+              className="px-1.5 py-0.5 h-5 text-[9px]"
               title="Overview 250x250 (80m/px, 122 KB)"
             >
-              Overview (80m)
+              80m
             </Button>
             <Button
               size="sm"
               variant={lod === 0 ? 'primary' : 'outline'}
               onClick={() => setLod(0)}
-              className="px-2 py-0.5 h-6 text-[10px]"
+              className="px-1.5 py-0.5 h-5 text-[9px]"
               title="Detail 1000x1000 (20m/px native LOLA)"
             >
-              Detail (20m)
+              20m
             </Button>
           </div>
         )}
 
         <div className="flex items-center gap-1">
-          <span className="text-muted mr-1">Exaggeration:</span>
+          <span className="text-muted text-[10px]">Slope:</span>
           {[1.0, 1.5, 2.5, 4.0].map((val) => (
             <Button
               key={val}
               size="sm"
               variant={exaggeration === val ? 'primary' : 'outline'}
               onClick={() => setExaggeration(val)}
-              className="px-2 py-0.5 h-6 text-[10px]"
+              className="px-1.5 py-0.5 h-5 text-[9px]"
             >
               {val.toFixed(1)}x
             </Button>
@@ -392,17 +418,17 @@ export function TerrainView(): React.JSX.Element {
         </div>
       </div>
 
-      {/* Cardinal direction badges on screen perimeter */}
-      <div className="pointer-events-none absolute top-3 right-1/2 translate-x-1/2 font-mono text-[10px] font-bold text-muted">
+      {/* Cardinal direction badges positioned cleanly without obscuring Tabs */}
+      <div className="pointer-events-none absolute top-13 sm:top-14 left-1/2 -translate-x-1/2 font-mono text-[10px] font-bold text-muted z-panel">
         N (-Z)
       </div>
-      <div className="pointer-events-none absolute bottom-3 right-1/2 translate-x-1/2 font-mono text-[10px] font-bold text-muted">
+      <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 font-mono text-[10px] font-bold text-muted z-panel">
         S (+Z)
       </div>
-      <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[10px] font-bold text-muted">
+      <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[10px] font-bold text-muted z-panel">
         E (+X)
       </div>
-      <div className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 font-mono text-[10px] font-bold text-muted">
+      <div className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 font-mono text-[10px] font-bold text-muted z-panel">
         W (-X)
       </div>
     </div>

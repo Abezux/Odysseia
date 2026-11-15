@@ -24,7 +24,25 @@
   --chart-dte: #10B981;
   --chart-blackout: rgba(239, 68, 68, 0.25);
   --chart-stroke: rgba(244, 239, 232, 0.2);
+
+  /* Unified Z-Index Token Scale */
+  --z-canvas: 0;
+  --z-mask: 10;
+  --z-overlay: 20;
+  --z-panel: 30;
+  --z-popover: 40;
+  --z-modal: 50;
+  --z-toast: 60;
 }
+
+/* Unified Z-Index Classes */
+.z-canvas { z-index: 0; }
+.z-mask { z-index: 10; }
+.z-overlay { z-index: 20; }
+.z-panel { z-index: 30; }
+.z-popover { z-index: 40; }
+.z-modal { z-index: 50; }
+.z-toast { z-index: 60; }
 
 /* Glassmorphism panel utility */
 .glass-panel {

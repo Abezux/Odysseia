@@ -20,7 +20,15 @@ const BACKGROUND_STARS = Array.from({ length: 60 }, (_, i) => {
   return { xPercent, yPercent, r, opacity };
 });
 
-export function HorizonView(): React.JSX.Element {
+export interface HorizonViewProps {
+  hideDetails?: boolean;
+  isFullscreen?: boolean;
+}
+
+export function HorizonView({
+  hideDetails = false,
+  isFullscreen = false
+}: HorizonViewProps): React.JSX.Element {
   const { activeSiteId } = useScenarioStore();
   const { currentTime } = useTimeStore();
 
@@ -300,105 +308,116 @@ export function HorizonView(): React.JSX.Element {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-full w-full flex-col select-none overflow-hidden bg-[#0B0A09] font-mono"
+      className="relative h-full w-full select-none overflow-hidden bg-[#0B0A09] font-mono"
     >
-      {/* Top Header & Navigation Bar */}
-      <div className="flex flex-wrap items-center justify-between border-b border-panel-border bg-panel/90 px-4 py-2 text-xs backdrop-blur-md gap-2 z-20">
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-ink font-sans">First-Person Skyline</span>
-          <Badge
-            variant={
-              horizon === null
-                ? 'neutral'
-                : horizon.source === 'lola'
-                ? horizon.coverageStatus === 'PARTIAL'
-                  ? 'warning'
-                  : 'success'
-                : 'warning'
-            }
-            size="sm"
-          >
-            {horizon === null
-              ? 'Smooth Horizon (0°)'
+      {/* Slot Top-Left: First-Person Skyline Title & LOLA Profile Badge */}
+      <div
+        className={`pointer-events-none absolute z-panel flex items-center gap-2 transition-opacity duration-200 ${
+          hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        } ${isFullscreen ? 'top-4 left-4 mt-[200px]' : 'top-3 left-3 sm:top-4 sm:left-4'}`}
+      >
+        <span className="font-semibold text-ink font-sans text-xs hidden sm:inline">First-Person Skyline</span>
+        <Badge
+          variant={
+            horizon === null
+              ? 'neutral'
               : horizon.source === 'lola'
               ? horizon.coverageStatus === 'PARTIAL'
-                ? `LOLA 20m Profile (PARTIAL ${horizon.realAzimuthBinPercent ?? 53}%)`
-                : 'LOLA 20m DEM Profile'
-              : 'Mock Profile (Outside 80°S)'}
-          </Badge>
-        </div>
-
-        {/* Quick Orientation Presets & Tracking Controls */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleTrackSun}
-            className="text-[10px] h-6 px-2 text-amber border-amber/30 hover:border-amber flex items-center gap-1.5"
-            title="Rotate panorama to center the Sun"
-          >
-            <Icon icon={Sun} size={16} />
-            <span>Sun ({sunAz.toFixed(0)}°)</span>
-          </Button>
-
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleTrackEarth}
-            className="text-[10px] h-6 px-2 text-emerald border-emerald/30 hover:border-emerald flex items-center gap-1.5"
-            title="Rotate panorama to center the Earth"
-          >
-            <Icon icon={Globe} size={16} />
-            <span>Earth ({earthAz.toFixed(0)}°)</span>
-          </Button>
-
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setCenterAzimuth(0)}
-            className={`text-[10px] h-6 px-1.5 ${
-              Math.round(centerAzimuth) === 0 ? 'text-amber font-bold' : 'text-muted hover:text-ink'
-            }`}
-          >
-            N (0°)
-          </Button>
-
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setCenterAzimuth(180)}
-            className={`text-[10px] h-6 px-1.5 ${
-              Math.round(centerAzimuth) === 180 ? 'text-amber font-bold' : 'text-muted hover:text-ink'
-            }`}
-          >
-            S (180°)
-          </Button>
-
-          {/* Reset View 360° Panorama */}
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleResetPanorama}
-            className="text-[10px] h-6 px-2 text-muted hover:text-ink border-panel-border hover:border-amber/40 flex items-center gap-1 ml-1"
-            title="Reset to 360° full panorama facing North"
-          >
-            <Icon icon={RotateCcw} size={16} />
-            <span>360° Reset</span>
-          </Button>
-        </div>
+                ? 'warning'
+                : 'success'
+              : 'warning'
+          }
+          size="sm"
+        >
+          {horizon === null
+            ? 'Smooth Horizon (0°)'
+            : horizon.source === 'lola'
+            ? horizon.coverageStatus === 'PARTIAL'
+              ? `LOLA 20m Profile (PARTIAL ${horizon.realAzimuthBinPercent ?? 53}%)`
+              : 'LOLA 20m Profile'
+            : 'Mock Profile (Outside 80°S)'}
+        </Badge>
       </div>
 
-      {/* Floating Controls Overlay (Top Right): Vertical Exaggeration (1x | 2x | 4x) & FOV readout */}
-      <div className="absolute top-12 right-4 z-20 flex items-center gap-2">
+      {/* Slot Top-Center: Quick Orientation Presets & Tracking Controls (below Tabs) */}
+      <div
+        className={`absolute z-panel flex items-center gap-1 sm:gap-1.5 rounded-xl border border-panel-border bg-panel/90 p-1 shadow-md backdrop-blur-md transition-opacity duration-200 ${
+          hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        } top-13 sm:top-14 left-1/2 -translate-x-1/2`}
+      >
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleTrackSun}
+          className="text-[10px] h-6 px-1.5 sm:px-2 text-amber border-amber/30 hover:border-amber flex items-center gap-1"
+          title="Rotate panorama to center the Sun"
+        >
+          <Icon icon={Sun} size={16} />
+          <span className="hidden sm:inline">Sun</span>
+          <span>({sunAz.toFixed(0)}°)</span>
+        </Button>
+
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleTrackEarth}
+          className="text-[10px] h-6 px-1.5 sm:px-2 text-emerald border-emerald/30 hover:border-emerald flex items-center gap-1"
+          title="Rotate panorama to center the Earth"
+        >
+          <Icon icon={Globe} size={16} />
+          <span className="hidden sm:inline">Earth</span>
+          <span>({earthAz.toFixed(0)}°)</span>
+        </Button>
+
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setCenterAzimuth(0)}
+          className={`text-[10px] h-6 px-1.5 ${
+            Math.round(centerAzimuth) === 0 ? 'text-amber font-bold' : 'text-muted hover:text-ink'
+          }`}
+        >
+          N
+        </Button>
+
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setCenterAzimuth(180)}
+          className={`text-[10px] h-6 px-1.5 ${
+            Math.round(centerAzimuth) === 180 ? 'text-amber font-bold' : 'text-muted hover:text-ink'
+          }`}
+        >
+          S
+        </Button>
+
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleResetPanorama}
+          className="text-[10px] h-6 px-1.5 sm:px-2 text-muted hover:text-ink border-panel-border hover:border-amber/40 flex items-center gap-1"
+          title="Reset to 360° full panorama facing North"
+        >
+          <Icon icon={RotateCcw} size={16} />
+          <span className="hidden sm:inline">Reset</span>
+        </Button>
+      </div>
+
+      {/* Slot Top-Right: Vertical Exaggeration (1x | 2x | 4x) & FOV readout (below Toolbar) */}
+      <div
+        className={`absolute z-panel flex items-center gap-1.5 sm:gap-2 transition-opacity duration-200 ${
+          hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        } top-13 sm:top-14 right-3 sm:right-4`}
+      >
         {/* Vertical Exaggeration Pill */}
         <div className="flex items-center rounded-xl border border-panel-border bg-panel/90 p-0.5 shadow-lg backdrop-blur-md">
-          <span className="px-2 font-mono text-[9px] text-muted uppercase">Slope:</span>
+          <span className="px-1.5 font-mono text-[9px] text-muted uppercase hidden sm:inline">Slope:</span>
           {([1, 2, 4] as const).map((factor) => (
             <button
               key={factor}
               type="button"
               onClick={() => setExaggeration(factor)}
-              className={`rounded-lg px-2 py-0.5 font-mono text-[10px] font-semibold transition-all focus:outline-none ${
+              className={`rounded-lg px-1.5 py-0.5 font-mono text-[10px] font-semibold transition-all focus:outline-none ${
                 exaggeration === factor
                   ? 'bg-amber text-ground shadow-xs'
                   : 'text-muted hover:text-ink'
@@ -411,15 +430,15 @@ export function HorizonView(): React.JSX.Element {
         </div>
 
         {/* FOV Pill */}
-        <div className="flex items-center rounded-xl border border-panel-border bg-panel/90 px-2 py-1 shadow-lg backdrop-blur-md text-[10px] font-mono text-muted">
-          <span>FOV:</span>
-          <span className="ml-1 font-bold text-ink">{fovDegrees}°</span>
+        <div className="flex items-center rounded-xl border border-panel-border bg-panel/90 px-2 py-0.5 sm:py-1 shadow-lg backdrop-blur-md text-[10px] font-mono text-muted">
+          <span className="hidden sm:inline">FOV:</span>
+          <span className="sm:ml-1 font-bold text-ink">{fovDegrees}°</span>
         </div>
       </div>
 
       {/* Panoramic SVG Canvas */}
       <div
-        className="relative flex-1 cursor-grab active:cursor-grabbing overflow-hidden touch-none"
+        className="relative h-full w-full cursor-grab active:cursor-grabbing overflow-hidden touch-none"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -622,8 +641,12 @@ export function HorizonView(): React.JSX.Element {
           </g>
         </svg>
 
-        {/* Overlay Telemetry HUD (Bottom Left) */}
-        <div className="pointer-events-none absolute bottom-3 left-3 z-10 flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 text-[10px] text-ink backdrop-blur-md">
+        {/* Slot Bottom-Left: Overlay Telemetry HUD */}
+        <div
+          className={`pointer-events-none absolute z-panel flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 text-[10px] text-ink backdrop-blur-md transition-opacity duration-200 ${
+            hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          } ${isFullscreen ? 'bottom-[195px] left-4' : 'bottom-3 left-3 sm:bottom-4 sm:left-4'}`}
+        >
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5 text-amber">
               <Icon icon={Sun} size={16} />
@@ -644,8 +667,12 @@ export function HorizonView(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Center Heading Readout HUD (Bottom Right) */}
-        <div className="pointer-events-none absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-2xl border border-panel-border bg-panel/90 px-3 py-1.5 text-[10px] text-muted backdrop-blur-md">
+        {/* Slot Bottom-Right: Center Heading Readout HUD */}
+        <div
+          className={`pointer-events-none absolute z-panel flex items-center gap-2 rounded-2xl border border-panel-border bg-panel/90 px-3 py-1.5 text-[10px] text-muted backdrop-blur-md transition-opacity duration-200 ${
+            hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          } bottom-3 right-3 sm:bottom-4 sm:right-4`}
+        >
           <Icon icon={Compass} size={16} className="text-amber" />
           <span>Observer Heading:</span>
           <span className="font-bold text-ink">{centerAzimuth.toFixed(1)}°</span>

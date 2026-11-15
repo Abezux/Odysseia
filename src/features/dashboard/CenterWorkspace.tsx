@@ -35,6 +35,7 @@ import type { MetricsResult, Site, HorizonProfile } from '../../contracts';
 import { safeViewTransition } from '../../lib/viewTransition';
 import { Icon } from '../../ui/Icon';
 import { ErrorBoundary } from '../../ui/ErrorBoundary';
+import { PortalPopover } from '../../ui/PortalPopover';
 
 const viewportTabs: TabItem[] = [
   { id: 'globe', label: '3D Moon Globe', icon: <Icon icon={Globe} size={16} /> },
@@ -87,6 +88,7 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
     shadowMap: true
   });
   const [isLayerHudOpen, setIsLayerHudOpen] = useState(false);
+  const layersBtnRef = useRef<HTMLButtonElement>(null);
 
   const toggleHideDetails = () => {
     setHideDetails((prev) => {
@@ -304,13 +306,87 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
             : 'h-[clamp(420px,calc(100vh-360px),720px)]'
         }`}
       >
+
+
         {/* ======================================================== */}
-        {/* NORMAL HUD CONTROLS (Non-Fullscreen Mode)                */}
+        {/* UNIFIED VIEWPORT OVERLAY SLOTS LAYER                     */}
         {/* ======================================================== */}
-        {!isFullscreen && (
-          <>
-            {/* Top-Center Floating Tab Switcher */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
+        <div className="pointer-events-none absolute inset-0 z-overlay p-3 sm:p-4 flex flex-col justify-between overflow-hidden">
+          {/* TOP SLOTS ROW: Top-Left, Top-Center, Top-Right */}
+          <div className="flex items-start justify-between w-full gap-2">
+            {/* Top-Left Slot: In Fullscreen, Site Card */}
+            <div className="slot-top-left flex flex-col items-start gap-2 max-w-[280px]">
+              {isFullscreen && (
+                <div
+                  className={`pointer-events-auto w-72 max-h-[35vh] overflow-y-auto rounded-2xl glass-panel p-3.5 shadow-2xl space-y-2 transition-opacity duration-250 ${
+                    hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2 border-b border-panel-border pb-2">
+                    <div>
+                      <div className="font-mono text-[9px] uppercase tracking-wider text-amber">
+                        MISSION SITE
+                      </div>
+                      <h3 className="font-sans text-xs font-bold text-ink leading-tight">
+                        {activeSite?.name || 'Active Landing Site'}
+                      </h3>
+                    </div>
+                    <span className="flex items-center gap-1 rounded-full border border-emerald/40 bg-emerald/15 px-2 py-0.5 font-mono text-[9px] font-bold text-emerald">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
+                      LIVE
+                    </span>
+                  </div>
+
+                  <div className="font-mono text-[10px] text-muted flex items-center justify-between">
+                    <span>
+                      {activeSite
+                        ? `${Math.abs(activeSite.latDeg).toFixed(2)}°${activeSite.latDeg >= 0 ? 'N' : 'S'}, ${Math.abs(
+                            activeSite.lonDeg
+                          ).toFixed(2)}°${activeSite.lonDeg >= 0 ? 'E' : 'W'}`
+                        : '--'}
+                    </span>
+                    <span>{activeSite?.elevationM ?? 0}m</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 font-mono text-[10px] pt-1">
+                    <div className="rounded-lg bg-[#141210] p-1.5 border border-panel-border">
+                      <div className="text-[9px] text-muted font-sans">Sun Elev</div>
+                      <div className="text-amber font-semibold">{sunEl.toFixed(1)}°</div>
+                    </div>
+                    <div className="rounded-lg bg-[#141210] p-1.5 border border-panel-border">
+                      <div className="text-[9px] text-muted font-sans">Earth Elev</div>
+                      <div className="text-emerald font-semibold">{earthEl.toFixed(1)}°</div>
+                    </div>
+                  </div>
+
+                  {/* Astrometric extra vectors when in technical mode */}
+                  {mode === 'technical' && metrics && (
+                    <div className="border-t border-panel-border pt-1.5 font-mono text-[9px] text-muted space-y-0.5">
+                      <div className="flex justify-between">
+                        <span>Sub-Solar:</span>
+                        <span className="text-ink">
+                          {metrics.currentEphemeris.subSolarCoordinates.latDeg.toFixed(1)}°,{' '}
+                          {metrics.currentEphemeris.subSolarCoordinates.lonDeg.toFixed(1)}°
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Clearance:</span>
+                        <span className={sunClearance >= 0 ? 'text-emerald' : 'text-critical'}>
+                          {sunClearance.toFixed(1)}°
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Top-Center Slot: Tab Switcher */}
+            <div
+              className={`slot-top-center pointer-events-auto flex flex-col items-center gap-1.5 transition-opacity duration-250 ${
+                isFullscreen && hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+              }`}
+            >
               <Tabs
                 tabs={viewportTabs}
                 activeTab={activeCenterTab}
@@ -318,158 +394,34 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
               />
             </div>
 
-            {/* Top-Left HUD: Layer Control Glass Panel */}
-            <div className="absolute top-4 left-4 z-30 pointer-events-auto">
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setIsLayerHudOpen(!isLayerHudOpen)}
-                  className="flex items-center gap-2 rounded-xl glass-panel px-3 py-1.5 font-sans text-xs text-ink transition-colors hover:border-amber/50 focus:outline-none"
-                  aria-label="Display layers toggle"
-                >
-                  <Icon icon={Layers} size={16} className="text-amber" />
-                  <span>Layers</span>
-                </button>
-
-                {isLayerHudOpen && (
-                  <div className="absolute left-0 mt-2 w-48 rounded-2xl glass-panel p-3 shadow-2xl space-y-2 z-40">
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-muted pb-1 border-b border-panel-border">
-                      Display Layers
-                    </div>
-                    {Object.entries(layers).map(([key, val]) => (
-                      <label key={key} className="flex cursor-pointer items-center justify-between text-xs text-ink capitalize">
-                        <span>{key.replace(/([A-Z])/g, ' $1')}</span>
-                        <input
-                          type="checkbox"
-                          checked={val}
-                          onChange={(e) => setLayers({ ...layers, [key]: e.target.checked })}
-                          className="accent-amber"
-                        />
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Top-Right HUD: View Controls */}
-            <div className="absolute top-4 right-4 z-30 flex items-center gap-2 pointer-events-auto">
-              <button
-                type="button"
-                onClick={toggleFullscreen}
-                className="flex h-8 w-8 items-center justify-center rounded-xl glass-panel text-muted hover:text-ink hover:border-amber/50 transition-colors focus:outline-none"
-                title="Enter fullscreen (F)"
-                aria-label="Enter fullscreen"
-              >
-                <Icon icon={Maximize2} size={16} />
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* ======================================================== */}
-        {/* FULLSCREEN FLOATING DETAILS OVERLAYS                     */}
-        {/* ======================================================== */}
-        {isFullscreen && (
-          <div className="pointer-events-none absolute inset-0 z-40 p-4 flex flex-col justify-between">
-            {/* Top Bar of Fullscreen: Top-Left Site Card, Top-Center Tabs, Top-Right Controls */}
-            <div className="flex items-start justify-between w-full">
-              {/* Top-Left: Compact Floating Site Card */}
-              <div
-                className={`pointer-events-auto w-72 rounded-2xl glass-panel p-3.5 shadow-2xl space-y-2 transition-opacity duration-250 ${
-                  hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2 border-b border-panel-border pb-2">
-                  <div>
-                    <div className="font-mono text-[9px] uppercase tracking-wider text-amber">
-                      MISSION SITE
-                    </div>
-                    <h3 className="font-sans text-xs font-bold text-ink leading-tight">
-                      {activeSite?.name || 'Active Landing Site'}
-                    </h3>
-                  </div>
-                  <span className="flex items-center gap-1 rounded-full border border-emerald/40 bg-emerald/15 px-2 py-0.5 font-mono text-[9px] font-bold text-emerald">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
-                    LIVE
-                  </span>
-                </div>
-
-                <div className="font-mono text-[10px] text-muted flex items-center justify-between">
-                  <span>
-                    {activeSite
-                      ? `${Math.abs(activeSite.latDeg).toFixed(2)}°${activeSite.latDeg >= 0 ? 'N' : 'S'}, ${Math.abs(
-                          activeSite.lonDeg
-                        ).toFixed(2)}°${activeSite.lonDeg >= 0 ? 'E' : 'W'}`
-                      : '--'}
-                  </span>
-                  <span>{activeSite?.elevationM ?? 0}m</span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 font-mono text-[10px] pt-1">
-                  <div className="rounded-lg bg-[#141210] p-1.5 border border-panel-border">
-                    <div className="text-[9px] text-muted font-sans">Sun Elev</div>
-                    <div className="text-amber font-semibold">{sunEl.toFixed(1)}°</div>
-                  </div>
-                  <div className="rounded-lg bg-[#141210] p-1.5 border border-panel-border">
-                    <div className="text-[9px] text-muted font-sans">Earth Elev</div>
-                    <div className="text-emerald font-semibold">{earthEl.toFixed(1)}°</div>
-                  </div>
-                </div>
-
-                {/* Astrometric extra vectors when in technical mode */}
-                {mode === 'technical' && metrics && (
-                  <div className="border-t border-panel-border pt-1.5 font-mono text-[9px] text-muted space-y-0.5">
-                    <div className="flex justify-between">
-                      <span>Sub-Solar:</span>
-                      <span className="text-ink">
-                        {metrics.currentEphemeris.subSolarCoordinates.latDeg.toFixed(1)}°,{' '}
-                        {metrics.currentEphemeris.subSolarCoordinates.lonDeg.toFixed(1)}°
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Clearance:</span>
-                      <span className={sunClearance >= 0 ? 'text-emerald' : 'text-critical'}>
-                        {sunClearance.toFixed(1)}°
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Top-Center: Tab Switcher (Floating) */}
-              <div
-                className={`pointer-events-auto transition-opacity duration-250 ${
-                  hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
-                }`}
-              >
-                <Tabs
-                  tabs={viewportTabs}
-                  activeTab={activeCenterTab}
-                  onChange={handleTabChange}
-                />
-              </div>
-
-              {/* Top-Right: View Controls & Hide Details Toggle */}
-              <div className="pointer-events-auto flex items-center gap-2">
-                {/* Layer Control (hidden when details hidden) */}
+            {/* Top-Right Slot: Viewport Toolbar Row */}
+            <div className="slot-top-right pointer-events-auto flex flex-col items-end gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                {/* Layer Control Button */}
                 <div
                   className={`relative transition-opacity duration-250 ${
                     hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
                   }`}
                 >
                   <button
+                    ref={layersBtnRef}
                     type="button"
                     onClick={() => setIsLayerHudOpen(!isLayerHudOpen)}
-                    className="flex h-8 items-center gap-1.5 rounded-xl glass-panel px-3 text-xs text-ink hover:border-amber/50 transition-colors focus:outline-none"
+                    className="flex h-8 items-center gap-1.5 rounded-xl glass-panel px-2.5 sm:px-3 text-xs text-ink hover:border-amber/50 transition-colors focus:outline-none"
                     aria-label="Toggle display layers"
+                    title="Display layers"
                   >
                     <Icon icon={Layers} size={16} className="text-amber" />
-                    <span>Layers</span>
+                    <span className="hidden sm:inline">Layers</span>
                   </button>
 
-                  {isLayerHudOpen && (
-                    <div className="absolute right-0 mt-2 w-48 rounded-2xl glass-panel p-3 shadow-2xl space-y-2 z-50">
+                  <PortalPopover
+                    isOpen={isLayerHudOpen}
+                    onClose={() => setIsLayerHudOpen(false)}
+                    anchorRef={layersBtnRef}
+                    align="end"
+                  >
+                    <div className="w-48 rounded-2xl glass-panel p-3 shadow-2xl space-y-2 border border-panel-border bg-[#141210]/95 backdrop-blur-xl">
                       <div className="font-mono text-[10px] uppercase tracking-wider text-muted pb-1 border-b border-panel-border">
                         Display Layers
                       </div>
@@ -485,10 +437,10 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
                         </label>
                       ))}
                     </div>
-                  )}
+                  </PortalPopover>
                 </div>
 
-                {/* Hide / Show Details Toggle (Always visible, low opacity when hidden) */}
+                {/* Hide / Show Details Toggle (Always visible in normal flow) */}
                 <button
                   type="button"
                   onClick={toggleHideDetails}
@@ -501,48 +453,55 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
                   <Icon icon={hideDetails ? EyeOff : Eye} size={16} />
                 </button>
 
-                {/* Exit Fullscreen Toggle (Always visible, low opacity when hidden) */}
+                {/* Fullscreen Toggle */}
                 <button
                   type="button"
                   onClick={toggleFullscreen}
                   className={`flex h-8 w-8 items-center justify-center rounded-xl glass-panel text-ink transition-all focus:outline-none ${
                     hideDetails ? 'opacity-40 hover:opacity-100' : 'opacity-100 hover:border-amber/50'
                   }`}
-                  title="Exit fullscreen (F or Esc)"
-                  aria-label="Exit fullscreen"
+                  title={isFullscreen ? 'Exit fullscreen (F or Esc)' : 'Enter fullscreen (F)'}
+                  aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
                 >
-                  <Icon icon={Minimize2} size={16} />
+                  <Icon icon={isFullscreen ? Minimize2 : Maximize2} size={16} />
                 </button>
               </div>
             </div>
+          </div>
 
-            {/* Bottom Row of Fullscreen: SkyDial on Bottom-Left, Compact Timeline on Bottom-Center */}
-            <div className="flex items-end justify-between w-full">
+          {/* CENTER CANVAS AREA: COMPLETELY UNOBSTRUCTED */}
+          <div className="flex-1 pointer-events-none" />
+
+          {/* BOTTOM SLOTS ROW: Bottom-Left (SkyDial), Bottom-Center (Timeline), Bottom-Right (Spacer) */}
+          {isFullscreen && (
+            <div className="flex items-end justify-between w-full gap-2">
               {/* Bottom-Left: Compact Sky Dial Card */}
-              <div
-                className={`pointer-events-auto w-48 rounded-2xl glass-panel p-2.5 shadow-2xl space-y-1.5 transition-opacity duration-250 ${
-                  hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
-                }`}
-              >
-                <div className="font-mono text-[9px] uppercase tracking-wider text-muted border-b border-panel-border pb-1">
-                  Topocentric Sky Dial
-                </div>
-                {metrics && (
-                  <div className="flex justify-center">
-                    <SkyDial
-                      horizon={horizon}
-                      ephemeris={metrics.currentEphemeris}
-                      sunTerrainElev={metrics.sunTerrainElevationDeg}
-                      earthTerrainElev={metrics.earthTerrainElevationDeg}
-                      size={140}
-                    />
+              <div className="slot-bottom-left flex flex-col items-start gap-2 max-w-[240px]">
+                <div
+                  className={`pointer-events-auto w-48 rounded-2xl glass-panel p-2.5 shadow-2xl space-y-1.5 transition-opacity duration-250 ${
+                    hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                  }`}
+                >
+                  <div className="font-mono text-[9px] uppercase tracking-wider text-muted border-b border-panel-border pb-1">
+                    Topocentric Sky Dial
                   </div>
-                )}
+                  {metrics && (
+                    <div className="flex justify-center">
+                      <SkyDial
+                        horizon={horizon}
+                        ephemeris={metrics.currentEphemeris}
+                        sunTerrainElev={metrics.sunTerrainElevationDeg}
+                        earthTerrainElev={metrics.earthTerrainElevationDeg}
+                        size={typeof window !== 'undefined' && window.innerHeight < 800 ? 120 : 140}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Bottom-Center: Compact Timeline Bar */}
               <div
-                className={`pointer-events-auto flex-1 max-w-2xl mx-4 rounded-2xl glass-panel p-2.5 shadow-2xl flex flex-col gap-1.5 transition-opacity duration-250 ${
+                className={`slot-bottom-center pointer-events-auto flex-1 max-w-2xl mx-2 sm:mx-4 rounded-2xl glass-panel p-2.5 shadow-2xl flex flex-col gap-1.5 transition-opacity duration-250 ${
                   hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
                 }`}
               >
@@ -618,10 +577,10 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
               </div>
 
               {/* Bottom-Right Spacer for layout balance */}
-              <div className="w-48" />
+              <div className="slot-bottom-right w-48 pointer-events-none hidden sm:block" />
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* 3D Canvas / Projection Viewport with Radial Gradient Vignette Mask */}
         <div className="relative h-full w-full">
@@ -631,16 +590,32 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
             onReset={() => setActiveCenterTab('horizon')}
           >
             <React.Suspense fallback={<div className="h-full w-full bg-[#0B0A09]" />}>
-              {activeCenterTab === 'globe' && <MoonGlobeView layers={layers} />}
-              {activeCenterTab === 'terrain' && <TerrainView />}
-              {activeCenterTab === 'horizon' && <HorizonView />}
+              {activeCenterTab === 'globe' && (
+                <MoonGlobeView
+                  layers={layers}
+                  hideDetails={hideDetails}
+                  isFullscreen={isFullscreen}
+                />
+              )}
+              {activeCenterTab === 'terrain' && (
+                <TerrainView
+                  hideDetails={hideDetails}
+                  isFullscreen={isFullscreen}
+                />
+              )}
+              {activeCenterTab === 'horizon' && (
+                <HorizonView
+                  hideDetails={hideDetails}
+                  isFullscreen={isFullscreen}
+                />
+              )}
             </React.Suspense>
           </ErrorBoundary>
 
           {/* Radial Edge Fade Mask (only in non-fullscreen) */}
           {!isFullscreen && (
             <div
-              className="pointer-events-none absolute inset-0 z-10"
+              className="pointer-events-none absolute inset-0 z-mask"
               style={{
                 background:
                   'radial-gradient(ellipse at center, transparent 65%, rgba(11, 10, 9, 0.85) 100%)'

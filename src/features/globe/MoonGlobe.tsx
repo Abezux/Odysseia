@@ -242,9 +242,15 @@ function GlobeCameraController({
 
 export interface MoonGlobeViewProps {
   layers?: GlobeLayers;
+  hideDetails?: boolean;
+  isFullscreen?: boolean;
 }
 
-export function MoonGlobeView({ layers }: MoonGlobeViewProps): React.JSX.Element {
+export function MoonGlobeView({
+  layers,
+  hideDetails = false,
+  isFullscreen = false
+}: MoonGlobeViewProps): React.JSX.Element {
   const currentTime = useTimeStore((s) => s.currentTime);
   const { activeSiteId, setActiveSiteId } = useScenarioStore();
 
@@ -378,14 +384,22 @@ export function MoonGlobeView({ layers }: MoonGlobeViewProps): React.JSX.Element
 
   return (
     <div className="relative h-full w-full select-none bg-[#0B0A09] overflow-hidden">
-      {/* Floating Provenance HUD Badges */}
-      <div className="pointer-events-none absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-        <div className="flex items-center gap-2">
-          <Badge variant="success" size="md">
+      {/* Slot Top-Left: Provenance HUD Badges */}
+      <div
+        className={`pointer-events-none absolute z-panel flex flex-col gap-1.5 transition-all duration-250 ${
+          isFullscreen
+            ? hideDetails
+              ? 'top-4 left-4 opacity-100'
+              : 'top-4 left-4 mt-[200px] opacity-100'
+            : 'top-3 left-3 opacity-100'
+        }`}
+      >
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Badge variant="success" size="sm">
             NASA LRO / LROC WAC 4K
           </Badge>
-          <Badge variant="neutral" size="md">
-            Global Albedo Mosaic
+          <Badge variant="neutral" size="sm" className="hidden sm:inline-flex">
+            Global Albedo
           </Badge>
         </div>
       </div>
@@ -475,8 +489,16 @@ export function MoonGlobeView({ layers }: MoonGlobeViewProps): React.JSX.Element
         />
       </Canvas>
 
-      {/* Floating HUD Controls */}
-      <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10">
+      {/* Slot Bottom-Left: Floating Camera HUD Controls */}
+      <div
+        className={`absolute z-panel flex items-center gap-2 transition-all duration-250 ${
+          isFullscreen
+            ? hideDetails
+              ? 'bottom-4 left-4'
+              : 'bottom-[195px] left-4'
+            : 'bottom-3 sm:bottom-4 left-3 sm:left-4'
+        }`}
+      >
         {focusedBody ? (
           <Button
             variant="primary"
@@ -501,18 +523,22 @@ export function MoonGlobeView({ layers }: MoonGlobeViewProps): React.JSX.Element
         )}
       </div>
 
-      {/* Ephemeris Legend */}
-      <div className="absolute top-4 right-4 flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 p-2.5 backdrop-blur-md font-mono text-[11px] text-ink z-10 shadow-lg">
+      {/* Slot Top-Right: Ephemeris Legend (flowed below the top-right toolbar) */}
+      <div
+        className={`absolute top-13 sm:top-14 right-3 sm:right-4 z-panel flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 p-2.5 backdrop-blur-md font-mono text-[11px] text-ink shadow-lg max-w-[280px] max-h-[30vh] overflow-y-auto transition-opacity duration-250 ${
+          hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+      >
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-amber shadow-xs" />
-          <span>Sub-Solar: {ephem.subSolarCoordinates.latDeg.toFixed(1)}°N, {ephem.subSolarCoordinates.lonDeg.toFixed(1)}°E (0.53° Apparent)</span>
+          <span className="h-2 w-2 rounded-full bg-amber shadow-xs shrink-0" />
+          <span className="truncate">Sub-Solar: {ephem.subSolarCoordinates.latDeg.toFixed(1)}°N, {ephem.subSolarCoordinates.lonDeg.toFixed(1)}°E (0.53°)</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-sky-400 shadow-xs" />
-          <span>Sub-Earth: {ephem.subEarthCoordinates.latDeg.toFixed(1)}°N, {ephem.subEarthCoordinates.lonDeg.toFixed(1)}°E (1.91° Apparent)</span>
+          <span className="h-2 w-2 rounded-full bg-sky-400 shadow-xs shrink-0" />
+          <span className="truncate">Sub-Earth: {ephem.subEarthCoordinates.latDeg.toFixed(1)}°N, {ephem.subEarthCoordinates.lonDeg.toFixed(1)}°E (1.91°)</span>
         </div>
         <div className="flex items-center gap-2 text-[10px] text-muted border-t border-panel-border/60 pt-1 mt-0.5">
-          <span>Earth Phase: {Math.round(ephem.earth.phaseFraction * 100)}% · 23.4° Axial Tilt</span>
+          <span>Phase: {Math.round(ephem.earth.phaseFraction * 100)}% · 23.4° Tilt</span>
         </div>
       </div>
     </div>
