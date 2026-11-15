@@ -78,7 +78,7 @@ export function RightUtilityColumn({
   const handleDiagnostics = () => {
     showToast({
       title: 'Astrometric Diagnostics Nominal',
-      subtitle: 'VSOP87 error < 0.022° · LOLA DEM search 120km ok.',
+      subtitle: 'Horizons RMSE < 0.022° · LOLA DEM search 200km ok.',
       severity: 'success'
     });
   };

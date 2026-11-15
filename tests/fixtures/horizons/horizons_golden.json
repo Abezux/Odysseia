@@ -1,10 +1,109 @@
 {
-  "generatedAt": "2026-11-14T11:00:00Z",
-  "source": "NASA JPL Horizons On-Line Ephemeris System (DE441)",
-  "benchmarkCount": 20,
+  "generatedAt": "2026-11-15T10:36:58.770971+00:00",
+  "source": "NASA JPL Horizons On-Line Ephemeris System (DE441/LE441)",
+  "benchmarkCount": 100,
+  "observableCount": 400,
+  "sites": [
+    "shackleton_rim",
+    "exact_south_pole",
+    "connecting_ridge",
+    "malapert_massif",
+    "haworth_crater",
+    "nobile_rim_1",
+    "im_1_odysseus",
+    "chandrayaan_3",
+    "apollo_11",
+    "change_4"
+  ],
+  "dates": [
+    "2026-01-15 12:00",
+    "2026-02-28 06:00",
+    "2026-03-20 18:00",
+    "2026-04-15 00:00",
+    "2026-06-01 00:00",
+    "2026-06-21 12:00",
+    "2026-08-15 06:00",
+    "2026-09-23 00:00",
+    "2026-11-15 12:00",
+    "2026-12-21 18:00"
+  ],
+  "timeScale": "UTC (Horizons input UT / astronomy-engine TT conversion)",
   "fixtures": [
     {
       "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
+      "latDeg": -89.9,
+      "lonDeg": 0.0,
+      "elevationM": 1250.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 216.403524,
+          "elevationDeg": 1.047683
+        },
+        "earth": {
+          "azimuthDeg": 359.045311,
+          "elevationDeg": -6.789207
+        }
+      }
+    },
+    {
+      "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
+      "latDeg": -89.9,
+      "lonDeg": 0.0,
+      "elevationM": 1250.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 44.035716,
+          "elevationDeg": 0.049116
+        },
+        "earth": {
+          "azimuthDeg": 3.230875,
+          "elevationDeg": 4.226678
+        }
+      }
+    },
+    {
+      "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
+      "latDeg": -89.9,
+      "lonDeg": 0.0,
+      "elevationM": 1250.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 154.426927,
+          "elevationDeg": -0.632764
+        },
+        "earth": {
+          "azimuthDeg": 356.722632,
+          "elevationDeg": 4.491477
+        }
+      }
+    },
+    {
+      "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
+      "latDeg": -89.9,
+      "lonDeg": 0.0,
+      "elevationM": 1250.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 206.757911,
+          "elevationDeg": -1.211717
+        },
+        "earth": {
+          "azimuthDeg": 353.459853,
+          "elevationDeg": 1.426497
+        }
+      }
+    },
+    {
+      "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
       "latDeg": -89.9,
       "lonDeg": 0.0,
       "elevationM": 1250.0,
@@ -22,57 +121,169 @@
     },
     {
       "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
       "latDeg": -89.9,
       "lonDeg": 0.0,
       "elevationM": 1250.0,
-      "timestampIso": "2026-06-08T00:00:00.000Z",
+      "timestampIso": "2026-06-21T12:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 267.525012,
-          "elevationDeg": -1.506672
+          "azimuthDeg": 102.270338,
+          "elevationDeg": -1.388074
         },
         "earth": {
-          "azimuthDeg": 352.373828,
-          "elevationDeg": 0.855523
+          "azimuthDeg": 7.425003,
+          "elevationDeg": -2.785519
         }
       }
     },
     {
       "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
       "latDeg": -89.9,
       "lonDeg": 0.0,
       "elevationM": 1250.0,
-      "timestampIso": "2026-06-15T00:00:00.000Z",
+      "timestampIso": "2026-08-15T06:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 181.850383,
-          "elevationDeg": -1.507839
+          "azimuthDeg": 153.250958,
+          "elevationDeg": -0.274582
         },
         "earth": {
-          "azimuthDeg": 0.149398,
-          "elevationDeg": 5.994053
+          "azimuthDeg": 6.12985,
+          "elevationDeg": -3.124216
         }
       }
     },
     {
       "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
       "latDeg": -89.9,
       "lonDeg": 0.0,
       "elevationM": 1250.0,
-      "timestampIso": "2026-06-22T00:00:00.000Z",
+      "timestampIso": "2026-09-23T00:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 96.158087,
-          "elevationDeg": -1.376133
+          "azimuthDeg": 40.176526,
+          "elevationDeg": 0.866647
         },
         "earth": {
-          "azimuthDeg": 7.252,
-          "elevationDeg": -3.451804
+          "azimuthDeg": 356.008331,
+          "elevationDeg": -1.77439
+        }
+      }
+    },
+    {
+      "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
+      "latDeg": -89.9,
+      "lonDeg": 0.0,
+      "elevationM": 1250.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 108.342958,
+          "elevationDeg": 1.5244
+        },
+        "earth": {
+          "azimuthDeg": 356.691547,
+          "elevationDeg": -2.848095
+        }
+      }
+    },
+    {
+      "siteId": "shackleton_rim",
+      "siteName": "Shackleton Crater Rim",
+      "latDeg": -89.9,
+      "lonDeg": 0.0,
+      "elevationM": 1250.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 27.506767,
+          "elevationDeg": 1.334904
+        },
+        "earth": {
+          "azimuthDeg": 354.947598,
+          "elevationDeg": 6.43325
         }
       }
     },
     {
       "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
+      "latDeg": -90.0,
+      "lonDeg": 0.0,
+      "elevationM": 0.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 216.404652,
+          "elevationDeg": 1.128168
+        },
+        "earth": {
+          "azimuthDeg": 359.045118,
+          "elevationDeg": -6.888966
+        }
+      }
+    },
+    {
+      "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
+      "latDeg": -90.0,
+      "lonDeg": 0.0,
+      "elevationM": 0.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 44.035699,
+          "elevationDeg": -0.022774
+        },
+        "earth": {
+          "azimuthDeg": 3.230437,
+          "elevationDeg": 4.126994
+        }
+      }
+    },
+    {
+      "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
+      "latDeg": -90.0,
+      "lonDeg": 0.0,
+      "elevationM": 0.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 154.42737,
+          "elevationDeg": -0.54256
+        },
+        "earth": {
+          "azimuthDeg": 356.723103,
+          "elevationDeg": 4.391798
+        }
+      }
+    },
+    {
+      "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
+      "latDeg": -90.0,
+      "lonDeg": 0.0,
+      "elevationM": 0.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 206.756994,
+          "elevationDeg": -1.122424
+        },
+        "earth": {
+          "azimuthDeg": 353.460179,
+          "elevationDeg": 1.327328
+        }
+      }
+    },
+    {
+      "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
       "latDeg": -90.0,
       "lonDeg": 0.0,
       "elevationM": 0.0,
@@ -90,125 +301,349 @@
     },
     {
       "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
       "latDeg": -90.0,
       "lonDeg": 0.0,
       "elevationM": 0.0,
-      "timestampIso": "2026-06-08T00:00:00.000Z",
+      "timestampIso": "2026-06-21T12:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 267.522389,
-          "elevationDeg": -1.502351
+          "azimuthDeg": 102.272687,
+          "elevationDeg": -1.366819
         },
         "earth": {
-          "azimuthDeg": 352.374074,
-          "elevationDeg": 0.756586
+          "azimuthDeg": 7.425585,
+          "elevationDeg": -2.884474
         }
       }
     },
     {
       "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
       "latDeg": -90.0,
       "lonDeg": 0.0,
       "elevationM": 0.0,
-      "timestampIso": "2026-06-15T00:00:00.000Z",
+      "timestampIso": "2026-08-15T06:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 181.850301,
-          "elevationDeg": -1.40789
+          "azimuthDeg": 153.251138,
+          "elevationDeg": -0.185283
         },
         "earth": {
-          "azimuthDeg": 0.149369,
-          "elevationDeg": 5.894203
+          "azimuthDeg": 6.130393,
+          "elevationDeg": -3.22343
         }
       }
     },
     {
       "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
       "latDeg": -90.0,
       "lonDeg": 0.0,
       "elevationM": 0.0,
-      "timestampIso": "2026-06-22T00:00:00.000Z",
+      "timestampIso": "2026-09-23T00:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 96.160465,
-          "elevationDeg": -1.365403
+          "azimuthDeg": 40.175592,
+          "elevationDeg": 0.79024
         },
         "earth": {
-          "azimuthDeg": 7.252716,
-          "elevationDeg": -3.550793
+          "azimuthDeg": 356.00814,
+          "elevationDeg": -1.873952
         }
       }
     },
     {
-      "siteId": "apollo_11",
-      "latDeg": 0.67408,
-      "lonDeg": 23.47297,
-      "elevationM": -2574.0,
+      "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
+      "latDeg": -90.0,
+      "lonDeg": 0.0,
+      "elevationM": 0.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 108.340405,
+          "elevationDeg": 1.555868
+        },
+        "earth": {
+          "azimuthDeg": 356.69128,
+          "elevationDeg": -2.94773
+        }
+      }
+    },
+    {
+      "siteId": "exact_south_pole",
+      "siteName": "Exact Lunar South Pole",
+      "latDeg": -90.0,
+      "lonDeg": 0.0,
+      "elevationM": 0.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 27.505726,
+          "elevationDeg": 1.246209
+        },
+        "earth": {
+          "azimuthDeg": 354.948626,
+          "elevationDeg": 6.333781
+        }
+      }
+    },
+    {
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 353.903191,
+          "elevationDeg": 1.685001
+        },
+        "earth": {
+          "azimuthDeg": 136.498847,
+          "elevationDeg": -7.295346
+        }
+      }
+    },
+    {
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 181.535778,
+          "elevationDeg": -0.582574
+        },
+        "earth": {
+          "azimuthDeg": 140.756313,
+          "elevationDeg": 3.692979
+        }
+      }
+    },
+    {
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 291.931335,
+          "elevationDeg": -0.33342
+        },
+        "earth": {
+          "azimuthDeg": 134.254438,
+          "elevationDeg": 4.000717
+        }
+      }
+    },
+    {
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 344.259254,
+          "elevationDeg": -0.583428
+        },
+        "earth": {
+          "azimuthDeg": 130.970581,
+          "elevationDeg": 0.959898
+        }
+      }
+    },
+    {
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
       "timestampIso": "2026-06-01T00:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 271.974403,
-          "elevationDeg": 59.448458
+          "azimuthDeg": 130.415775,
+          "elevationDeg": -1.947797
         },
         "earth": {
-          "azimuthDeg": 284.186496,
-          "elevationDeg": 65.681942
+          "azimuthDeg": 137.340108,
+          "elevationDeg": -7.042901
         }
       }
     },
     {
-      "siteId": "apollo_11",
-      "latDeg": 0.67408,
-      "lonDeg": 23.47297,
-      "elevationM": -2574.0,
-      "timestampIso": "2026-06-08T00:00:00.000Z",
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-06-21T12:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 271.997588,
-          "elevationDeg": -25.920023
+          "azimuthDeg": 239.785418,
+          "elevationDeg": -1.648689
         },
         "earth": {
-          "azimuthDeg": 266.923935,
-          "elevationDeg": 58.723626
+          "azimuthDeg": 144.909527,
+          "elevationDeg": -3.342874
         }
       }
     },
     {
-      "siteId": "apollo_11",
-      "latDeg": 0.67408,
-      "lonDeg": 23.47297,
-      "elevationM": -2574.0,
-      "timestampIso": "2026-06-15T00:00:00.000Z",
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-08-15T06:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 84.497058,
-          "elevationDeg": -68.279266
+          "azimuthDeg": 290.751919,
+          "elevationDeg": 0.013135
         },
         "earth": {
-          "azimuthDeg": 253.281017,
-          "elevationDeg": 65.61723
+          "azimuthDeg": 143.611903,
+          "elevationDeg": -3.674424
         }
       }
     },
     {
-      "siteId": "apollo_11",
-      "latDeg": 0.67408,
-      "lonDeg": 23.47297,
-      "elevationM": -2574.0,
-      "timestampIso": "2026-06-22T00:00:00.000Z",
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-09-23T00:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 88.780611,
-          "elevationDeg": 17.322395
+          "azimuthDeg": 177.675795,
+          "elevationDeg": 0.230701
         },
         "earth": {
-          "azimuthDeg": 279.406866,
-          "elevationDeg": 73.507828
+          "azimuthDeg": 133.495268,
+          "elevationDeg": -2.259627
+        }
+      }
+    },
+    {
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 245.827544,
+          "elevationDeg": 1.326612
+        },
+        "earth": {
+          "azimuthDeg": 134.170959,
+          "elevationDeg": -3.338157
+        }
+      }
+    },
+    {
+      "siteId": "connecting_ridge",
+      "siteName": "Connecting Ridge Peak",
+      "latDeg": -89.44,
+      "lonDeg": -137.5,
+      "elevationM": 1680.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 165.008195,
+          "elevationDeg": 0.705271
+        },
+        "earth": {
+          "azimuthDeg": 132.495083,
+          "elevationDeg": 5.955195
         }
       }
     },
     {
       "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
+      "latDeg": -85.99,
+      "lonDeg": 2.94,
+      "elevationM": 5000.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 213.485653,
+          "elevationDeg": -2.21709
+        },
+        "earth": {
+          "azimuthDeg": 356.127191,
+          "elevationDeg": -2.890341
+        }
+      }
+    },
+    {
+      "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
+      "latDeg": -85.99,
+      "lonDeg": 2.94,
+      "elevationM": 5000.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 41.16426,
+          "elevationDeg": 2.998168
+        },
+        "earth": {
+          "azimuthDeg": 0.292727,
+          "elevationDeg": 8.138178
+        }
+      }
+    },
+    {
+      "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
+      "latDeg": -85.99,
+      "lonDeg": 2.94,
+      "elevationM": 5000.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 151.410253,
+          "elevationDeg": -4.065235
+        },
+        "earth": {
+          "azimuthDeg": 353.732214,
+          "elevationDeg": 8.379363
+        }
+      }
+    },
+    {
+      "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
+      "latDeg": -85.99,
+      "lonDeg": 2.94,
+      "elevationM": 5000.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 203.900771,
+          "elevationDeg": -4.789993
+        },
+        "earth": {
+          "azimuthDeg": 350.478867,
+          "elevationDeg": 5.282668
+        }
+      }
+    },
+    {
+      "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
       "latDeg": -85.99,
       "lonDeg": 2.94,
       "elevationM": 5000.0,
@@ -226,57 +661,709 @@
     },
     {
       "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
       "latDeg": -85.99,
       "lonDeg": 2.94,
       "elevationM": 5000.0,
-      "timestampIso": "2026-06-08T00:00:00.000Z",
+      "timestampIso": "2026-06-21T12:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 264.700165,
-          "elevationDeg": -1.877003
+          "azimuthDeg": 99.215912,
+          "elevationDeg": -2.013334
         },
         "earth": {
-          "azimuthDeg": 349.39566,
-          "elevationDeg": 4.698507
+          "azimuthDeg": 4.482147,
+          "elevationDeg": 1.112243
         }
       }
     },
     {
       "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
       "latDeg": -85.99,
       "lonDeg": 2.94,
       "elevationM": 5000.0,
-      "timestampIso": "2026-06-15T00:00:00.000Z",
+      "timestampIso": "2026-08-15T06:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 178.905743,
-          "elevationDeg": -5.417162
+          "azimuthDeg": 150.244253,
+          "elevationDeg": -3.668072
         },
         "earth": {
-          "azimuthDeg": 357.181173,
-          "elevationDeg": 9.901291
+          "azimuthDeg": 3.186659,
+          "elevationDeg": 0.779218
         }
       }
     },
     {
       "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
       "latDeg": -85.99,
       "lonDeg": 2.94,
       "elevationM": 5000.0,
-      "timestampIso": "2026-06-22T00:00:00.000Z",
+      "timestampIso": "2026-09-23T00:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 93.117282,
-          "elevationDeg": -1.587164
+          "azimuthDeg": 37.33687,
+          "elevationDeg": 3.981152
         },
         "earth": {
-          "azimuthDeg": 4.305896,
-          "elevationDeg": 0.446659
+          "azimuthDeg": 353.06503,
+          "elevationDeg": 2.106058
+        }
+      }
+    },
+    {
+      "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
+      "latDeg": -85.99,
+      "lonDeg": 2.94,
+      "elevationM": 5000.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 105.469437,
+          "elevationDeg": 0.488225
+        },
+        "earth": {
+          "azimuthDeg": 353.756677,
+          "elevationDeg": 1.037491
+        }
+      }
+    },
+    {
+      "siteId": "malapert_massif",
+      "siteName": "Malapert Massif Peak",
+      "latDeg": -85.99,
+      "lonDeg": 2.94,
+      "elevationM": 5000.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 24.655323,
+          "elevationDeg": 4.892198
+        },
+        "earth": {
+          "azimuthDeg": 351.92392,
+          "elevationDeg": 10.306433
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 221.499985,
+          "elevationDeg": -0.819192
+        },
+        "earth": {
+          "azimuthDeg": 4.12756,
+          "elevationDeg": -4.296327
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 49.164137,
+          "elevationDeg": 1.678008
+        },
+        "earth": {
+          "azimuthDeg": 8.36799,
+          "elevationDeg": 6.701113
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 159.499409,
+          "elevationDeg": -2.97817
+        },
+        "earth": {
+          "azimuthDeg": 1.831761,
+          "elevationDeg": 6.992232
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 211.910377,
+          "elevationDeg": -3.330245
+        },
+        "earth": {
+          "azimuthDeg": 358.556874,
+          "elevationDeg": 3.927591
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-06-01T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 358.029361,
+          "elevationDeg": 1.013783
+        },
+        "earth": {
+          "azimuthDeg": 4.963862,
+          "elevationDeg": -4.041235
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-06-21T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 107.29669,
+          "elevationDeg": -2.141616
+        },
+        "earth": {
+          "azimuthDeg": 12.512224,
+          "elevationDeg": -0.346072
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-08-15T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 158.3278,
+          "elevationDeg": -2.601743
+        },
+        "earth": {
+          "azimuthDeg": 11.215499,
+          "elevationDeg": -0.673001
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-09-23T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 45.330627,
+          "elevationDeg": 2.619127
+        },
+        "earth": {
+          "azimuthDeg": 1.107857,
+          "elevationDeg": 0.725954
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 113.483663,
+          "elevationDeg": 0.520553
+        },
+        "earth": {
+          "azimuthDeg": 1.789292,
+          "elevationDeg": -0.348823
+        }
+      }
+    },
+    {
+      "siteId": "haworth_crater",
+      "siteName": "Haworth Crater Floor (PSR)",
+      "latDeg": -87.4,
+      "lonDeg": -5.1,
+      "elevationM": -3500.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 32.663073,
+          "elevationDeg": 3.435855
+        },
+        "earth": {
+          "azimuthDeg": 0.048933,
+          "elevationDeg": 8.93598
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 180.605777,
+          "elevationDeg": -3.671565
+        },
+        "earth": {
+          "azimuthDeg": 323.481661,
+          "elevationDeg": -3.038488
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 8.264018,
+          "elevationDeg": 4.727612
+        },
+        "earth": {
+          "azimuthDeg": 327.138689,
+          "elevationDeg": 8.167627
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 118.502915,
+          "elevationDeg": -2.838755
+        },
+        "earth": {
+          "azimuthDeg": 320.575794,
+          "elevationDeg": 8.111003
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 170.910815,
+          "elevationDeg": -5.862526
+        },
+        "earth": {
+          "azimuthDeg": 317.469666,
+          "elevationDeg": 4.871128
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-06-01T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 317.118922,
+          "elevationDeg": 1.93384
+        },
+        "earth": {
+          "azimuthDeg": 324.302178,
+          "elevationDeg": -2.739308
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-06-21T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 66.441406,
+          "elevationDeg": 0.551417
+        },
+        "earth": {
+          "azimuthDeg": 331.646086,
+          "elevationDeg": 1.338945
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-08-15T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 117.355141,
+          "elevationDeg": -2.395496
+        },
+        "earth": {
+          "azimuthDeg": 330.366671,
+          "elevationDeg": 0.947595
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-09-23T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 4.396023,
+          "elevationDeg": 5.576203
+        },
+        "earth": {
+          "azimuthDeg": 320.196229,
+          "elevationDeg": 1.814193
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 72.722377,
+          "elevationDeg": 2.989519
+        },
+        "earth": {
+          "azimuthDeg": 320.935588,
+          "elevationDeg": 0.77797
+        }
+      }
+    },
+    {
+      "siteId": "nobile_rim_1",
+      "siteName": "Nobile Rim 1 (VIPER / Artemis)",
+      "latDeg": -85.2,
+      "lonDeg": 35.8,
+      "elevationM": 4200.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 351.661757,
+          "elevationDeg": 5.995796
+        },
+        "earth": {
+          "azimuthDeg": 318.681662,
+          "elevationDeg": 9.954464
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 215.254083,
+          "elevationDeg": -6.952668
+        },
+        "earth": {
+          "azimuthDeg": 357.617457,
+          "elevationDeg": 2.970713
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 43.019021,
+          "elevationDeg": 7.226605
+        },
+        "earth": {
+          "azimuthDeg": 1.841934,
+          "elevationDeg": 13.998938
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 152.596893,
+          "elevationDeg": -9.325058
+        },
+        "earth": {
+          "azimuthDeg": 355.143768,
+          "elevationDeg": 14.234692
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 205.733329,
+          "elevationDeg": -10.03321
+        },
+        "earth": {
+          "azimuthDeg": 351.862655,
+          "elevationDeg": 11.104886
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-06-01T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 351.404157,
+          "elevationDeg": 8.176081
+        },
+        "earth": {
+          "azimuthDeg": 358.450761,
+          "elevationDeg": 3.233897
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-06-21T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 100.445605,
+          "elevationDeg": -3.193422
+        },
+        "earth": {
+          "azimuthDeg": 6.026825,
+          "elevationDeg": 6.932817
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-08-15T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 151.438652,
+          "elevationDeg": -8.87434
+        },
+        "earth": {
+          "azimuthDeg": 4.718131,
+          "elevationDeg": 6.614458
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-09-23T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 39.239801,
+          "elevationDeg": 8.469597
+        },
+        "earth": {
+          "azimuthDeg": 354.514026,
+          "elevationDeg": 7.953447
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 106.919874,
+          "elevationDeg": -1.32155
+        },
+        "earth": {
+          "azimuthDeg": 355.219472,
+          "elevationDeg": 6.889446
+        }
+      }
+    },
+    {
+      "siteId": "im_1_odysseus",
+      "siteName": "IM-1 Odysseus Landing Site",
+      "latDeg": -80.13,
+      "lonDeg": 1.44,
+      "elevationM": 2400.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 26.501028,
+          "elevationDeg": 10.100159
+        },
+        "earth": {
+          "azimuthDeg": 353.276819,
+          "elevationDeg": 16.147344
         }
       }
     },
     {
       "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
+      "latDeg": -69.373,
+      "lonDeg": 32.319,
+      "elevationM": -1800.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 184.33237,
+          "elevationDeg": -19.444396
+        },
+        "earth": {
+          "azimuthDeg": 326.327128,
+          "elevationDeg": 10.375987
+        }
+      }
+    },
+    {
+      "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
+      "latDeg": -69.373,
+      "lonDeg": 32.319,
+      "elevationM": -1800.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 12.493035,
+          "elevationDeg": 20.155614
+        },
+        "earth": {
+          "azimuthDeg": 328.417496,
+          "elevationDeg": 22.00193
+        }
+      }
+    },
+    {
+      "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
+      "latDeg": -69.373,
+      "lonDeg": 32.319,
+      "elevationM": -1800.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 120.256804,
+          "elevationDeg": -11.309008
+        },
+        "earth": {
+          "azimuthDeg": 321.520465,
+          "elevationDeg": 20.944113
+        }
+      }
+    },
+    {
+      "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
+      "latDeg": -69.373,
+      "lonDeg": 32.319,
+      "elevationM": -1800.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 174.01565,
+          "elevationDeg": -21.64712
+        },
+        "earth": {
+          "azimuthDeg": 318.891082,
+          "elevationDeg": 17.217954
+        }
+      }
+    },
+    {
+      "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
       "latDeg": -69.373,
       "lonDeg": 32.319,
       "elevationM": -1800.0,
@@ -294,52 +1381,451 @@
     },
     {
       "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
       "latDeg": -69.373,
       "lonDeg": 32.319,
       "elevationM": -1800.0,
-      "timestampIso": "2026-06-08T00:00:00.000Z",
+      "timestampIso": "2026-06-21T12:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 237.415946,
-          "elevationDeg": -13.032502
+          "azimuthDeg": 70.687617,
+          "elevationDeg": 5.64683
         },
         "earth": {
-          "azimuthDeg": 317.92855,
-          "elevationDeg": 16.407906
+          "azimuthDeg": 334.053977,
+          "elevationDeg": 15.792981
         }
       }
     },
     {
       "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
       "latDeg": -69.373,
       "lonDeg": 32.319,
       "elevationM": -1800.0,
-      "timestampIso": "2026-06-15T00:00:00.000Z",
+      "timestampIso": "2026-08-15T06:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 147.567135,
-          "elevationDeg": -19.058743
+          "azimuthDeg": 119.227477,
+          "elevationDeg": -10.609079
         },
         "earth": {
-          "azimuthDeg": 324.776901,
-          "elevationDeg": 23.139903
+          "azimuthDeg": 332.781288,
+          "elevationDeg": 15.253485
         }
       }
     },
     {
       "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
       "latDeg": -69.373,
       "lonDeg": 32.319,
       "elevationM": -1800.0,
-      "timestampIso": "2026-06-22T00:00:00.000Z",
+      "timestampIso": "2026-09-23T00:00:00.000Z",
       "horizons": {
         "sun": {
-          "azimuthDeg": 64.872193,
-          "elevationDeg": 7.640704
+          "azimuthDeg": 8.430928,
+          "elevationDeg": 21.213928
         },
         "earth": {
-          "azimuthDeg": 333.98409,
-          "elevationDeg": 15.106959
+          "azimuthDeg": 322.226165,
+          "elevationDeg": 14.664534
+        }
+      }
+    },
+    {
+      "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
+      "latDeg": -69.373,
+      "lonDeg": 32.319,
+      "elevationM": -1800.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 77.422824,
+          "elevationDeg": 6.342772
+        },
+        "earth": {
+          "azimuthDeg": 323.152994,
+          "elevationDeg": 13.760229
+        }
+      }
+    },
+    {
+      "siteId": "chandrayaan_3",
+      "siteName": "Chandrayaan-3 Shiv Shakti Point",
+      "latDeg": -69.373,
+      "lonDeg": 32.319,
+      "elevationM": -1800.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 354.816349,
+          "elevationDeg": 21.796593
+        },
+        "earth": {
+          "azimuthDeg": 319.192198,
+          "elevationDeg": 22.439083
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 267.892066,
+          "elevationDeg": -77.062117
+        },
+        "earth": {
+          "azimuthDeg": 284.34651,
+          "elevationDeg": 64.808437
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 91.733411,
+          "elevationDeg": 69.427196
+        },
+        "earth": {
+          "azimuthDeg": 255.752021,
+          "elevationDeg": 69.054498
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 88.697723,
+          "elevationDeg": -40.940799
+        },
+        "earth": {
+          "azimuthDeg": 258.443875,
+          "elevationDeg": 62.624952
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 298.670671,
+          "elevationDeg": -86.25721
+        },
+        "earth": {
+          "azimuthDeg": 265.65681,
+          "elevationDeg": 59.77128
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-06-01T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 271.974403,
+          "elevationDeg": 59.448458
+        },
+        "earth": {
+          "azimuthDeg": 284.186496,
+          "elevationDeg": 65.681942
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-06-21T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 88.740818,
+          "elevationDeg": 11.212015
+        },
+        "earth": {
+          "azimuthDeg": 277.12863,
+          "elevationDeg": 73.769692
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-08-15T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 89.198663,
+          "elevationDeg": -39.772298
+        },
+        "earth": {
+          "azimuthDeg": 277.734885,
+          "elevationDeg": 72.437914
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-09-23T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 94.985643,
+          "elevationDeg": 73.233526
+        },
+        "earth": {
+          "azimuthDeg": 272.220485,
+          "elevationDeg": 62.408331
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 91.623195,
+          "elevationDeg": 5.111257
+        },
+        "earth": {
+          "azimuthDeg": 274.65393,
+          "elevationDeg": 63.043317
+        }
+      }
+    },
+    {
+      "siteId": "apollo_11",
+      "siteName": "Apollo 11 Tranquillity Base",
+      "latDeg": 0.67408,
+      "lonDeg": 23.47297,
+      "elevationM": -2574.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 115.470466,
+          "elevationDeg": 85.53326
+        },
+        "earth": {
+          "azimuthDeg": 255.203021,
+          "elevationDeg": 60.483001
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-01-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 49.172159,
+          "elevationDeg": 34.101721
+        },
+        "earth": {
+          "azimuthDeg": 182.291554,
+          "elevationDeg": -51.332896
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-02-28T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 235.888935,
+          "elevationDeg": -28.933571
+        },
+        "earth": {
+          "azimuthDeg": 187.328089,
+          "elevationDeg": -40.112989
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-03-20T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 329.262565,
+          "elevationDeg": 39.659615
+        },
+        "earth": {
+          "azimuthDeg": 178.862079,
+          "elevationDeg": -40.094102
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-04-15T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 37.453918,
+          "elevationDeg": 36.770933
+        },
+        "earth": {
+          "azimuthDeg": 174.355222,
+          "elevationDeg": -43.013112
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-06-01T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 173.277998,
+          "elevationDeg": -45.947674
+        },
+        "earth": {
+          "azimuthDeg": 183.601218,
+          "elevationDeg": -51.046087
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-06-21T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 281.523808,
+          "elevationDeg": 9.245945
+        },
+        "earth": {
+          "azimuthDeg": 194.292162,
+          "elevationDeg": -46.499382
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-08-15T06:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 327.67212,
+          "elevationDeg": 39.560386
+        },
+        "earth": {
+          "azimuthDeg": 192.513783,
+          "elevationDeg": -47.041181
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-09-23T00:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 231.695837,
+          "elevationDeg": -30.448447
+        },
+        "earth": {
+          "azimuthDeg": 177.703863,
+          "elevationDeg": -46.328633
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-11-15T12:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 284.007108,
+          "elevationDeg": 15.528869
+        },
+        "earth": {
+          "azimuthDeg": 178.664043,
+          "elevationDeg": -47.415774
+        }
+      }
+    },
+    {
+      "siteId": "change_4",
+      "siteName": "Chang'e 4 Von K\u00e1rm\u00e1n (Farside)",
+      "latDeg": -45.4446,
+      "lonDeg": 177.5991,
+      "elevationM": -5900.0,
+      "timestampIso": "2026-12-21T18:00:00.000Z",
+      "horizons": {
+        "sun": {
+          "azimuthDeg": 218.227964,
+          "elevationDeg": -36.336806
+        },
+        "earth": {
+          "azimuthDeg": 176.662904,
+          "elevationDeg": -38.109974
         }
       }
     }

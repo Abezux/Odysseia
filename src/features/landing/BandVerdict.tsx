@@ -126,7 +126,7 @@ export function BandVerdict(): React.JSX.Element {
     },
     {
       leadingDigit: '0.',
-      trailing: '0211°',
+      trailing: '0219°',
       caption: 'Earth Elevation RMSE vs NASA JPL Horizons'
     },
     {
