@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { Canvas, useFrame, type ThreeEvent } from '@react-three/fiber';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
-import { Target, Globe } from 'lucide-react';
+import { Target, Globe, RotateCcw } from 'lucide-react';
 import { useTimeStore } from '../../store/useTimeStore';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { dataProvider } from '../../lib/data';
@@ -15,10 +15,22 @@ import { SubBodyMarkers } from './SubBodyMarkers';
 import { EarthBody } from './EarthBody';
 import { SunBody } from './SunBody';
 import { Starfield } from './Starfield';
+import { EarthOrbitPath } from './EarthOrbitPath';
 import { latLonToVector3, GLOBE_RADIUS } from './globeMath';
 import { Button } from '../../ui/Button';
 import { Badge } from '../../ui/Badge';
 import { Icon } from '../../ui';
+
+export interface GlobeLayers {
+  celestialBodies?: boolean;
+  orbitPath?: boolean;
+  labels?: boolean;
+  starfield?: boolean;
+  siteMarkers?: boolean;
+  terminator?: boolean;
+  earthVector?: boolean;
+  shadowMap?: boolean;
+}
 
 interface GlobeMeshProps {
   sunDirection: THREE.Vector3;
@@ -146,12 +158,115 @@ function PolarRings(): React.JSX.Element {
   return <primitive object={line} />;
 }
 
-export function MoonGlobeView(): React.JSX.Element {
+interface CameraTarget {
+  position: THREE.Vector3;
+  target: THREE.Vector3;
+}
+
+/**
+ * Smooth Camera Animation Controller (0.6s ease, honoring prefers-reduced-motion)
+ */
+function GlobeCameraController({
+  cameraTarget,
+  onTransitionEnd,
+  controlsRef
+}: {
+  cameraTarget: CameraTarget | null;
+  onTransitionEnd: () => void;
+  controlsRef: React.RefObject<OrbitControlsImpl>;
+}): null {
+  const { camera } = useThree();
+  const animRef = useRef<{
+    startPos: THREE.Vector3;
+    endPos: THREE.Vector3;
+    startTarget: THREE.Vector3;
+    endTarget: THREE.Vector3;
+    startTime: number;
+    duration: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!cameraTarget) return;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      camera.position.copy(cameraTarget.position);
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(cameraTarget.target);
+        controlsRef.current.update();
+      }
+      onTransitionEnd();
+      return;
+    }
+
+    const currentTarget = controlsRef.current
+      ? controlsRef.current.target.clone()
+      : new THREE.Vector3(0, 0, 0);
+
+    animRef.current = {
+      startPos: camera.position.clone(),
+      endPos: cameraTarget.position.clone(),
+      startTarget: currentTarget,
+      endTarget: cameraTarget.target.clone(),
+      startTime: performance.now(),
+      duration: 600 // 0.6 seconds
+    };
+  }, [cameraTarget, camera, controlsRef, onTransitionEnd]);
+
+  useFrame(() => {
+    if (!animRef.current) return;
+    const { startPos, endPos, startTarget, endTarget, startTime, duration } = animRef.current;
+    const elapsed = performance.now() - startTime;
+    const progress = Math.min(1.0, elapsed / duration);
+
+    // Smoothstep ease
+    const ease = progress * progress * (3 - 2 * progress);
+
+    camera.position.lerpVectors(startPos, endPos, ease);
+    if (controlsRef.current) {
+      controlsRef.current.target.lerpVectors(startTarget, endTarget, ease);
+      controlsRef.current.update();
+    }
+
+    if (progress >= 1.0) {
+      animRef.current = null;
+      onTransitionEnd();
+    }
+  });
+
+  return null;
+}
+
+export interface MoonGlobeViewProps {
+  layers?: GlobeLayers;
+}
+
+export function MoonGlobeView({ layers }: MoonGlobeViewProps): React.JSX.Element {
   const currentTime = useTimeStore((s) => s.currentTime);
   const { activeSiteId, setActiveSiteId } = useScenarioStore();
 
   const [sites, setSites] = useState<Site[]>([]);
   const controlsRef = useRef<OrbitControlsImpl>(null);
+
+  // Default active layers if not provided
+  const activeLayers = useMemo<Required<GlobeLayers>>(() => ({
+    celestialBodies: layers?.celestialBodies ?? true,
+    orbitPath: layers?.orbitPath ?? false,
+    labels: layers?.labels ?? true,
+    starfield: layers?.starfield ?? true,
+    siteMarkers: layers?.siteMarkers ?? true,
+    terminator: layers?.terminator ?? true,
+    earthVector: layers?.earthVector ?? true,
+    shadowMap: layers?.shadowMap ?? true
+  }), [layers]);
+
+  // Camera focus animation state
+  const [cameraTarget, setCameraTarget] = useState<CameraTarget | null>(null);
+  const [focusedBody, setFocusedBody] = useState<'earth' | 'sun' | 'southPole' | 'equator' | null>(null);
+  const previousCameraRef = useRef<CameraTarget | null>(null);
 
   // Load sites catalog
   useEffect(() => {
@@ -160,7 +275,6 @@ export function MoonGlobeView(): React.JSX.Element {
 
   // Compute live sub-solar and sub-earth positions
   const ephem = useMemo(() => {
-    // Reference sample at 0,0 to read sub-body coordinates
     return ephemerisEngine.sample({ latDeg: 0, lonDeg: 0 }, currentTime);
   }, [currentTime]);
 
@@ -180,27 +294,86 @@ export function MoonGlobeView(): React.JSX.Element {
     ).normalize();
   }, [ephem]);
 
+  // Compressed Earth distance varying with true ephemeris distance
+  const earthCompressedDistance = useMemo(() => {
+    return 24.0 * (ephem.earth.distanceKm / 384400.0);
+  }, [ephem.earth.distanceKm]);
+
+  // Angular separation between Sun and Earth
+  const sunEarthSeparationDeg = useMemo(() => {
+    const dot = THREE.MathUtils.clamp(sunDirection.dot(earthDirection), -1, 1);
+    return THREE.MathUtils.radToDeg(Math.acos(dot));
+  }, [sunDirection, earthDirection]);
+
   // Click on globe to select or create a pin
   const handleGlobeClick = (lat: number, lon: number) => {
     console.log(`[MoonGlobe] Surface clicked: Lat ${lat}°, Lon ${lon}°`);
   };
 
+  // Focus Earth
+  const focusEarth = useCallback(() => {
+    if (controlsRef.current) {
+      if (!focusedBody) {
+        previousCameraRef.current = {
+          position: controlsRef.current.object.position.clone(),
+          target: controlsRef.current.target.clone()
+        };
+      }
+      const earthPos = latLonToVector3(
+        ephem.subEarthCoordinates.latDeg,
+        ephem.subEarthCoordinates.lonDeg,
+        earthCompressedDistance
+      );
+      // Place camera 1.8 units along view direction from Earth
+      const camPos = earthPos.clone().add(new THREE.Vector3(0, 0.4, 1.8));
+      setCameraTarget({ target: earthPos, position: camPos });
+      setFocusedBody('earth');
+    }
+  }, [controlsRef, focusedBody, ephem, earthCompressedDistance]);
+
+  // Focus Sun
+  const focusSun = useCallback(() => {
+    if (controlsRef.current) {
+      if (!focusedBody) {
+        previousCameraRef.current = {
+          position: controlsRef.current.object.position.clone(),
+          target: controlsRef.current.target.clone()
+        };
+      }
+      const sunPos = sunDirection.clone().multiplyScalar(36.0);
+      const camPos = sunPos.clone().sub(sunDirection.clone().multiplyScalar(3.0));
+      setCameraTarget({ target: sunPos, position: camPos });
+      setFocusedBody('sun');
+    }
+  }, [controlsRef, focusedBody, sunDirection]);
+
+  // Reset Camera View to previous or default
+  const resetCameraView = useCallback(() => {
+    const defaultTarget: CameraTarget = previousCameraRef.current || {
+      position: new THREE.Vector3(0, -3.2, 3.2),
+      target: new THREE.Vector3(0, 0, 0)
+    };
+    setCameraTarget(defaultTarget);
+    setFocusedBody(null);
+    previousCameraRef.current = null;
+  }, []);
+
   // Quick focus to South Pole
   const focusSouthPole = () => {
-    if (controlsRef.current) {
-      controlsRef.current.object.position.set(0, -4.5, 0.2);
-      controlsRef.current.target.set(0, 0, 0);
-      controlsRef.current.update();
-    }
+    setCameraTarget({
+      position: new THREE.Vector3(0, -4.5, 0.2),
+      target: new THREE.Vector3(0, 0, 0)
+    });
+    setFocusedBody('southPole');
   };
 
   // Quick focus to Equator
   const focusEquator = () => {
-    if (controlsRef.current) {
-      controlsRef.current.object.position.set(0, 0, 4.5);
-      controlsRef.current.target.set(0, 0, 0);
-      controlsRef.current.update();
-    }
+    setCameraTarget({
+      position: new THREE.Vector3(0, 0, 4.5),
+      target: new THREE.Vector3(0, 0, 0)
+    });
+    setFocusedBody('equator');
   };
 
   return (
@@ -227,52 +400,105 @@ export function MoonGlobeView(): React.JSX.Element {
         <color attach="background" args={['#050403']} />
         <ambientLight intensity={0.12} />
 
+        {/* Camera Transition Controller */}
+        <GlobeCameraController
+          cameraTarget={cameraTarget}
+          onTransitionEnd={() => setCameraTarget(null)}
+          controlsRef={controlsRef}
+        />
+
         {/* Real Celestial Starfield (Yale / Hipparcos bright star catalog) */}
-        <Starfield />
+        {activeLayers.starfield && <Starfield />}
+
+        {/* Ephemeris Orbit Path (27.32d sidereal loop with current epoch node) */}
+        <EarthOrbitPath
+          currentTime={currentTime}
+          visible={activeLayers.orbitPath && activeLayers.celestialBodies}
+        />
 
         {/* Ephemeris Sun & Earth in Deep Space */}
-        <SunBody sunDirection={sunDirection} />
-        <EarthBody
-          earthDirection={earthDirection}
-          sunDirection={sunDirection}
-          currentTime={currentTime}
-        />
+        {activeLayers.celestialBodies && (
+          <>
+            <SunBody
+              sunDirection={sunDirection}
+              showLabel={activeLayers.labels}
+              tooltipData={{
+                distanceKm: ephem.sun.distanceKm,
+                lightTimeMin: ephem.sun.distanceKm / 299792.458 / 60,
+                separationDeg: 0.0
+              }}
+              onClick={focusSun}
+            />
+            <EarthBody
+              earthDirection={earthDirection}
+              sunDirection={sunDirection}
+              currentTime={currentTime}
+              distance={earthCompressedDistance}
+              showLabel={activeLayers.labels}
+              tooltipData={{
+                distanceKm: ephem.earth.distanceKm,
+                lightTimeSec: ephem.earth.distanceKm / 299792.458,
+                phasePct: Math.round(ephem.earth.phaseFraction * 100),
+                separationDeg: sunEarthSeparationDeg
+              }}
+              onClick={focusEarth}
+            />
+          </>
+        )}
 
         <GlobeMesh sunDirection={sunDirection} onGlobeClick={handleGlobeClick} />
         <PolarRings />
 
-        <SitePinLayer
-          sites={sites}
-          activeSiteId={activeSiteId}
-          onSelectSite={(id) => setActiveSiteId(id)}
-        />
+        {activeLayers.siteMarkers && (
+          <SitePinLayer
+            sites={sites}
+            activeSiteId={activeSiteId}
+            onSelectSite={(id) => setActiveSiteId(id)}
+          />
+        )}
 
-        <SubBodyMarkers
-          subSolarLatDeg={ephem.subSolarCoordinates.latDeg}
-          subSolarLonDeg={ephem.subSolarCoordinates.lonDeg}
-          subEarthLatDeg={ephem.subEarthCoordinates.latDeg}
-          subEarthLonDeg={ephem.subEarthCoordinates.lonDeg}
-        />
+        {activeLayers.earthVector && (
+          <SubBodyMarkers
+            subSolarLatDeg={ephem.subSolarCoordinates.latDeg}
+            subSolarLonDeg={ephem.subSolarCoordinates.lonDeg}
+            subEarthLatDeg={ephem.subEarthCoordinates.latDeg}
+            subEarthLonDeg={ephem.subEarthCoordinates.lonDeg}
+          />
+        )}
 
         <OrbitControls
           ref={controlsRef}
           enablePan={false}
-          minDistance={2.5}
-          maxDistance={8.0}
+          minDistance={1.2}
+          maxDistance={45.0}
           rotateSpeed={0.8}
         />
       </Canvas>
 
       {/* Floating HUD Controls */}
       <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10">
-        <Button variant="secondary" size="sm" onClick={focusSouthPole} className="flex items-center gap-1.5">
-          <Icon icon={Target} size={16} />
-          <span>Focus South Pole</span>
-        </Button>
-        <Button variant="outline" size="sm" onClick={focusEquator} className="flex items-center gap-1.5">
-          <Icon icon={Globe} size={16} />
-          <span>Equator View</span>
-        </Button>
+        {focusedBody ? (
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={resetCameraView}
+            className="flex items-center gap-1.5 shadow-lg"
+          >
+            <Icon icon={RotateCcw} size={16} />
+            <span>Reset View (Moon)</span>
+          </Button>
+        ) : (
+          <>
+            <Button variant="secondary" size="sm" onClick={focusSouthPole} className="flex items-center gap-1.5">
+              <Icon icon={Target} size={16} />
+              <span>Focus South Pole</span>
+            </Button>
+            <Button variant="outline" size="sm" onClick={focusEquator} className="flex items-center gap-1.5">
+              <Icon icon={Globe} size={16} />
+              <span>Equator View</span>
+            </Button>
+          </>
+        )}
       </div>
 
       {/* Ephemeris Legend */}

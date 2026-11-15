@@ -1,6 +1,14 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
+
+export interface EarthTooltipData {
+  distanceKm: number;
+  lightTimeSec: number;
+  phasePct: number;
+  separationDeg: number;
+}
 
 interface EarthBodyProps {
   earthDirection: THREE.Vector3;
@@ -8,13 +16,17 @@ interface EarthBodyProps {
   currentTime: Date;
   distance?: number;
   radius?: number;
+  showLabel?: boolean;
+  tooltipData?: EarthTooltipData;
+  onClick?: () => void;
+  onHover?: (hovered: boolean) => void;
 }
 
 /**
  * Custom Earth Shader:
  * - NASA Blue Marble albedo texture
  * - Realistic solar day/night terminator phase
- * - Subtle atmospheric limb glow (Fresnel cyan/blue, airless/space contrast, zero bloom)
+ * - Subtle atmospheric limb glow (Fresnel cyan/blue, zero bloom)
  */
 const EarthShader = {
   uniforms: {
@@ -78,10 +90,15 @@ export function EarthBody({
   sunDirection,
   currentTime,
   distance = 24.0,
-  radius = 0.40
+  radius = 0.40,
+  showLabel = true,
+  tooltipData,
+  onClick,
+  onHover
 }: EarthBodyProps): React.JSX.Element {
   const earthMeshRef = useRef<THREE.Mesh>(null);
   const textureRef = useRef<THREE.Texture | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Position in space along true ephemeris direction
   const position = useMemo(() => {
@@ -163,15 +180,86 @@ export function EarthBody({
   // Earth's axial tilt: 23.44° relative to ecliptic normal
   const axialTiltRad = THREE.MathUtils.degToRad(23.44);
 
+  const handlePointerEnter = () => {
+    setIsHovered(true);
+    onHover?.(true);
+  };
+
+  const handlePointerLeave = () => {
+    setIsHovered(false);
+    onHover?.(false);
+  };
+
   return (
     <group position={position} name="celestial-earth">
       {/* Tilted polar axis container */}
       <group rotation={[axialTiltRad, 0, 0]}>
-        <mesh ref={earthMeshRef}>
+        <mesh
+          ref={earthMeshRef}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick?.();
+          }}
+          onPointerOver={handlePointerEnter}
+          onPointerOut={handlePointerLeave}
+        >
           <sphereGeometry args={[radius, 48, 48]} />
           <primitive object={material} attach="material" />
         </mesh>
       </group>
+
+      {/* Small mono label and hover tooltip */}
+      {showLabel && (
+        <Html
+          position={[0, radius + 0.35, 0]}
+          center
+          distanceFactor={18}
+          style={{ pointerEvents: 'auto', userSelect: 'none' }}
+        >
+          <div
+            className="group relative flex flex-col items-center cursor-pointer"
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick?.();
+            }}
+          >
+            <div className="flex items-center gap-1.5 rounded-md border border-sky-400/50 bg-[#0B0A09]/85 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-sky-400 shadow-md backdrop-blur-xs transition-colors hover:border-sky-300 hover:text-sky-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
+              <span>EARTH</span>
+            </div>
+
+            {/* Hover Tooltip Card */}
+            {isHovered && tooltipData && (
+              <div className="absolute bottom-full mb-2 w-52 rounded-xl border border-panel-border bg-[#0E0C0A]/95 p-2.5 font-mono text-[10px] text-ink shadow-2xl backdrop-blur-md z-50 pointer-events-none">
+                <div className="flex items-center justify-between border-b border-panel-border pb-1 mb-1.5 font-bold text-sky-400">
+                  <span>EARTH</span>
+                  <span className="text-[9px] text-muted font-normal">Click to Focus</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-muted">Distance:</span>
+                    <span className="font-semibold">{Math.round(tooltipData.distanceKm).toLocaleString()} km</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Light-Time:</span>
+                    <span>{tooltipData.lightTimeSec.toFixed(2)} s</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Illumination:</span>
+                    <span className="text-amber">{tooltipData.phasePct}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Sep from Sun:</span>
+                    <span>{tooltipData.separationDeg.toFixed(1)}°</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }

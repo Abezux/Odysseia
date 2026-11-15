@@ -3,3 +3,7 @@ export * from './SitePinLayer';
 export * from './SubBodyMarkers';
 export * from './TerminatorShader';
 export * from './globeMath';
+export * from './EarthBody';
+export * from './SunBody';
+export * from './Starfield';
+export * from './EarthOrbitPath';

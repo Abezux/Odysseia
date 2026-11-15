@@ -77,11 +77,14 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
 
   // HUD layer controls state
   const [layers, setLayers] = useState({
-    terminator: true,
+    celestialBodies: true,
+    orbitPath: false,
+    labels: true,
+    starfield: true,
     siteMarkers: true,
+    terminator: true,
     earthVector: true,
-    shadowMap: true,
-    labels: true
+    shadowMap: true
   });
   const [isLayerHudOpen, setIsLayerHudOpen] = useState(false);
 
@@ -628,7 +631,7 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
             onReset={() => setActiveCenterTab('horizon')}
           >
             <React.Suspense fallback={<div className="h-full w-full bg-[#0B0A09]" />}>
-              {activeCenterTab === 'globe' && <MoonGlobeView />}
+              {activeCenterTab === 'globe' && <MoonGlobeView layers={layers} />}
               {activeCenterTab === 'terrain' && <TerrainView />}
               {activeCenterTab === 'horizon' && <HorizonView />}
             </React.Suspense>

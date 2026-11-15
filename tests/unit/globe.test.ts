@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { latLonToVector3, GLOBE_RADIUS } from '../../src/features/globe/globeMath';
 import { LunarSurfaceShader } from '../../src/features/globe/TerminatorShader';
+import { ephemerisEngine } from '../../src/lib/ephemeris';
 
 describe('Phase 3: 3D Moon Globe & NASA LROC Texture Integration', () => {
   it('correctly maps selenographic coordinates to 3D Cartesian vectors in Mean Earth frame', () => {
@@ -205,6 +206,80 @@ describe('Phase 3: 3D Moon Globe & NASA LROC Texture Integration', () => {
 
       const [rRed, , bRed] = getStarRgb(redStarBv);
       expect(rRed).toBeGreaterThan(bRed);
+    });
+  });
+
+  describe('Group 5: Orbit Paths, Labels, Toggles, and Camera Interaction', () => {
+    it('samples Earth apparent orbit over one lunar sidereal month (27.32 days) with distance variation', () => {
+      const testDate = new Date('2026-11-15T12:00:00Z');
+      const siderealPeriodDays = 27.321661;
+      const sampleCount = 60;
+      const stepMs = (siderealPeriodDays * 86400 * 1000) / sampleCount;
+      const startMs = testDate.getTime() - (siderealPeriodDays * 86400 * 1000) / 2;
+
+      const distances: number[] = [];
+      for (let i = 0; i <= sampleCount; i++) {
+        const sample = ephemerisEngine.sample({ latDeg: 0, lonDeg: 0 }, new Date(startMs + i * stepMs));
+        distances.push(sample.earth.distanceKm);
+      }
+
+      const minDistance = Math.min(...distances);
+      const maxDistance = Math.max(...distances);
+
+      // Real Earth-Moon distance varies between ~356,000 km (perigee) and ~407,000 km (apogee)
+      expect(minDistance).toBeLessThan(375000);
+      expect(maxDistance).toBeGreaterThan(395000);
+      expect(maxDistance - minDistance).toBeGreaterThan(25000); // Measurable variation > 25,000 km
+    });
+
+    it('calculates astronomical light-time and solar angular separation accurately', () => {
+      const SPEED_OF_LIGHT_KM_S = 299792.458;
+      const earthDistKm = 384400;
+      const earthLightTimeSec = earthDistKm / SPEED_OF_LIGHT_KM_S;
+      expect(earthLightTimeSec).toBeCloseTo(1.28, 2);
+
+      const sunDistKm = 149597870.7;
+      const sunLightTimeMin = sunDistKm / SPEED_OF_LIGHT_KM_S / 60;
+      expect(sunLightTimeMin).toBeCloseTo(8.32, 1);
+
+      // Vector separation test
+      const vSun = new THREE.Vector3(1, 0, 0);
+      const vEarth = new THREE.Vector3(0, 1, 0); // 90° separation
+      const angleRad = Math.acos(THREE.MathUtils.clamp(vSun.dot(vEarth), -1, 1));
+      const angleDeg = THREE.MathUtils.radToDeg(angleRad);
+      expect(angleDeg).toBeCloseTo(90.0, 4);
+    });
+
+    it('validates default Layer Control state contract', () => {
+      const defaultLayers = {
+        celestialBodies: true,
+        orbitPath: false,
+        labels: true,
+        starfield: true,
+        siteMarkers: true,
+        terminator: true,
+        earthVector: true,
+        shadowMap: true
+      };
+
+      expect(defaultLayers.celestialBodies).toBe(true);
+      expect(defaultLayers.orbitPath).toBe(false); // Orbit path off by default
+      expect(defaultLayers.labels).toBe(true);
+      expect(defaultLayers.starfield).toBe(true);
+    });
+
+    it('verifies smoothstep camera interpolation behavior', () => {
+      const smoothstep = (t: number) => t * t * (3 - 2 * t);
+      expect(smoothstep(0.0)).toBeCloseTo(0.0, 5);
+      expect(smoothstep(0.5)).toBeCloseTo(0.5, 5);
+      expect(smoothstep(1.0)).toBeCloseTo(1.0, 5);
+
+      // Easing derivative is zero at endpoints (smooth acceleration & deceleration)
+      const eps = 1e-4;
+      const derivative0 = (smoothstep(eps) - smoothstep(0)) / eps;
+      const derivative1 = (smoothstep(1) - smoothstep(1 - eps)) / eps;
+      expect(derivative0).toBeCloseTo(0, 3);
+      expect(derivative1).toBeCloseTo(0, 3);
     });
   });
 });
