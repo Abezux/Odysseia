@@ -13,5 +13,17 @@ export default defineConfig({
   },
   worker: {
     format: 'es'
+  },
+  build: {
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
+          'vendor-icons': ['lucide-react'],
+          'vendor-ephem': ['astronomy-engine']
+        }
+      }
+    }
   }
 });

@@ -20,10 +20,15 @@ import {
 } from 'lucide-react';
 import { useUIStore, type CenterTab } from '../../store/useUIStore';
 import { useTimeStore } from '../../store/useTimeStore';
-import { MoonGlobeView } from '../globe';
-import { TerrainView } from '../terrain';
 import { HorizonView } from '../horizon';
 import { Tabs, type TabItem } from '../../ui/Tabs';
+
+const MoonGlobeView = React.lazy(() =>
+  import('../globe').then((m) => ({ default: m.MoonGlobeView }))
+);
+const TerrainView = React.lazy(() =>
+  import('../terrain').then((m) => ({ default: m.TerrainView }))
+);
 import { SkyDial } from '../detail/SkyDial';
 import { TimelineStripView } from '../timeline/TimelineStrip';
 import type { MetricsResult, Site, HorizonProfile } from '../../contracts';
@@ -622,9 +627,11 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
             message="The 3D WebGL renderer could not initialize in your browser. Verify graphics acceleration in chrome://settings/system, or switch to the 2D Horizon Panorama tab."
             onReset={() => setActiveCenterTab('horizon')}
           >
-            {activeCenterTab === 'globe' && <MoonGlobeView />}
-            {activeCenterTab === 'terrain' && <TerrainView />}
-            {activeCenterTab === 'horizon' && <HorizonView />}
+            <React.Suspense fallback={<div className="h-full w-full bg-[#0B0A09]" />}>
+              {activeCenterTab === 'globe' && <MoonGlobeView />}
+              {activeCenterTab === 'terrain' && <TerrainView />}
+              {activeCenterTab === 'horizon' && <HorizonView />}
+            </React.Suspense>
           </ErrorBoundary>
 
           {/* Radial Edge Fade Mask (only in non-fullscreen) */}

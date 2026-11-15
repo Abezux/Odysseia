@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { Layout } from './Layout';
 import { TopBar } from '../features/dashboard/TopBar';
 import { LeftSidebar } from '../features/dashboard/LeftSidebar';
-import { CenterWorkspace } from '../features/dashboard/CenterWorkspace';
 import { RightUtilityColumn } from '../features/dashboard/RightUtilityColumn';
 import { TimelineDock } from '../features/dashboard/TimelineDock';
-import { CompareView } from '../features/compare';
-import { GuidedTour } from '../features/tour';
 import { LandingPage } from '../features/landing';
 import { ToastContainer } from '../ui/Toast';
 import { showToast } from '../ui/toastStore';
-import { CustomSiteModal } from '../features/sites/CustomSiteModal';
-import { ScorecardModal } from '../features/detail/ScorecardModal';
 import { useUIStore } from '../store/useUIStore';
 import { useScenarioStore } from '../store/useScenarioStore';
 import { useTimeStore } from '../store/useTimeStore';
@@ -20,6 +15,22 @@ import { dataProvider } from '../lib/data';
 import { evaluateMetricsAsync } from '../lib/workers/workerClient';
 import type { Site, HorizonProfile, MetricsResult } from '../contracts';
 import { safeViewTransition } from '../lib/viewTransition';
+
+const CenterWorkspace = React.lazy(() =>
+  import('../features/dashboard/CenterWorkspace').then((m) => ({ default: m.CenterWorkspace }))
+);
+const CompareView = React.lazy(() =>
+  import('../features/compare').then((m) => ({ default: m.CompareView }))
+);
+const GuidedTour = React.lazy(() =>
+  import('../features/tour').then((m) => ({ default: m.GuidedTour }))
+);
+const CustomSiteModal = React.lazy(() =>
+  import('../features/sites/CustomSiteModal').then((m) => ({ default: m.CustomSiteModal }))
+);
+const ScorecardModal = React.lazy(() =>
+  import('../features/detail/ScorecardModal').then((m) => ({ default: m.ScorecardModal }))
+);
 
 export default function App(): React.JSX.Element {
   const {
@@ -248,7 +259,9 @@ export default function App(): React.JSX.Element {
             />
           ),
           CenterViewSlot: (
-            <CenterWorkspace metrics={metrics} activeSite={site} horizon={horizon} />
+            <Suspense fallback={<div className="h-full w-full bg-[#0B0A09]" />}>
+              <CenterWorkspace metrics={metrics} activeSite={site} horizon={horizon} />
+            </Suspense>
           ),
           RightDetailSlot: (
             <RightUtilityColumn
@@ -266,28 +279,42 @@ export default function App(): React.JSX.Element {
 
       {/* Full-Screen Comparison Matrix Overlay */}
       {isCompareOpen && (
-        <div className="fixed inset-0 z-50 flex bg-[#0B0A09]/90 backdrop-blur-md">
-          <CompareView />
-        </div>
+        <Suspense fallback={null}>
+          <div className="fixed inset-0 z-50 flex bg-[#0B0A09]/90 backdrop-blur-md">
+            <CompareView />
+          </div>
+        </Suspense>
       )}
 
       {/* Custom Site Coordinate Entry Modal */}
-      <CustomSiteModal
-        isOpen={isCustomSiteOpen}
-        onClose={() => setIsCustomSiteOpen(false)}
-        onSubmit={handleAddCustomSite}
-      />
+      {isCustomSiteOpen && (
+        <Suspense fallback={null}>
+          <CustomSiteModal
+            isOpen={isCustomSiteOpen}
+            onClose={() => setIsCustomSiteOpen(false)}
+            onSubmit={handleAddCustomSite}
+          />
+        </Suspense>
+      )}
 
       {/* Full Feasibility Scorecard Modal */}
-      <ScorecardModal
-        isOpen={isScorecardOpen}
-        onClose={() => setIsScorecardOpen(false)}
-        site={site}
-        metrics={metrics}
-      />
+      {isScorecardOpen && (
+        <Suspense fallback={null}>
+          <ScorecardModal
+            isOpen={isScorecardOpen}
+            onClose={() => setIsScorecardOpen(false)}
+            site={site}
+            metrics={metrics}
+          />
+        </Suspense>
+      )}
 
       {/* Interactive Guided Tour Overlay */}
-      <GuidedTour />
+      {isTourOpen && (
+        <Suspense fallback={null}>
+          <GuidedTour />
+        </Suspense>
+      )}
 
       {/* Industrial Dark Toast Container */}
       <ToastContainer />
