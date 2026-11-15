@@ -72,7 +72,7 @@ export function LandingPage({ onEnterApp }: LandingPageProps): React.JSX.Element
 
       {/* 6. Band 03 · Odysseia (Chapter 4) */}
       <div className="reveal-block">
-        <BandOdysseia />
+        <BandOdysseia onEnterApp={onEnterApp} />
       </div>
 
       {/* 7. Band 04 · Verdict (Chapter 5) */}

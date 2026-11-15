@@ -1,13 +1,73 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BandHeader } from './BandHeader';
 
-export function BandOdysseia(): React.JSX.Element {
+interface BandOdysseiaProps {
+  onEnterApp?: () => void;
+}
+
+interface TabPreviewItem {
+  id: 'globe' | 'terrain' | 'horizon' | 'compare';
+  label: string;
+  badge: string;
+  title: string;
+  description: string;
+  image: string;
+  fallback: string;
+}
+
+const PREVIEW_TABS: TabPreviewItem[] = [
+  {
+    id: 'globe',
+    label: 'Moon Globe',
+    badge: '3D ORBITAL SIMULATION',
+    title: '3D Lunar Globe & Astrometric Context',
+    description:
+      'Sub-solar terminator simulation, real-time Earth line-of-sight tracking, and 27.32-day sidereal orbit nodal trajectory.',
+    image: `${import.meta.env.BASE_URL}preview/globe.webp`,
+    fallback: `${import.meta.env.BASE_URL}preview/globe.png`
+  },
+  {
+    id: 'terrain',
+    label: 'Local Terrain',
+    badge: '20M/PX LASER ALTIMETRY',
+    title: 'Authentic LOLA 20m/px Elevation Mesh',
+    description:
+      'Polar digital elevation models from NASA LOLA LDEM 80°S altimetry with dynamic hillshading, slope variance, and lander mast elevation.',
+    image: `${import.meta.env.BASE_URL}preview/terrain.webp`,
+    fallback: `${import.meta.env.BASE_URL}preview/terrain.png`
+  },
+  {
+    id: 'horizon',
+    label: 'Horizon Skyline',
+    badge: '360° TOPOCENTRIC PROFILE',
+    title: 'First-Person 360° Panoramic Skyline',
+    description:
+      'Raycasted topographic horizon profiles showing exact solar elevation angles and Earth line-of-sight clearing crater ridges.',
+    image: `${import.meta.env.BASE_URL}preview/horizon.webp`,
+    fallback: `${import.meta.env.BASE_URL}preview/horizon.png`
+  },
+  {
+    id: 'compare',
+    label: 'Compare Matrix',
+    badge: 'MULTI-SITE BENCHMARKING',
+    title: 'Multi-Site Artemis Comparative Analysis',
+    description:
+      'Side-by-side radar matrices and quantitative diffs for continuous illumination %, comms blackout duration, and slope hazard.',
+    image: `${import.meta.env.BASE_URL}preview/compare.webp`,
+    fallback: `${import.meta.env.BASE_URL}preview/compare.png`
+  }
+];
+
+export function BandOdysseia({ onEnterApp }: BandOdysseiaProps = {}): React.JSX.Element {
   const globeCanvasRef = useRef<HTMLCanvasElement>(null);
   const skylineCanvasRef = useRef<HTMLCanvasElement>(null);
   const skyDialCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const [parallaxY, setParallaxY] = useState(0);
+  const [activePreviewTab, setActivePreviewTab] = useState<'globe' | 'terrain' | 'horizon' | 'compare'>('globe');
   const sectionRef = useRef<HTMLElement>(null);
+
+  const currentTab = PREVIEW_TABS.find((t) => t.id === activePreviewTab) || PREVIEW_TABS[0];
 
   useEffect(() => {
     // Parallax scroll listener
@@ -256,24 +316,89 @@ export function BandOdysseia(): React.JSX.Element {
           lede="Instead of interpreting disconnected data tables, Odysseia transforms complex astrometric matrices into physical perspectives: the global terminator, 3D surface relief, and the horizon skyline."
         />
 
-        {/* Product Screen Recording Panel */}
-        <div className="mb-10 w-full border border-hairline bg-secondary-ground overflow-hidden">
-          <div className="relative aspect-[16/9] w-full max-h-[460px] bg-panel flex items-center justify-center">
-            {/* Visual preview banner with real UI components screenshot / animated frame */}
-            <div className="flex flex-col items-center justify-center p-8 text-center space-y-3">
-              <div className="font-mono text-[11px] uppercase tracking-[0.1em] text-amber">
+        {/* Interactive Tabbed Product Preview Frame (Option C) */}
+        <div className="mb-12 w-full border border-hairline bg-secondary-ground overflow-hidden shadow-2xl">
+          {/* Header Bar */}
+          <div className="flex flex-wrap items-center justify-between border-b border-hairline bg-ground/80 px-4 py-2.5 backdrop-blur-md gap-3">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber" />
+              </span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">
                 ODYSSEIA MISSION CONTROL INTERFACE
-              </div>
-              <p className="max-w-md font-sans font-light text-xs text-muted">
-                3D Moon Globe, LOLA 20m Local Elevation Mesh, Polar Sky Dial, and Synodic Month Elevation Strip running simultaneously in the browser.
-              </p>
-              <div className="flex items-center gap-2 pt-2">
-                <span className="h-1.5 w-1.5 bg-amber" />
-                <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink">
-                  LIVE 60 FPS WEBGL RUNTIME
-                </span>
-              </div>
+              </span>
+              <span className="hidden sm:inline-block font-mono text-[10px] text-amber/90 bg-amber/10 px-2 py-0.5 rounded border border-amber/25">
+                {currentTab.badge}
+              </span>
             </div>
+
+            {/* Tab Switcher Pills */}
+            <div
+              role="tablist"
+              aria-label="Mission Control Preview Tabs"
+              className="flex items-center gap-1 rounded-lg border border-hairline bg-surface/70 p-1"
+            >
+              {PREVIEW_TABS.map((tab) => {
+                const isActive = tab.id === activePreviewTab;
+                return (
+                  <button
+                    key={tab.id}
+                    role="tab"
+                    aria-selected={isActive}
+                    type="button"
+                    onClick={() => setActivePreviewTab(tab.id)}
+                    className={`rounded-md px-3 py-1 font-mono text-xs uppercase tracking-wider transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-amber text-amber-text font-semibold shadow-sm'
+                        : 'text-muted hover:text-ink hover:bg-white/5'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Screenshot Display Frame */}
+          <div className="relative aspect-[16/9] w-full max-h-[520px] bg-[#0B0A09] overflow-hidden group">
+            <picture>
+              <source srcSet={currentTab.image} type="image/webp" />
+              <img
+                key={currentTab.id}
+                src={currentTab.fallback}
+                alt={currentTab.title}
+                className="h-full w-full object-cover object-top transition-opacity duration-300 animate-fadeIn"
+                loading="lazy"
+              />
+            </picture>
+
+            {/* Subtle Gradient Vignette Over Bottom Edge */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0B0A09]/80 to-transparent" />
+          </div>
+
+          {/* Caption & Metadata Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-hairline bg-ground/90 px-4 py-3">
+            <div className="min-w-0">
+              <h4 className="font-mono text-xs font-semibold text-ink">
+                {currentTab.title}
+              </h4>
+              <p className="mt-0.5 font-sans text-xs text-muted leading-relaxed max-w-2xl">
+                {currentTab.description}
+              </p>
+            </div>
+
+            {onEnterApp && (
+              <button
+                type="button"
+                onClick={onEnterApp}
+                className="shrink-0 inline-flex items-center gap-1.5 rounded-none bg-white/5 border border-hairline px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider text-ink hover:text-amber hover:border-amber/40 transition-colors cursor-pointer self-start sm:self-auto"
+              >
+                <span>Launch Live System</span>
+                <span className="text-amber">→</span>
+              </button>
+            )}
           </div>
         </div>
 
