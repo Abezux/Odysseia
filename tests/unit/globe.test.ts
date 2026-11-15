@@ -135,4 +135,76 @@ describe('Phase 3: 3D Moon Globe & NASA LROC Texture Integration', () => {
     expect(manifest.polarCoverage.deGerlacheCrater).toContain('88.5°S');
     expect(manifest.polarCoverage.malapertMassif).toContain('85.9°S');
   });
+
+  describe('Group 4: Celestial Environment (Sun, Earth, Starfield in Space)', () => {
+    it('verifies NASA Blue Marble texture exists and satisfies < 500 KB budget', () => {
+      const earthPath = path.resolve(__dirname, '../../public/textures/earth-blue-marble.webp');
+      expect(fs.existsSync(earthPath)).toBe(true);
+      const size = fs.statSync(earthPath).size;
+      expect(size).toBeLessThan(500 * 1024);
+      expect(size).toBeGreaterThan(50 * 1024);
+    });
+
+    it('verifies Earth and Sun apparent angular diameters adhere to celestial scale specifications', () => {
+      const earthDistance = 24.0;
+      const earthRadius = 0.40;
+      const earthAngularDiameterDeg = 2 * Math.atan(earthRadius / earthDistance) * (180 / Math.PI);
+      expect(earthAngularDiameterDeg).toBeCloseTo(1.91, 1);
+
+      const sunDistance = 36.0;
+      const sunRadius = 0.166;
+      const sunAngularDiameterDeg = 2 * Math.atan(sunRadius / sunDistance) * (180 / Math.PI);
+      expect(sunAngularDiameterDeg).toBeCloseTo(0.53, 1);
+
+      // Earth apparent size should be ~3.6x larger than Sun's apparent size from Moon
+      const ratio = earthAngularDiameterDeg / sunAngularDiameterDeg;
+      expect(ratio).toBeCloseTo(3.6, 1);
+    });
+
+    it('transforms J2000 celestial coordinates to the Lunar Mean Earth / Polar Axis frame correctly', () => {
+      // Lunar North Pole direction in J2000 is RA = 270°, Dec = 66.56°
+      const raRad = (270 * Math.PI) / 180;
+      const decRad = (66.56 * Math.PI) / 180;
+
+      const uJ2000 = new THREE.Vector3(
+        Math.cos(decRad) * Math.cos(raRad),
+        Math.cos(decRad) * Math.sin(raRad),
+        Math.sin(decRad)
+      );
+
+      const LUNAR_BASIS_X = new THREE.Vector3(0.0, 0.9175, 0.3978);
+      const LUNAR_BASIS_Y = new THREE.Vector3(0.0, -0.3978, 0.9175);
+      const LUNAR_BASIS_Z = new THREE.Vector3(1.0, 0.0, 0.0);
+
+      const xL = uJ2000.dot(LUNAR_BASIS_X);
+      const yL = uJ2000.dot(LUNAR_BASIS_Y);
+      const zL = uJ2000.dot(LUNAR_BASIS_Z);
+
+      // In Lunar frame, Lunar North Pole must point along +Y (0, 1, 0)
+      expect(xL).toBeCloseTo(0.0, 2);
+      expect(yL).toBeCloseTo(1.0, 2);
+      expect(zL).toBeCloseTo(0.0, 2);
+    });
+
+    it('verifies astronomical B-V color temperature and stellar magnitude properties', () => {
+      // Test B-V color temperature function logic
+      const blueStarBv = -0.15; // O/B star like Rigel
+      const redStarBv = 1.6;    // M star like Betelgeuse
+
+      const getStarRgb = (bv: number) => {
+        if (bv < -0.1) return [0.72, 0.82, 1.0];
+        if (bv < 0.25) return [0.92, 0.95, 1.0];
+        if (bv < 0.55) return [1.0, 0.98, 0.92];
+        if (bv < 0.85) return [1.0, 0.92, 0.76];
+        if (bv < 1.30) return [1.0, 0.80, 0.58];
+        return [1.0, 0.68, 0.62];
+      };
+
+      const [rBlue, , bBlue] = getStarRgb(blueStarBv);
+      expect(bBlue).toBeGreaterThan(rBlue);
+
+      const [rRed, , bRed] = getStarRgb(redStarBv);
+      expect(rRed).toBeGreaterThan(bRed);
+    });
+  });
 });

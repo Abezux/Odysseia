@@ -12,6 +12,9 @@ import type { Site } from '../../contracts';
 import { LunarSurfaceShader } from './TerminatorShader';
 import { SitePinLayer } from './SitePinLayer';
 import { SubBodyMarkers } from './SubBodyMarkers';
+import { EarthBody } from './EarthBody';
+import { SunBody } from './SunBody';
+import { Starfield } from './Starfield';
 import { latLonToVector3, GLOBE_RADIUS } from './globeMath';
 import { Button } from '../../ui/Button';
 import { Badge } from '../../ui/Badge';
@@ -169,6 +172,14 @@ export function MoonGlobeView(): React.JSX.Element {
     ).normalize();
   }, [ephem]);
 
+  const earthDirection = useMemo(() => {
+    return latLonToVector3(
+      ephem.subEarthCoordinates.latDeg,
+      ephem.subEarthCoordinates.lonDeg,
+      1.0
+    ).normalize();
+  }, [ephem]);
+
   // Click on globe to select or create a pin
   const handleGlobeClick = (lat: number, lon: number) => {
     console.log(`[MoonGlobe] Surface clicked: Lat ${lat}°, Lon ${lon}°`);
@@ -208,13 +219,24 @@ export function MoonGlobeView(): React.JSX.Element {
 
       {/* 3D Canvas */}
       <Canvas
-        camera={{ position: [0, -3.2, 3.2], fov: 45 }}
+        camera={{ position: [0, -3.2, 3.2], fov: 45, far: 200 }}
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         dpr={Math.min(2, typeof window !== 'undefined' ? window.devicePixelRatio : 1)}
         className="h-full w-full"
       >
-        <color attach="background" args={['#0B0A09']} />
-        <ambientLight intensity={0.15} />
+        <color attach="background" args={['#050403']} />
+        <ambientLight intensity={0.12} />
+
+        {/* Real Celestial Starfield (Yale / Hipparcos bright star catalog) */}
+        <Starfield />
+
+        {/* Ephemeris Sun & Earth in Deep Space */}
+        <SunBody sunDirection={sunDirection} />
+        <EarthBody
+          earthDirection={earthDirection}
+          sunDirection={sunDirection}
+          currentTime={currentTime}
+        />
 
         <GlobeMesh sunDirection={sunDirection} onGlobeClick={handleGlobeClick} />
         <PolarRings />
@@ -254,14 +276,17 @@ export function MoonGlobeView(): React.JSX.Element {
       </div>
 
       {/* Ephemeris Legend */}
-      <div className="absolute top-4 right-4 flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 p-2.5 backdrop-blur-md font-mono text-[11px] text-ink z-10">
+      <div className="absolute top-4 right-4 flex flex-col gap-1.5 rounded-2xl border border-panel-border bg-panel/90 p-2.5 backdrop-blur-md font-mono text-[11px] text-ink z-10 shadow-lg">
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-amber" />
-          <span>Sub-Solar: {ephem.subSolarCoordinates.latDeg.toFixed(1)}°N, {ephem.subSolarCoordinates.lonDeg.toFixed(1)}°E</span>
+          <span className="h-2 w-2 rounded-full bg-amber shadow-xs" />
+          <span>Sub-Solar: {ephem.subSolarCoordinates.latDeg.toFixed(1)}°N, {ephem.subSolarCoordinates.lonDeg.toFixed(1)}°E (0.53° Apparent)</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-emerald" />
-          <span>Sub-Earth (Libration): {ephem.subEarthCoordinates.latDeg.toFixed(1)}°N, {ephem.subEarthCoordinates.lonDeg.toFixed(1)}°E</span>
+          <span className="h-2 w-2 rounded-full bg-sky-400 shadow-xs" />
+          <span>Sub-Earth: {ephem.subEarthCoordinates.latDeg.toFixed(1)}°N, {ephem.subEarthCoordinates.lonDeg.toFixed(1)}°E (1.91° Apparent)</span>
+        </div>
+        <div className="flex items-center gap-2 text-[10px] text-muted border-t border-panel-border/60 pt-1 mt-0.5">
+          <span>Earth Phase: {Math.round(ephem.earth.phaseFraction * 100)}% · 23.4° Axial Tilt</span>
         </div>
       </div>
     </div>
