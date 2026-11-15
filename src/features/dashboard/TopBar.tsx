@@ -13,6 +13,8 @@ interface TopBarProps {
   onOpenAlertsMobile?: () => void;
   onBackToLanding: () => void;
   isRealLolaData?: boolean;
+  horizonCoverageStatus?: 'COMPLETE' | 'PARTIAL' | 'SYNTHETIC';
+  realAzimuthPercent?: number;
 }
 
 export function TopBar({
@@ -21,7 +23,9 @@ export function TopBar({
   onToggleMobileDrawer,
   onOpenAlertsMobile,
   onBackToLanding,
-  isRealLolaData = true
+  isRealLolaData = true,
+  horizonCoverageStatus,
+  realAzimuthPercent
 }: TopBarProps): React.JSX.Element {
   const { mode, setMode, setCompareOpen, isCompareOpen } = useUIStore();
   const { scenarios } = useScenarioStore();
@@ -102,8 +106,20 @@ export function TopBar({
           <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
           <span>SIM LIVE · {playbackSpeed}X</span>
           <span>·</span>
-          <span className={isRealLolaData ? 'text-ink' : 'text-warning'}>
-            {isRealLolaData ? 'LOLA 20M DEM' : 'MOCK HORIZON'}
+          <span
+            className={
+              horizonCoverageStatus === 'PARTIAL'
+                ? 'text-amber'
+                : isRealLolaData
+                ? 'text-ink'
+                : 'text-warning'
+            }
+          >
+            {horizonCoverageStatus === 'PARTIAL'
+              ? `LOLA 20M (PARTIAL ${realAzimuthPercent ?? 53}%)`
+              : isRealLolaData
+              ? 'LOLA 20M DEM'
+              : 'MOCK HORIZON (OUTSIDE 80°S)'}
           </span>
         </div>
 

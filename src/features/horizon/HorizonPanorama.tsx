@@ -226,7 +226,9 @@ export function HorizonView(): React.JSX.Element {
               horizon === null
                 ? 'neutral'
                 : horizon.source === 'lola'
-                ? 'success'
+                ? horizon.coverageStatus === 'PARTIAL'
+                  ? 'warning'
+                  : 'success'
                 : 'warning'
             }
             size="sm"
@@ -234,8 +236,10 @@ export function HorizonView(): React.JSX.Element {
             {horizon === null
               ? 'Smooth Horizon (0°)'
               : horizon.source === 'lola'
-              ? 'LOLA 20m Profile'
-              : 'Simulated Profile (Mock)'}
+              ? horizon.coverageStatus === 'PARTIAL'
+                ? `LOLA 20m Profile (PARTIAL ${horizon.realAzimuthBinPercent ?? 53}%)`
+                : 'LOLA 20m Profile'
+              : 'Mock Profile (Outside 80°S)'}
           </Badge>
         </div>
 

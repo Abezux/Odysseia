@@ -137,7 +137,11 @@ export function SiteDetailView(): React.JSX.Element {
             </Badge>
           ) : horizon.source === 'mock' ? (
             <Badge variant="warning" size="sm">
-              Simulated terrain (Mock)
+              MOCK HORIZON (OUTSIDE LOLA 80S)
+            </Badge>
+          ) : horizon.coverageStatus === 'PARTIAL' ? (
+            <Badge variant="warning" size="sm">
+              LOLA 20m/px DEM (PARTIAL {horizon.realAzimuthBinPercent}% | {horizon.searchRadiusKm}km search)
             </Badge>
           ) : (
             <Badge variant="success" size="sm">

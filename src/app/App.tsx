@@ -235,6 +235,8 @@ export default function App(): React.JSX.Element {
               onOpenAlertsMobile={() => {}}
               onBackToLanding={() => setView('landing')}
               isRealLolaData={horizon?.source === 'lola'}
+              horizonCoverageStatus={horizon?.coverageStatus}
+              realAzimuthPercent={horizon?.realAzimuthBinPercent}
             />
           ),
           LeftSidebarSlot: (
