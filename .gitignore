@@ -32,3 +32,10 @@ dist-ssr
 # Vitest / Coverage
 coverage
 .vite
+
+# Raw DEM data (heavy binary rasters)
+data/raw/
+*.img
+*.IMG
+*.tif
+*.tiff
