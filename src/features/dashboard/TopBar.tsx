@@ -5,6 +5,7 @@ import { useScenarioStore } from '../../store/useScenarioStore';
 import { useTimeStore } from '../../store/useTimeStore';
 import { useNotificationStore } from '../../store/useNotificationStore';
 import { NotificationPopover } from '../notifications/NotificationPopover';
+import { HelpMenu } from '../tour/HelpMenu';
 import { safeViewTransition } from '../../lib/viewTransition';
 import { Icon } from '../../ui/Icon';
 
@@ -80,7 +81,7 @@ export function TopBar({
         </div>
 
         {/* Mode Switcher: Pill container #1A1816 with 1px border; Overview | Astrometric */}
-        <div className="flex items-center rounded-full border border-panel-border bg-panel p-1 scale-90 md:scale-100 transition-transform">
+        <div data-tour="mode-switcher" className="flex items-center rounded-full border border-panel-border bg-panel p-1 scale-90 md:scale-100 transition-transform">
           <button
             type="button"
             onClick={() => handleModeChange('overview')}
@@ -106,8 +107,8 @@ export function TopBar({
         </div>
       </div>
 
-      {/* Right: Live-status text + Notification Bell + Compare (n) + Back to Odysseia */}
-      <div className="flex items-center gap-3">
+      {/* Right: Live-status text + Help Menu + Notification Bell + Compare (n) + Back to Odysseia */}
+      <div className="flex items-center gap-2.5 sm:gap-3">
         {/* Mono Live Status Text */}
         <div className="hidden items-center gap-2 font-mono text-[11px] text-muted xl:flex">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
@@ -130,8 +131,11 @@ export function TopBar({
           </span>
         </div>
 
+        {/* Help Menu Dropdown Button */}
+        <HelpMenu />
+
         {/* Notification Bell with Badge & Popover */}
-        <div className="relative">
+        <div data-tour="notification-bell" className="relative">
           <button
             ref={bellButtonRef}
             type="button"
@@ -163,6 +167,7 @@ export function TopBar({
         {/* Compare (n) Button with count badge */}
         <button
           type="button"
+          data-tour="compare-button"
           onClick={handleCompareClick}
           className="flex items-center gap-2 rounded-lg border border-panel-border bg-panel px-3 py-1.5 font-sans text-xs font-semibold text-ink transition-all hover:border-amber/60 hover:bg-[#221F1C] focus:outline-none"
           title="Open Comparative Scenario Matrix"

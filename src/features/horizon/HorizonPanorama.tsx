@@ -308,6 +308,7 @@ export function HorizonView({
   return (
     <div
       ref={containerRef}
+      data-tour="skyline-view"
       className="relative h-full w-full select-none overflow-hidden bg-[#0B0A09] font-mono"
     >
       {/* Slot Top-Left: First-Person Skyline Title & LOLA Profile Badge */}

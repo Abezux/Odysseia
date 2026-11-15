@@ -186,6 +186,7 @@ export function LeftSidebar({
       <aside
         ref={sidebarRef}
         id="main-sidebar"
+        data-tour="site-browser"
         aria-label="Landing site catalog"
         className={`view-nav fixed md:static inset-y-0 left-0 z-50 flex h-full flex-col border-r border-panel-border bg-panel text-ink transition-all duration-300 ${
           isOpenMobile ? 'translate-x-0 w-[280px]' : '-translate-x-full md:translate-x-0'

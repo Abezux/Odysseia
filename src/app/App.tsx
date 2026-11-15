@@ -26,6 +26,15 @@ const CompareView = React.lazy(() =>
 const GuidedTour = React.lazy(() =>
   import('../features/tour').then((m) => ({ default: m.GuidedTour }))
 );
+const OnboardingTour = React.lazy(() =>
+  import('../features/tour').then((m) => ({ default: m.OnboardingTour }))
+);
+const OnboardingInvite = React.lazy(() =>
+  import('../features/tour').then((m) => ({ default: m.OnboardingInvite }))
+);
+const FeatureGuideModal = React.lazy(() =>
+  import('../features/tour').then((m) => ({ default: m.FeatureGuideModal }))
+);
 const CustomSiteModal = React.lazy(() =>
   import('../features/sites/CustomSiteModal').then((m) => ({ default: m.CustomSiteModal }))
 );
@@ -42,7 +51,11 @@ export default function App(): React.JSX.Element {
     isCompareOpen,
     setCompareOpen,
     isTourOpen,
-    setTourOpen
+    setTourOpen,
+    isOnboardingOpen,
+    setOnboardingOpen,
+    isFeatureGuideOpen,
+    setFeatureGuideOpen
   } = useUIStore();
 
   const { activeSiteId, setActiveSiteId } = useScenarioStore();
@@ -64,6 +77,19 @@ export default function App(): React.JSX.Element {
     const cleanup = initializeUrlSync();
     return cleanup;
   }, []);
+
+  // Check for ?tour=1 URL query parameter to launch onboarding directly
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('tour') === '1') {
+        if (view === 'landing') {
+          setView('app');
+        }
+        setOnboardingOpen(true, 0);
+      }
+    }
+  }, [view, setView, setOnboardingOpen]);
 
   // Fetch active site and horizon profile whenever activeSiteId changes
   useEffect(() => {
@@ -247,12 +273,13 @@ export default function App(): React.JSX.Element {
           safeViewTransition(() => setCompareOpen(!isCompareOpen));
           break;
         case '?':
-          setTourOpen(!isTourOpen);
+          setFeatureGuideOpen(!isFeatureGuideOpen);
           break;
         case 'Escape':
           if (isCompareOpen) setCompareOpen(false);
           if (isScorecardOpen) setIsScorecardOpen(false);
           if (isCustomSiteOpen) setIsCustomSiteOpen(false);
+          if (isFeatureGuideOpen) setFeatureGuideOpen(false);
           if (isTourOpen) setTourOpen(false);
           if (isOpenMobile) setIsOpenMobile(false);
           break;
@@ -270,6 +297,8 @@ export default function App(): React.JSX.Element {
     setCompareOpen,
     isScorecardOpen,
     isCustomSiteOpen,
+    isFeatureGuideOpen,
+    setFeatureGuideOpen,
     isTourOpen,
     setTourOpen,
     isOpenMobile
@@ -355,10 +384,29 @@ export default function App(): React.JSX.Element {
         </Suspense>
       )}
 
-      {/* Interactive Guided Tour Overlay */}
+      {/* Interactive Guided Tour Overlay (Legacy) */}
       {isTourOpen && (
         <Suspense fallback={null}>
           <GuidedTour />
+        </Suspense>
+      )}
+
+      {/* Non-Blocking First-Run Onboarding Invite Card */}
+      <Suspense fallback={null}>
+        <OnboardingInvite />
+      </Suspense>
+
+      {/* Interactive 60-Second Onboarding Tour */}
+      {isOnboardingOpen && (
+        <Suspense fallback={null}>
+          <OnboardingTour />
+        </Suspense>
+      )}
+
+      {/* Comprehensive Feature Guide & Hotkeys Modal */}
+      {isFeatureGuideOpen && (
+        <Suspense fallback={null}>
+          <FeatureGuideModal />
         </Suspense>
       )}
 

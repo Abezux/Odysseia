@@ -33,6 +33,7 @@
   --z-popover: 40;
   --z-modal: 50;
   --z-toast: 60;
+  --z-tour: 70;
 }
 
 /* Unified Z-Index Classes */
@@ -43,6 +44,7 @@
 .z-popover { z-index: 40; }
 .z-modal { z-index: 50; }
 .z-toast { z-index: 60; }
+.z-tour { z-index: 70; }
 
 /* Glassmorphism panel utility */
 .glass-panel {

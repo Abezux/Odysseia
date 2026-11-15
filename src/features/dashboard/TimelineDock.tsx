@@ -70,7 +70,7 @@ export function TimelineDock({ metrics }: TimelineDockProps): React.JSX.Element 
   const earthClearance = earthEl - earthTerr;
 
   return (
-    <footer className="w-full shrink-0 p-3 pt-0 select-none z-20">
+    <footer data-tour="timeline-dock" className="w-full shrink-0 p-3 pt-0 select-none z-20">
       <div className="glass-panel rounded-3xl p-3.5 w-full flex flex-col xl:flex-row items-center justify-between gap-4 shadow-2xl">
         {/* Left: Play/Pause, Step Back/Forward, ONE Speed Dropdown */}
         <div className="flex items-center gap-2 shrink-0">

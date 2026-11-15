@@ -300,6 +300,7 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
       {/* 2. Main Viewport Container: rounded-3xl, flexible height (or Fullscreen overlay) */}
       <div
         ref={viewportRef}
+        data-tour="viewport-canvas"
         className={`relative flex w-full flex-col overflow-hidden rounded-3xl border border-panel-border bg-[#0B0A09] shadow-2xl transition-all duration-300 ${
           isFullscreen
             ? 'fixed inset-0 z-50 h-screen w-screen rounded-none border-0'
@@ -383,6 +384,7 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
 
             {/* Top-Center Slot: Tab Switcher */}
             <div
+              data-tour="viewport-tabs"
               className={`slot-top-center pointer-events-auto flex flex-col items-center gap-1.5 transition-opacity duration-250 ${
                 isFullscreen && hideDetails ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}

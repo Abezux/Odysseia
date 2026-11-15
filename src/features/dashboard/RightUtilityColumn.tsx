@@ -102,7 +102,7 @@ export function RightUtilityColumn({
   return (
     <aside className="w-full xl:w-[340px] shrink-0 overflow-y-auto space-y-4 p-4 border-l border-panel-border bg-[#0B0A09] text-ink select-none">
       {/* 1. Top: Mission Alerts Pipeline */}
-      <div className="rounded-2xl border border-panel-border bg-panel p-4 shadow-md">
+      <div data-tour="mission-alerts" className="rounded-2xl border border-panel-border bg-panel p-4 shadow-md">
         <div className="flex items-center justify-between pb-3 border-b border-panel-border">
           <div className="flex items-center gap-2">
             <span className="site-dot-pulse h-2 w-2 rounded-full bg-amber" />
@@ -181,7 +181,7 @@ export function RightUtilityColumn({
       </div>
 
       {/* 2. Middle: Sky Dial Card */}
-      <div className="rounded-2xl border border-panel-border bg-panel p-4 shadow-md flex flex-col items-center">
+      <div data-tour="sky-dial" className="rounded-2xl border border-panel-border bg-panel p-4 shadow-md flex flex-col items-center">
         <div className="flex w-full items-center justify-between pb-3 border-b border-panel-border mb-2">
           <h3 className="font-mono text-[11px] font-bold uppercase tracking-wider text-ink">
             Topocentric Sky Dial
@@ -201,7 +201,7 @@ export function RightUtilityColumn({
       </div>
 
       {/* 3. Bottom: Site Inspector Card (zinc-900 #1A1816, 24px padding) */}
-      <div className="rounded-2xl border border-panel-border bg-panel p-6 shadow-xl space-y-5">
+      <div data-tour="site-inspector" className="rounded-2xl border border-panel-border bg-panel p-6 shadow-xl space-y-5">
         {/* Header with site name, coordinates in mono, and LIVE badge */}
         <div className="flex items-start justify-between gap-2 border-b border-panel-border pb-4">
           <div>
