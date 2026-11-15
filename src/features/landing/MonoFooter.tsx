@@ -2,7 +2,7 @@ import React from 'react';
 
 export function MonoFooter(): React.JSX.Element {
   return (
-    <footer className="w-full border-t border-hairline bg-ground py-10 select-none">
+    <footer className="relative z-10 w-full border-t border-hairline bg-transparent py-10 select-none">
       <div className="mx-auto flex w-full max-w-[1152px] flex-col items-start justify-between gap-6 px-[clamp(20px,5vw,64px)] sm:flex-row sm:items-center">
         {/* Left: Project identity */}
         <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-muted">

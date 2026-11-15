@@ -4,23 +4,26 @@ import { useUIStore } from '../../store/useUIStore';
 import { Button } from '../../ui/Button';
 import { Icon } from '../../ui/Icon';
 import { showToast } from '../../ui/toastStore';
+import { isPhoneSizedDevice } from '../dashboard/MobileNoticeModal';
 
 export function OnboardingInvite(): React.JSX.Element | null {
   const { hasSeenOnboarding, isOnboardingOpen, setOnboardingOpen, setHasSeenOnboarding } = useUIStore();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Only show if user hasn't seen or skipped this tour version and tour is not already open
-    if (hasSeenOnboarding || isOnboardingOpen) return;
+    // Only show if user hasn't seen or skipped this tour version, tour is not open, and device is not phone-sized
+    if (hasSeenOnboarding || isOnboardingOpen || isPhoneSizedDevice()) return;
 
     const timer = setTimeout(() => {
-      setIsVisible(true);
+      if (!isPhoneSizedDevice()) {
+        setIsVisible(true);
+      }
     }, 1500);
 
     return () => clearTimeout(timer);
   }, [hasSeenOnboarding, isOnboardingOpen]);
 
-  if (!isVisible || hasSeenOnboarding || isOnboardingOpen) {
+  if (!isVisible || hasSeenOnboarding || isOnboardingOpen || isPhoneSizedDevice()) {
     return null;
   }
 

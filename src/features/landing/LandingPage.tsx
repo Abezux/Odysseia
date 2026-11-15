@@ -8,6 +8,7 @@ import { BandOdysseia } from './BandOdysseia';
 import { BandVerdict } from './BandVerdict';
 import { BandFAQ } from './BandFAQ';
 import { BandClose } from './BandClose';
+import { SpaceAmbienceCanvas } from './SpaceAmbienceCanvas';
 import { MonoFooter } from './MonoFooter';
 
 interface LandingPageProps {
@@ -47,6 +48,9 @@ export function LandingPage({ onEnterApp }: LandingPageProps): React.JSX.Element
 
   return (
     <div className="relative min-h-screen w-full bg-ground text-ink font-sans selection:bg-amber selection:text-ground">
+      {/* 0. Ambient Starfield & Shooting Stars Canvas (Dark sections only) */}
+      <SpaceAmbienceCanvas />
+
       {/* 1. Intro Stage */}
       <IntroStage />
 

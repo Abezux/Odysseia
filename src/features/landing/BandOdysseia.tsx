@@ -216,7 +216,7 @@ export function BandOdysseia(): React.JSX.Element {
     <section
       ref={sectionRef}
       id="odysseia"
-      className="relative w-full overflow-hidden bg-ground py-24 select-none"
+      className="relative z-10 w-full overflow-hidden bg-transparent py-24 select-none"
     >
       {/* Background: Eyes-Open Astronaut with slow parallax */}
       <picture className="absolute inset-0 h-full w-full pointer-events-none">

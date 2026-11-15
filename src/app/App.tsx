@@ -35,6 +35,9 @@ const OnboardingInvite = React.lazy(() =>
 const FeatureGuideModal = React.lazy(() =>
   import('../features/tour').then((m) => ({ default: m.FeatureGuideModal }))
 );
+const MobileNoticeModal = React.lazy(() =>
+  import('../features/dashboard/MobileNoticeModal').then((m) => ({ default: m.MobileNoticeModal }))
+);
 const CustomSiteModal = React.lazy(() =>
   import('../features/sites/CustomSiteModal').then((m) => ({ default: m.CustomSiteModal }))
 );
@@ -388,6 +391,13 @@ export default function App(): React.JSX.Element {
       {isTourOpen && (
         <Suspense fallback={null}>
           <GuidedTour />
+        </Suspense>
+      )}
+
+      {/* Mobile Notice for Mission Control on Phone-Sized Devices */}
+      {view === 'app' && (
+        <Suspense fallback={null}>
+          <MobileNoticeModal />
         </Suspense>
       )}
 

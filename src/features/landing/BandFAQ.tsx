@@ -36,7 +36,7 @@ const faqs: FAQItem[] = [
 
 export function BandFAQ(): React.JSX.Element {
   return (
-    <section id="faq" className="w-full bg-ground py-24 select-none">
+    <section id="faq" className="relative z-10 w-full bg-transparent py-24 select-none">
       <div className="mx-auto w-full max-w-[1152px] px-[clamp(20px,5vw,64px)]">
         <BandHeader
           eyebrow="05 · INQUIRY"

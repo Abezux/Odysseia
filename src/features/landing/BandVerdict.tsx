@@ -142,7 +142,7 @@ export function BandVerdict(): React.JSX.Element {
   ];
 
   return (
-    <section id="verdict" className="w-full bg-ground py-24 select-none">
+    <section id="verdict" className="relative z-10 w-full bg-transparent py-24 select-none">
       <div className="mx-auto max-w-[1152px] px-[clamp(20px,5vw,64px)]">
         <BandHeader
           eyebrow="04 · Verdict"
