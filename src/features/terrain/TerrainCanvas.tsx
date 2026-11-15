@@ -49,6 +49,12 @@ function TerrainMesh({ manifest, heights, exaggeration }: TerrainMeshProps): Rea
     return geo;
   }, [manifest, heights, exaggeration, unitsPerMeter, planeSize, width, height]);
 
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
+
   return (
     <mesh ref={meshRef} geometry={geometry} receiveShadow castShadow>
       <meshStandardMaterial
@@ -162,6 +168,7 @@ export function TerrainView(): React.JSX.Element {
     heights: Float32Array;
   } | null>(null);
   const [exaggeration, setExaggeration] = useState<number>(1.5);
+  const [lod, setLod] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Load site and terrain
@@ -174,7 +181,7 @@ export function TerrainView(): React.JSX.Element {
       if (isCancelled) return;
       setSite(s);
 
-      const td = await dataProvider.getTerrain(s.id);
+      const td = await dataProvider.getTerrain(s.id, lod);
       if (isCancelled) return;
       setTerrainData(td);
       setIsLoading(false);
@@ -183,7 +190,7 @@ export function TerrainView(): React.JSX.Element {
     return () => {
       isCancelled = true;
     };
-  }, [activeSiteId]);
+  }, [activeSiteId, lod]);
 
   // Compute live Sun and Earth vectors relative to site
   const { sunVector, earthVector, sunElevDeg, earthElevDeg, isSunUp, isEarthUp } = useMemo(() => {
@@ -309,16 +316,21 @@ export function TerrainView(): React.JSX.Element {
       <div className="pointer-events-none absolute top-3 left-3 z-10 flex flex-col gap-2">
         <div className="flex items-center gap-2">
           {manifest.source === 'lola' ? (
-            <Badge variant="success" size="md">
-              LOLA 20m/px DEM Tile
+            <Badge
+              variant={manifest.coverageStatus === 'PARTIAL' ? 'warning' : 'success'}
+              size="md"
+            >
+              {manifest.coverageStatus === 'PARTIAL'
+                ? 'LOLA DEM (PARTIAL - EDGE CLIPPED)'
+                : 'LOLA 20m/px DEM Tile'}
             </Badge>
           ) : (
             <Badge variant="warning" size="md">
-              Simulated terrain (Mock)
+              SYNTHETIC TERRAIN (OUTSIDE LOLA 80S)
             </Badge>
           )}
           <Badge variant="neutral" size="md">
-            Tile: {(manifest.width * manifest.metersPerPixel / 1000).toFixed(1)} km × {(manifest.height * manifest.metersPerPixel / 1000).toFixed(1)} km
+            Tile: {(manifest.width * manifest.metersPerPixel / 1000).toFixed(1)} km × {(manifest.height * manifest.metersPerPixel / 1000).toFixed(1)} km ({manifest.metersPerPixel}m/px)
           </Badge>
         </div>
 
@@ -338,10 +350,34 @@ export function TerrainView(): React.JSX.Element {
         </div>
       </div>
 
-      {/* Floating Controls Overlay: Vertical Exaggeration */}
-      <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 font-mono text-xs text-ink backdrop-blur-md">
-        <span className="text-muted">Vertical Exaggeration:</span>
+      {/* Floating Controls Overlay: LOD & Vertical Exaggeration */}
+      <div className="absolute bottom-3 right-3 z-10 flex flex-wrap items-center gap-3 rounded-2xl border border-panel-border bg-panel/90 px-3 py-2 font-mono text-xs text-ink backdrop-blur-md">
+        {manifest.lodLevels && manifest.lodLevels.length > 1 && (
+          <div className="flex items-center gap-1.5 border-r border-panel-border pr-3">
+            <span className="text-muted">LOD:</span>
+            <Button
+              size="sm"
+              variant={lod === 1 ? 'primary' : 'outline'}
+              onClick={() => setLod(1)}
+              className="px-2 py-0.5 h-6 text-[10px]"
+              title="Overview 250x250 (80m/px, 122 KB)"
+            >
+              Overview (80m)
+            </Button>
+            <Button
+              size="sm"
+              variant={lod === 0 ? 'primary' : 'outline'}
+              onClick={() => setLod(0)}
+              className="px-2 py-0.5 h-6 text-[10px]"
+              title="Detail 1000x1000 (20m/px native LOLA)"
+            >
+              Detail (20m)
+            </Button>
+          </div>
+        )}
+
         <div className="flex items-center gap-1">
+          <span className="text-muted mr-1">Exaggeration:</span>
           {[1.0, 1.5, 2.5, 4.0].map((val) => (
             <Button
               key={val}
