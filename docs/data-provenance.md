@@ -72,3 +72,18 @@ For the 12 non-polar sites currently labeled `SYNTHETIC` (e.g. Apollo 11–17, C
 | `SLDEM2015` (Global Hyb)| $60^\circ\text{S}$ to $60^\circ\text{N}$ | 512 pix/deg (~59 m/pix) | ~8.5 GB (Tiles) | ~48 kB | Apollo 11–17, SLIM, Blue Ghost 1, Chang'e 5 |
 
 *Note: As approved, these products are evaluated but not yet downloaded or applied, awaiting explicit user directive.*
+
+---
+
+## 4. Phase 2: 3D Local Terrain Meshes Pipeline
+1. **Extraction Script**: `scripts/dem/cropLolaTerrainTiles.py`
+2. **Input**: `data/raw/ldem_80s_20m.raw` (uncompressed 16-bit LOLA DEM, gitignored).
+3. **Outputs**:
+   - `public/data/terrain/<siteId>.json` (manifest with bounds, elevation relief, lodLevels).
+   - `public/data/terrain/<siteId>.bin` (LOD 1 Overview, 250x250 uint16, 122 KB, ~94 KB Brotli).
+   - `public/data/terrain/<siteId>-lod0.bin` (LOD 0 Detail, 1000x1000 uint16, 1.95 MB, ~960 KB Brotli).
+4. **Reproduction Command**:
+   ```bash
+   .venv/bin/python scripts/dem/cropLolaTerrainTiles.py
+   ```
+
