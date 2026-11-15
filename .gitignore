@@ -33,6 +33,8 @@ dist-ssr
 coverage
 .vite
 .venv/
+__pycache__/
+*.pyc
 
 # Raw DEM data (heavy binary rasters)
 data/raw/
