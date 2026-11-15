@@ -77,20 +77,22 @@ export class LocalDataProvider implements DataProvider {
   }
 
   /**
-   * Retrieves and validates the 3D TerrainManifest and binary Float32Array heights buffer.
+   * Retrieves and validates the 3D TerrainManifest and binary heights buffer for a given LOD level.
    * Returns null if missing.
    */
   async getTerrain(
-    siteId: string
+    siteId: string,
+    lod: number = 1
   ): Promise<{ manifest: TerrainManifest; heights: Float32Array } | null> {
-    if (this.terrainCache.has(siteId)) {
-      return this.terrainCache.get(siteId)!;
+    const cacheKey = `${siteId}-lod${lod}`;
+    if (this.terrainCache.has(cacheKey)) {
+      return this.terrainCache.get(cacheKey)!;
     }
 
     try {
       const manifestRes = await fetch(`${this.baseUrl}/terrain/${siteId}.json`);
       if (manifestRes.status === 404) {
-        this.terrainCache.set(siteId, null);
+        this.terrainCache.set(cacheKey, null);
         return null;
       }
       if (!manifestRes.ok) {
@@ -100,25 +102,62 @@ export class LocalDataProvider implements DataProvider {
       const manifestJson = await manifestRes.json();
       const manifest = TerrainManifestSchema.parse(manifestJson);
 
-      const binRes = await fetch(`${this.baseUrl}/terrain/${manifest.heightsFile}`);
+      let targetFile = manifest.heightsFile;
+      let targetWidth = manifest.width;
+      let targetHeight = manifest.height;
+      let targetMpp = manifest.metersPerPixel;
+
+      if (manifest.lodLevels && manifest.lodLevels.length > 0) {
+        const matchingLod = manifest.lodLevels.find((l) => l.lod === lod) ?? manifest.lodLevels[0];
+        targetFile = matchingLod.heightsFile;
+        targetWidth = matchingLod.width;
+        targetHeight = matchingLod.height;
+        targetMpp = matchingLod.metersPerPixel;
+      }
+
+      const binRes = await fetch(`${this.baseUrl}/terrain/${targetFile}`);
       if (!binRes.ok) {
         throw new Error(`Failed to fetch binary heights: HTTP ${binRes.status}`);
       }
 
       const arrayBuffer = await binRes.arrayBuffer();
-      const expectedElements = manifest.width * manifest.height;
-      if (arrayBuffer.byteLength !== expectedElements * 4) {
+      const expectedElements = targetWidth * targetHeight;
+      const isUint16 = manifest.encoding === 'uint16';
+      const expectedBytes = expectedElements * (isUint16 ? 2 : 4);
+
+      if (arrayBuffer.byteLength !== expectedBytes) {
         throw new Error(
-          `Buffer size mismatch: expected ${expectedElements * 4} bytes, got ${arrayBuffer.byteLength}`
+          `Buffer size mismatch: expected ${expectedBytes} bytes, got ${arrayBuffer.byteLength}`
         );
       }
 
-      const heights = new Float32Array(arrayBuffer);
-      const result = { manifest, heights };
-      this.terrainCache.set(siteId, result);
+      let heights: Float32Array;
+      if (isUint16) {
+        const u16 = new Uint16Array(arrayBuffer);
+        heights = new Float32Array(expectedElements);
+        const minE = manifest.minElevationM;
+        const range = manifest.maxElevationM - minE;
+        const scale = range > 0 ? range / 65535.0 : 0;
+        for (let i = 0; i < expectedElements; i++) {
+          heights[i] = minE + u16[i] * scale;
+        }
+      } else {
+        heights = new Float32Array(arrayBuffer);
+      }
+
+      const effectiveManifest: TerrainManifest = {
+        ...manifest,
+        width: targetWidth,
+        height: targetHeight,
+        metersPerPixel: targetMpp,
+        heightsFile: targetFile
+      };
+
+      const result = { manifest: effectiveManifest, heights };
+      this.terrainCache.set(cacheKey, result);
       return result;
     } catch {
-      this.terrainCache.set(siteId, null);
+      this.terrainCache.set(cacheKey, null);
       return null;
     }
   }

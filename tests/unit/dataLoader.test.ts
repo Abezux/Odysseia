@@ -56,7 +56,11 @@ describe('A8 Data Provider Unit Tests', () => {
   });
 
   it('loads terrain manifest and binary Float32 heights buffer', async () => {
-    const floatHeights = new Float32Array(256 * 256).fill(1250.0);
+    const isU16 = shackletonManifest.encoding === 'uint16';
+    const numElements = shackletonManifest.width * shackletonManifest.height;
+    const mockBuffer = isU16
+      ? new Uint16Array(numElements).fill(32768).buffer
+      : new Float32Array(numElements).fill(1250.0).buffer;
 
     global.fetch = vi.fn().mockImplementation((url: string) => {
       if (url.includes('/terrain/shackleton-rim.json')) {
@@ -70,7 +74,7 @@ describe('A8 Data Provider Unit Tests', () => {
         return Promise.resolve({
           ok: true,
           status: 200,
-          arrayBuffer: () => Promise.resolve(floatHeights.buffer)
+          arrayBuffer: () => Promise.resolve(mockBuffer)
         } as unknown as Response);
       }
       return Promise.resolve({ ok: false, status: 404 } as unknown as Response);
@@ -78,7 +82,8 @@ describe('A8 Data Provider Unit Tests', () => {
 
     const terrain = await provider.getTerrain('shackleton-rim');
     expect(terrain).not.toBeNull();
-    expect(terrain?.manifest.width).toBe(256);
-    expect(terrain?.heights.length).toBe(256 * 256);
+    expect(terrain?.manifest.width).toBe(shackletonManifest.width);
+    expect(terrain?.heights.length).toBe(numElements);
+    expect(terrain?.heights instanceof Float32Array).toBe(true);
   });
 });
