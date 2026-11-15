@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """
-scripts/dem/processLolaDem.py
+scripts/dem/makeSyntheticTerrain.py
 
-Processes LOLA (Lunar Orbiter Laser Altimeter) South Pole Digital Elevation Models (DEM)
-from the NASA PDS Geosciences Node for targeted lunar landing sites, starting with Shackleton Crater Rim.
-
+Generates synthetic mathematical noise terrain tiles for testing and simulation fallback.
 Produces:
-1. public/data/terrain/<siteId>.json (TerrainManifest with source: "lola")
+1. public/data/terrain/<siteId>.json (TerrainManifest with source: "mock")
 2. public/data/terrain/<siteId>.bin  (Float32Array little-endian row-major heights)
 """
 
@@ -102,7 +100,7 @@ def generate_shackleton_dem_tile():
         "heightsFile": f"{site_id}.bin",
         "minElevationM": round(min_elev, 1),
         "maxElevationM": round(max_elev, 1),
-        "source": "lola"
+        "source": "mock"
     }
 
     with open(manifest_path, "w", encoding="utf-8") as f:
