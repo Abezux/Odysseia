@@ -191,24 +191,23 @@ export function LeftSidebar({
           isOpenMobile ? 'translate-x-0 w-[280px]' : '-translate-x-full md:translate-x-0'
         } ${desktopWidthClass}`}
       >
-        {/* Top Header: Brand Mark + Name (if expanded) + Controls */}
-        <div className="flex h-16 shrink-0 items-center justify-between border-b border-panel-border px-3.5">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            {/* Brand Logo Box */}
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber text-ground font-bold font-mono text-sm shadow-sm select-none">
-              OD
-            </div>
-
+        {/* Top Header: Brand Title (if expanded) + Controls */}
+        <div
+          className={`flex h-16 shrink-0 items-center border-b border-panel-border px-3.5 ${
+            isExpandedDesktop === false ? 'justify-center' : 'justify-between'
+          }`}
+        >
+          <div
+            className={`flex items-center gap-2.5 overflow-hidden ${
+              isExpandedDesktop === false
+                ? 'hidden'
+                : isExpandedDesktop === true
+                ? 'flex'
+                : 'hidden 2xl:flex'
+            }`}
+          >
             {/* Brand Title (hidden in collapsed rail mode) */}
-            <div
-              className={`flex flex-col overflow-hidden transition-opacity duration-200 ${
-                isExpandedDesktop === false
-                  ? 'hidden'
-                  : isExpandedDesktop === true
-                  ? 'block'
-                  : 'hidden 2xl:block'
-              }`}
-            >
+            <div className="flex flex-col overflow-hidden">
               <span className="font-sans text-xs font-bold tracking-wider text-ink uppercase">
                 ODYSSEIA
               </span>
