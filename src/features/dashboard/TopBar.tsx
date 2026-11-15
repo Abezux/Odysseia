@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Menu, Search, Bell, Columns3, ArrowLeft } from 'lucide-react';
 import { useUIStore } from '../../store/useUIStore';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { useTimeStore } from '../../store/useTimeStore';
+import { useNotificationStore } from '../../store/useNotificationStore';
+import { NotificationPopover } from '../notifications/NotificationPopover';
 import { safeViewTransition } from '../../lib/viewTransition';
 import { Icon } from '../../ui/Icon';
 
@@ -30,6 +32,11 @@ export function TopBar({
   const { mode, setMode, setCompareOpen, isCompareOpen } = useUIStore();
   const { scenarios } = useScenarioStore();
   const { playbackSpeed } = useTimeStore();
+  const notifications = useNotificationStore((s) => s.notifications);
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const bellButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleModeChange = (newMode: 'overview' | 'technical') => {
     safeViewTransition(() => {
@@ -123,18 +130,35 @@ export function TopBar({
           </span>
         </div>
 
-        {/* Notification Bell with Amber Pulse Dot */}
-        <button
-          type="button"
-          onClick={onOpenAlertsMobile}
-          className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-panel-border bg-panel text-muted hover:text-ink transition-colors focus:outline-none"
-          title="Mission Alert Feed"
-          aria-label="Mission Alert Feed"
-        >
-          <Icon icon={Bell} size={18} />
-          {/* Amber Pulse Dot */}
-          <span className="site-dot-pulse absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-amber" />
-        </button>
+        {/* Notification Bell with Badge & Popover */}
+        <div className="relative">
+          <button
+            ref={bellButtonRef}
+            type="button"
+            onClick={() => {
+              setIsNotificationsOpen((prev) => !prev);
+              onOpenAlertsMobile?.();
+            }}
+            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-panel-border bg-panel text-muted hover:text-ink transition-colors focus:outline-none"
+            title={`Notifications (${unreadCount} unread)`}
+            aria-label={`Notifications (${unreadCount} unread)`}
+            aria-haspopup="dialog"
+            aria-expanded={isNotificationsOpen}
+          >
+            <Icon icon={Bell} size={18} />
+            {unreadCount > 0 && (
+              <span className="site-dot-pulse motion-reduce:animate-none absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-amber px-1 font-mono text-[9px] font-bold text-amber-text shadow-sm">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+
+          <NotificationPopover
+            isOpen={isNotificationsOpen}
+            onClose={() => setIsNotificationsOpen(false)}
+            triggerRef={bellButtonRef}
+          />
+        </div>
 
         {/* Compare (n) Button with count badge */}
         <button

@@ -1,4 +1,7 @@
 import { create } from 'zustand';
+import { useNotificationStore } from '../store/useNotificationStore';
+import { useTimeStore } from '../store/useTimeStore';
+import { useScenarioStore } from '../store/useScenarioStore';
 
 export interface ToastMessage {
   id: string;
@@ -34,4 +37,29 @@ export const useToastStore = create<ToastStore>((set) => ({
 
 export function showToast(toast: Omit<ToastMessage, 'id'>): void {
   useToastStore.getState().addToast(toast);
+
+  // Sync toast events into the unified Notification Store
+  try {
+    const titleLower = toast.title.toLowerCase();
+    const isUserAction =
+      titleLower.includes('compare') ||
+      titleLower.includes('epoch') ||
+      titleLower.includes('created') ||
+      titleLower.includes('matrix');
+
+    const simTime = useTimeStore.getState().currentTime;
+    const activeSiteId = useScenarioStore.getState().activeSiteId;
+
+    useNotificationStore.getState().addNotification({
+      type: isUserAction ? 'user' : 'system',
+      severity: toast.severity || 'info',
+      title: toast.title,
+      detail: toast.subtitle || '',
+      simTime: simTime.toISOString().slice(11, 19) + ' UTC',
+      simTimestampMs: simTime.getTime(),
+      siteId: activeSiteId
+    });
+  } catch {
+    // Avoid crashing if stores are not yet initialized during SSR/tests
+  }
 }

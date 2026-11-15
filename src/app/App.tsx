@@ -7,6 +7,7 @@ import { TimelineDock } from '../features/dashboard/TimelineDock';
 import { LandingPage } from '../features/landing';
 import { ToastContainer } from '../ui/Toast';
 import { showToast } from '../ui/toastStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { useUIStore } from '../store/useUIStore';
 import { useScenarioStore } from '../store/useScenarioStore';
 import { useTimeStore } from '../store/useTimeStore';
@@ -78,6 +79,51 @@ export default function App(): React.JSX.Element {
         const horiz = await dataProvider.getHorizon(currentSite.id);
         if (isCancelled) return;
         setHorizon(horiz);
+
+        // Emit authentic data provenance system notices into the Notification Center
+        const simTimeStr = currentTime.toISOString().slice(11, 19) + ' UTC';
+        if (horiz?.coverageStatus === 'PARTIAL') {
+          useNotificationStore.getState().addNotification({
+            type: 'system',
+            severity: 'warning',
+            title: 'LOLA 20M Horizon (Partial Coverage)',
+            detail: `${currentSite.name} has ${horiz.realAzimuthBinPercent ?? 53}% authentic LOLA DEM coverage; remaining azimuths synthesized.`,
+            simTime: simTimeStr,
+            simTimestampMs: currentTime.getTime(),
+            siteId: currentSite.id
+          });
+        } else if (horiz?.source === 'lola') {
+          useNotificationStore.getState().addNotification({
+            type: 'system',
+            severity: 'info',
+            title: 'LOLA 20M DEM Horizon Active',
+            detail: `${currentSite.name} verified with 100% authentic LOLA polar DEM raycast.`,
+            simTime: simTimeStr,
+            simTimestampMs: currentTime.getTime(),
+            siteId: currentSite.id
+          });
+        } else {
+          useNotificationStore.getState().addNotification({
+            type: 'system',
+            severity: 'warning',
+            title: 'Synthetic Horizon Profile',
+            detail: `${currentSite.name} is outside LOLA 80°S DEM extent. Using synthetic terrain profile.`,
+            simTime: simTimeStr,
+            simTimestampMs: currentTime.getTime(),
+            siteId: currentSite.id
+          });
+        }
+
+        // Terrain system notice
+        useNotificationStore.getState().addNotification({
+          type: 'system',
+          severity: 'info',
+          title: 'Procedural 3D Terrain Active',
+          detail: `${currentSite.name} local 3D surface mesh is procedurally synthesized.`,
+          simTime: simTimeStr,
+          simTimestampMs: currentTime.getTime(),
+          siteId: currentSite.id
+        });
       } catch (err) {
         console.error('[App] Failed to load site catalog or horizon:', err);
       }

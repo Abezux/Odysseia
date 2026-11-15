@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { Scenario } from '../contracts';
+import { useNotificationStore } from './useNotificationStore';
 
 export interface ScenarioState {
   activeSiteId: string;
@@ -58,6 +59,7 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
   removeScenario: (id: string) => {
     const current = get().scenarios;
     if (current.length <= 1) return; // Keep at least one scenario
+    const target = current.find((s) => s.id === id);
     const filtered = current.filter((s) => s.id !== id);
     const newActive = filtered[0].id;
     set({
@@ -65,6 +67,21 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
       activeScenarioId: newActive,
       activeSiteId: filtered[0].siteId
     });
+
+    if (target) {
+      try {
+        useNotificationStore.getState().addNotification({
+          type: 'user',
+          severity: 'info',
+          title: 'Removed from Compare',
+          detail: `${target.label} removed from comparative scenario matrix.`,
+          simTime: new Date().toISOString().slice(11, 19) + ' UTC',
+          siteId: target.siteId
+        });
+      } catch {
+        // Ignore during test/ssr
+      }
+    }
   },
 
   updateScenario: (id: string, partial: Partial<Scenario>) => {

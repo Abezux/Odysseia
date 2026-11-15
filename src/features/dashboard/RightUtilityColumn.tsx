@@ -11,6 +11,7 @@ import {
 import { useUIStore } from '../../store/useUIStore';
 import { useScenarioStore } from '../../store/useScenarioStore';
 import { useTimeStore } from '../../store/useTimeStore';
+import { useNotificationStore } from '../../store/useNotificationStore';
 import { SkyDial } from '../detail/SkyDial';
 import { computeMissionAlerts } from '../../lib/alerts';
 import { showToast } from '../../ui/toastStore';
@@ -37,6 +38,21 @@ export function RightUtilityColumn({
   const alerts = useMemo(() => {
     return computeMissionAlerts(metrics, site, currentTime);
   }, [metrics, site, currentTime]);
+
+  React.useEffect(() => {
+    if (alerts.length > 0) {
+      useNotificationStore.getState().syncAlerts(alerts, currentTime, site?.id);
+    }
+  }, [alerts, currentTime, site?.id]);
+
+  const handleAlertClick = (alert: (typeof alerts)[number]) => {
+    if (alert.simTimestampMs) {
+      useTimeStore.getState().setTime(new Date(alert.simTimestampMs));
+    }
+    if (alert.siteId) {
+      useScenarioStore.getState().setActiveSiteId(alert.siteId);
+    }
+  };
 
   const sunEl = metrics?.currentEphemeris.sun.elevationDeg ?? 0;
   const earthEl = metrics?.currentEphemeris.earth.elevationDeg ?? 0;
@@ -121,7 +137,16 @@ export function RightUtilityColumn({
             return (
               <div
                 key={alert.id}
-                className={`rounded-xl border border-panel-border border-l-4 p-2.5 ${barColor} transition-colors`}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleAlertClick(alert)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleAlertClick(alert);
+                  }
+                }}
+                className={`group rounded-xl border border-panel-border border-l-4 p-2.5 ${barColor} transition-all cursor-pointer hover:border-amber/40 hover:bg-[#1E1C1A]`}
               >
                 <div className="flex items-start justify-between gap-1">
                   <div className="flex items-center gap-1.5">
