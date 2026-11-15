@@ -364,6 +364,9 @@
     0.586
   ],
   "searchRadiusKm": 30,
-  "demSource": "LOLA_GLOBAL_MOCK_30KM",
-  "source": "mock"
+  "demSource": "MOCK HORIZON (OUTSIDE LOLA 80S)",
+  "source": "mock",
+  "coverageStatus": "SYNTHETIC",
+  "realAzimuthBinPercent": 0.0,
+  "observerHeightM": 2.0
 }

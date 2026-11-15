@@ -364,6 +364,9 @@
     2.147
   ],
   "searchRadiusKm": 80,
-  "demSource": "LOLA_POLAR_MOCK_80KM",
-  "source": "mock"
+  "demSource": "MOCK HORIZON (OUTSIDE LOLA 80S)",
+  "source": "mock",
+  "coverageStatus": "SYNTHETIC",
+  "realAzimuthBinPercent": 0.0,
+  "observerHeightM": 2.0
 }
