@@ -78,4 +78,68 @@ describe('Wave 3 Feature Views Unit Tests', () => {
     expect(sampleStart.sun.azimuthDeg).toBeGreaterThanOrEqual(0);
     expect(sampleEnd.sun.azimuthDeg).toBeGreaterThanOrEqual(0);
   });
+
+  describe('Group 2: Horizon Panorama Projection & Scales', () => {
+    const minElev = -3;
+    const maxElev = 25;
+    const elevRange = maxElev - minElev; // 28°
+    const height = 600;
+    const width = 1200;
+
+    const elevToY = (elev: number, exaggeration = 1): number => {
+      const effectiveElev = elev * exaggeration;
+      const fraction = (effectiveElev - minElev) / elevRange;
+      return height * (1 - Math.max(0, Math.min(1, fraction)));
+    };
+
+    const azToX = (az: number, centerAzimuth: number, fovDegrees: number): number => {
+      let delta = az - centerAzimuth;
+      while (delta < -180) delta += 360;
+      while (delta > 180) delta -= 360;
+      const fraction = (delta + fovDegrees / 2) / fovDegrees;
+      return fraction * width;
+    };
+
+    it('maps vertical elevation scale correctly (-3° to +25° range)', () => {
+      // Top of view (+25°) maps to Y = 0
+      expect(elevToY(25)).toBeCloseTo(0, 4);
+
+      // Bottom of view (-3°) maps to Y = height
+      expect(elevToY(-3)).toBeCloseTo(height, 4);
+
+      // 0° true-horizon line maps cleanly inside view
+      const zeroY = elevToY(0);
+      expect(zeroY).toBeGreaterThan(0);
+      expect(zeroY).toBeLessThan(height);
+      // fraction for 0° is (0 - (-3)) / 28 = 3/28 -> Y = height * (1 - 3/28) = 25/28 * height
+      expect(zeroY).toBeCloseTo((25 / 28) * height, 2);
+    });
+
+    it('scales terrain slope proportionally with 1x, 2x, and 4x vertical exaggeration', () => {
+      const ridgeElevation = 2.0; // 2° ridge crest
+      const y1x = elevToY(ridgeElevation, 1);
+      const y2x = elevToY(ridgeElevation, 2);
+      const y4x = elevToY(ridgeElevation, 4);
+
+      const zeroY = elevToY(0, 1);
+
+      // Higher elevation should move further up (lower Y value)
+      expect(zeroY - y2x).toBeCloseTo(2 * (zeroY - y1x), 4);
+      expect(zeroY - y4x).toBeCloseTo(4 * (zeroY - y1x), 4);
+    });
+
+    it('centers observer heading correctly across 60° to 360° FOV', () => {
+      // With centerAzimuth = 180° (South), 180° should be at the exact horizontal center
+      expect(azToX(180, 180, 180)).toBeCloseTo(width / 2, 4);
+      expect(azToX(180, 180, 360)).toBeCloseTo(width / 2, 4);
+      expect(azToX(180, 180, 60)).toBeCloseTo(width / 2, 4);
+
+      // With centerAzimuth = 0° (North), 0° should be at horizontal center
+      expect(azToX(0, 0, 180)).toBeCloseTo(width / 2, 4);
+
+      // In 360° panorama with center 180°, 0° and 360° should be at the left and right edges
+      expect(azToX(0, 180, 360)).toBeCloseTo(0, 4);
+      expect(azToX(360, 180, 360)).toBeCloseTo(width, 4);
+    });
+  });
 });
