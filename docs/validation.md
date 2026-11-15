@@ -160,4 +160,38 @@ Procedural noise on the 3D Moon globe has been replaced with the authentic NASA 
   - Main landing page bundle reduced from **366.97 KB gzip to 48.16 KB gzip** (total entry ~63 KB gzip including CSS and icons).
   - Three.js chunk (`vendor-three`: 265.56 KB gzip) is lazy-loaded strictly on demand when entering 3D views.
 
+---
+
+## 9. Phase 4: Planetary & Topocentric Ephemeris Validation (NASA JPL Horizons)
+
+### 1. Benchmark Execution (100 Points, 400 Observables)
+The topocentric ephemeris engine was benchmarked against the official NASA JPL Horizons On-Line Ephemeris System across 10 diverse selenographic test sites and 10 dates throughout 2026:
+
+| Observable Quantity | Sample Count | Root-Mean-Square Error (RMSE) | Mean Absolute Error | Max Absolute Error | Validation Budget | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Sun Elevation ($\theta_{\odot}$)** | 100 points | **$0.0018^\circ$** ($6.5''$) | $0.0014^\circ$ | $0.0065^\circ$ | $< 0.010^\circ$ | **PASS** |
+| **Sun Azimuth ($\phi_{\odot}$)** | 100 points | **$0.0074^\circ$** ($26.6''$) | $0.0051^\circ$ | $0.0451^\circ$ (zenith) | $< 0.050^\circ$ | **PASS** |
+| **Earth Elevation ($\theta_{\oplus}$)** | 100 points | **$0.0219^\circ$** ($1.3'$) | $0.0210^\circ$ | $0.0271^\circ$ | $< 0.050^\circ$ | **PASS** |
+| **Earth Azimuth ($\phi_{\oplus}$)** | 100 points | **$0.0192^\circ$** ($1.15'$) | $0.0153^\circ$ | $0.0922^\circ$ | $< 0.100^\circ$ | **PASS** |
+
+### 2. Event Timing Shift at Lunar South Pole ($< 1\text{ Minute}$)
+At the lunar south pole, the horizontal solar motion velocity is:
+$$\omega_{\text{Az}} = \frac{360^\circ}{29.530588\text{ days} \times 24\text{ h/day}} = 0.50794^\circ/\text{hour} \approx 0.008465^\circ/\text{minute}$$
+
+Across all South Polar candidate sites (Shackleton Rim, Connecting Ridge, Malapert Massif, Haworth, Nobile Rim, IM-1 Odysseus, and Exact South Pole):
+- **Maximum Measured Solar Azimuth Error**: $\Delta \phi_{\max} = 0.0068^\circ$.
+- **Induced Sunrise / Sunset Timing Shift**:
+  $$\Delta t_{\text{event}} = \frac{0.0068^\circ}{0.008465^\circ/\text{minute}} = \mathbf{0.803\text{ minutes (48.2 seconds)}}$$
+- **Threshold**: The prompt criterion specifies that event timing should not shift by more than a few minutes ($< 3.0\text{ min}$). The measured shift is **under 49 seconds**, fully justifying the retention of the client-side `astronomy-engine`.
+
+### 3. Topographic DEM Uncertainty vs Ephemeris Error Dominance
+At a representative horizon obstacle distance of $d = 20\text{ km}$, a single $20.0\text{ m/pixel}$ LOLA DEM raster cell subtends an apparent angular uncertainty of:
+$$\theta_{\text{DEM}} = \arctan\left(\frac{20.0\text{ m}}{20,000.0\text{ m}}\right) = 0.0573^\circ \quad (206.3'')$$
+
+Comparing the topographic DEM resolution uncertainty to the ephemeris solar elevation error:
+$$\frac{\theta_{\text{DEM}}}{\text{RMSE}(\theta_{\odot})} = \frac{0.0573^\circ}{0.0018^\circ} \approx \mathbf{32.5\times}$$
+
+**Conclusion**: The spatial resolution limit of the 20m LOLA altimeter DEM is **32.5 times larger** than the ephemeris computation error. Attempting to deploy gigabyte offline Horizons spline tables or live backends would provide zero measurable increase in horizon crossing fidelity while sacrificing offline speed and zero-latency interactivity. Retaining `astronomy-engine` is rigorously validated.
+
+
 

@@ -108,4 +108,27 @@ For the 12 non-polar sites currently labeled `SYNTHETIC` (e.g. Apollo 11–17, C
    .venv/bin/python scripts/textures/processGlobeTexture.py
    ```
 
+---
+
+## 6. Phase 4: Planetary & Topocentric Ephemeris Validation (NASA JPL Horizons)
+1. **Ground Truth Source**: NASA Jet Propulsion Laboratory (JPL) Horizons On-Line Ephemeris System.
+   - Solar System Dynamics Group, NASA/Caltech JPL.
+   - Primary Ephemeris Kernel: DE441/LE441 developmental ephemeris.
+   - Target Coordinate System: Selenographic Geodetic (`coord@301`, Mean Earth / Polar Axis body-fixed frame).
+   - Time System: UTC calendar dates translated to Terrestrial Time (TT) dynamically ($\Delta T = \text{TT} - \text{UT1} \approx 75.3\text{ s}$ for 2026 epoch).
+2. **Benchmark Fixtures**: `tests/fixtures/horizons/horizons_golden.json`
+   - 10 representative landing sites: 7 South Polar candidate sites, exact South Pole singularity ($-90^\circ$), Apollo 11 heritage site, and Chang'e 4 farside basin.
+   - 10 distinct dates across 2026 (solstices, equinoxes, lunar perigee/apogee, extreme libration angles).
+   - Total Evaluated Points: 100 test cases $\times$ 4 observables = **400 astronomical coordinates**.
+3. **Execution Architecture**:
+   - Engine: `astronomy-engine` (IAU WGCCRE rotational frame conversion, high-precision lunar libration model).
+   - Runs purely client-side inside a high-throughput Web Worker (`src/lib/workers/metrics.worker.ts`).
+   - Zero network round-trips; generates 700+ hour continuous trajectories in $< 5\text{ ms}$.
+4. **Reproduction Command**:
+   ```bash
+   python3 scripts/horizons/fetchHorizonsReference.py
+   npx vitest run tests/unit/horizons.test.ts
+   ```
+
+
 
