@@ -588,8 +588,11 @@ export function CenterWorkspace({ metrics, activeSite, horizon = null }: CenterW
         <div className="relative h-full w-full">
           <ErrorBoundary
             title="Viewport Telemetry Alert"
-            message="The 3D WebGL renderer could not initialize in your browser. Verify graphics acceleration in chrome://settings/system, or switch to the 2D Horizon Panorama tab."
-            onReset={() => setActiveCenterTab('horizon')}
+            isWebGLError={true}
+            onSwitchToHorizon={() => setActiveCenterTab('horizon')}
+            onReset={() => {
+              // Retry current viewport renderer
+            }}
           >
             <React.Suspense fallback={<div className="h-full w-full bg-[#0B0A09]" />}>
               {activeCenterTab === 'globe' && (

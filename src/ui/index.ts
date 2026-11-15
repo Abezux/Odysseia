@@ -9,4 +9,5 @@ export * from './toastStore';
 export * from './Toast';
 export * from './Icon';
 export * from './ErrorBoundary';
+export * from './ViewportTelemetryAlert';
 export * from './PortalPopover';
